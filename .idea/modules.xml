@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/dreampay.iml" filepath="$PROJECT_DIR$/dreampay.iml" />
+      <module fileurl="file://$PROJECT_DIR$/android/dreampay_android.iml" filepath="$PROJECT_DIR$/android/dreampay_android.iml" />
     </modules>
   </component>
 </project>
