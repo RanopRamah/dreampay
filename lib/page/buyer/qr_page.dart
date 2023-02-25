@@ -97,7 +97,7 @@ class _QRPageState extends State<QRPage> {
     // For this example we check how width or tall the device is and change the scanArea and overlay accordingly.
     var scanArea = (MediaQuery.of(context).size.width < 400 ||
         MediaQuery.of(context).size.height < 400)
-        ? 200.0
+        ? 280.0
         : 370.0;
     // To ensure the Scanner view is properly sizes after rotation
     // we need to listen for Flutter SizeChanged notification and update controller
@@ -107,8 +107,8 @@ class _QRPageState extends State<QRPage> {
       overlay: QrScannerOverlayShape(
           borderColor: const Color(0xFFE4F789),
           borderRadius: 76,
-          borderLength: 76,
-          borderWidth: 20,
+          borderLength: 50,
+          borderWidth: 10,
           cutOutSize: scanArea),
       onPermissionSet: (ctrl, p) => _onPermissionSet(context, ctrl, p),
     );
