@@ -37,7 +37,12 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   qr_code_scanner: ^1.0.1
-  pattern_formatter: ^2.0.0
+  sliding_up_panel: ^2.0.0+1
+  searchfield: ^0.7.5
+  pin_code_fields: ^7.4.0
+  signed_spacing_flex: ^1.0.0
+  badges: ^3.0.2
+
 
 dev_dependencies:
   flutter_test:
@@ -66,14 +71,18 @@ flutter:
     - assets/image/wallet.png
     - assets/image/back_money.png
     - assets/image/trans.png
+    - assets/image/logout.png
+    - assets/image/back_login.png
+    - assets/image/scan.png
+    - assets/image/cross.png
+    - assets/image/success.png
     - assets/image/phone.png
     - assets/image/exit.png
     - assets/image/Rp.png
     - assets/image/failed.png
-    - assets/image/bg-login.png
-    - assets/image/Indonesia.png
-    - assets/image/store-icon.png
-    - assets/image/backspace.png
+    - assets/image/shop.png
+    - assets/image/qrex.png
+    - assets/image/back_money2.png
 
 
   # An image asset can refer to one or more resolution-specific "variants", see
