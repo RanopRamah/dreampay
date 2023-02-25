@@ -68,6 +68,12 @@
       "languageVersion": "2.17"
     },
     {
+      "name": "intl",
+      "rootUri": "file:///Users/ariefsonn_/.pub-cache/hosted/pub.dartlang.org/intl-0.17.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "js",
       "rootUri": "file:///Users/ariefsonn_/.pub-cache/hosted/pub.dartlang.org/js-0.6.4",
       "packageUri": "lib/",
@@ -100,6 +106,12 @@
     {
       "name": "path",
       "rootUri": "file:///Users/ariefsonn_/.pub-cache/hosted/pub.dartlang.org/path-1.8.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "pattern_formatter",
+      "rootUri": "file:///Users/ariefsonn_/.pub-cache/hosted/pub.dartlang.org/pattern_formatter-2.0.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -164,7 +176,7 @@
       "languageVersion": "2.18"
     }
   ],
-  "generated": "2023-02-24T02:13:05.313361Z",
+  "generated": "2023-02-25T13:31:06.704263Z",
   "generator": "pub",
   "generatorVersion": "2.19.0-146.2.beta"
 }

@@ -37,6 +37,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   qr_code_scanner: ^1.0.1
+  pattern_formatter: ^2.0.0
 
 dev_dependencies:
   flutter_test:
@@ -69,6 +70,10 @@ flutter:
     - assets/image/exit.png
     - assets/image/Rp.png
     - assets/image/failed.png
+    - assets/image/bg-login.png
+    - assets/image/Indonesia.png
+    - assets/image/store-icon.png
+    - assets/image/backspace.png
 
 
   # An image asset can refer to one or more resolution-specific "variants", see
