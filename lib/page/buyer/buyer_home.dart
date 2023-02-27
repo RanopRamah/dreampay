@@ -170,7 +170,7 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                             Row(
                               children: <Widget>[
                                 Padding(
-                                  padding: EdgeInsets.only(bottom: 45),
+                                  padding: EdgeInsets.only(bottom: 45, left: 10),
                                   child: Text(
                                     'Rp',
                                     style: TextStyle(
@@ -415,7 +415,7 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                   child: Center(
                     child: Container(
                       margin: EdgeInsets.only(top: 15),
-                      height: 10,
+                      height: 5,
                       width: 90,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(15),
@@ -665,7 +665,8 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
             )
           ],
         ),
-      ))
+      ),
+          ),
     )
     ]));
   }

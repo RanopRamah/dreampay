@@ -1,6 +1,9 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:dreampay/page/buyer/buyer_home.dart';
+import 'package:dreampay/page/buyer/nominal_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -42,6 +45,7 @@ class _QRPageState extends State<QRPage> {
             child: GestureDetector(
               onTap: () {
                 Navigator.pop(context);
+                controller!.pauseCamera();
               },
               child: Image.asset('assets/image/exit.png', width: 52, height: 54),
             ),
@@ -107,8 +111,8 @@ class _QRPageState extends State<QRPage> {
       overlay: QrScannerOverlayShape(
           borderColor: const Color(0xFFE4F789),
           borderRadius: 76,
-          borderLength: 50,
-          borderWidth: 10,
+          borderLength: 70,
+          borderWidth: 20,
           cutOutSize: scanArea),
       onPermissionSet: (ctrl, p) => _onPermissionSet(context, ctrl, p),
     );
@@ -121,112 +125,9 @@ class _QRPageState extends State<QRPage> {
     controller.scannedDataStream.listen((scanData) {
       setState(() {
         result = scanData;
+        isThisJson();
+        controller.pauseCamera();
       });
-      showDialog(
-        context: context,
-        builder: (BuildContext context) => AlertDialog(
-          shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(49))),
-          title: const Center(child: Text('Nominal Pembayaran', style: TextStyle(color: Color(0xFFACA9A9), fontFamily: 'Euclid Circular B', fontStyle: FontStyle.normal, fontWeight: FontWeight.w500, fontSize: 13))),
-          content: SizedBox(
-            height: 270,
-            child: Column(
-              children: [
-                const SizedBox(height: 20),
-                Center(
-                  child: Container(
-                    height: 76,
-                    padding: const EdgeInsets.only(left: 30, right: 20),
-                    child: TextField(
-                      controller: _controller,
-                      style: const TextStyle(
-                        color: Colors.black,
-                        fontFamily: 'SF Pro Display',
-                        fontStyle: FontStyle.normal,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 40,
-                      ),
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintStyle: const TextStyle(
-                          color: Color(0xFFACA9A9),
-                          fontFamily: 'SF Pro Display',
-                          fontStyle: FontStyle.normal,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 40,
-                        ),
-                        hintText: '120,000',
-                        prefixIcon: Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Image.asset('assets/image/Rp.png', width: 20, height: 20),
-                        ),
-                      ),
-                      inputFormatters: [ThousandsSeparatorInputFormatter()],
-                      keyboardType: TextInputType.number,
-                    ),
-                  )
-                ),
-                const SizedBox(height: 50),
-                SizedBox(
-                  width: 288,
-                  height: 51,
-                  child: ElevatedButton(
-                    onPressed: () {},
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(const Color(0xFF5258D4)),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(31)),
-                        ),
-                      ),
-                    ),
-                    child: const Text(
-                      'Lanjutkan',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontFamily: 'Euclid Circular B',
-                        fontStyle: FontStyle.normal,
-                        fontWeight: FontWeight.w400,
-                        fontSize: 24,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 12),
-                SizedBox(
-                  width: 288,
-                  height: 51,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        Navigator.of(context).pop();
-                      });
-                    },
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        const RoundedRectangleBorder(
-                          side: BorderSide(width: 1.0, color: Color(0xFFC7C7C7)),
-                          borderRadius: BorderRadius.all(Radius.circular(31)),
-                        ),
-                      ),
-                    ),
-                    child: const Text(
-                      'Batalkan',
-                      style: TextStyle(
-                        color: Color(0xFFDD3960),
-                        fontFamily: 'Euclid Circular B',
-                        fontStyle: FontStyle.normal,
-                        fontWeight: FontWeight.w400,
-                        fontSize: 24,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      );
     });
   }
 
@@ -243,6 +144,17 @@ class _QRPageState extends State<QRPage> {
   void dispose() {
     controller?.dispose();
     super.dispose();
+  }
+
+  void isThisJson() {
+    var output = result!.code;
+    var response = jsonDecode(output!);
+
+    if (response['nama'] != null) {
+      Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => NominalPage(response['no_hp'], response['nama'])));
+    } else {
+      Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => const BuyerHomePage()));
+    }
   }
 }
 

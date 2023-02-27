@@ -1,5 +1,7 @@
 import 'package:dreampay/page/buyer/buyer_home.dart';
-import 'package:dreampay/page/buyer/success_pay.dart';
+import 'package:dreampay/page/buyer/closing/success_pay.dart';
+import 'package:dreampay/page/cashier/cashier_page.dart';
+import 'package:dreampay/page/login_page.dart';
 import 'package:dreampay/page/merchant/merchant.dart';
 import 'package:flutter/material.dart';
 
@@ -14,11 +16,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-
+    return const MaterialApp(
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
-      home: SuccessPayPage(),
+      home: LoginPage(),
     );
   }
 }
