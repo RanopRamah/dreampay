@@ -4,7 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class NominalPage extends StatefulWidget {
-  const NominalPage({Key? key}) : super(key: key);
+  const NominalPage(this.id_seller, this.name, {super.key}) : super();
+
+  final id_seller;
+  final name;
 
   @override
   State<NominalPage> createState() => _NominalPageState();
@@ -44,10 +47,10 @@ class _NominalPageState extends State<NominalPage> {
                           padding: const EdgeInsets.only(top: 20.98),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            children: const [
+                            children: [
                               Text(
-                                'Warung Indomie ABF',
-                                style: TextStyle(
+                                widget.name,
+                                style: const TextStyle(
                                   color: Colors.white,
                                   fontFamily: 'Euclid Circular B',
                                   fontWeight: FontWeight.w600,
@@ -55,8 +58,8 @@ class _NominalPageState extends State<NominalPage> {
                                 ),
                               ),
                               Text(
-                                'DPID: 62543678934',
-                                style: TextStyle(
+                                'DPID: ${widget.id_seller}',
+                                style: const TextStyle(
                                   color: Color(0xFFC5C7F1),
                                   fontFamily: 'SF Pro Display',
                                   fontWeight: FontWeight.w500,
@@ -369,6 +372,7 @@ class _NominalPageState extends State<NominalPage> {
                       child: ElevatedButton(
                         onPressed: () {
                           print(_controller.text);
+                          print(widget.id_seller);
                         },
                         style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all<Color>(const Color(0xFF5258D4)),

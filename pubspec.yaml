@@ -42,6 +42,10 @@ dependencies:
   pin_code_fields: ^7.4.0
   signed_spacing_flex: ^1.0.0
   badges: ^3.0.2
+  flutter_launcher_icons: ^0.12.0
+  http: ^0.13.5
+  flutter_svg: ^1.1.6
+  shared_preferences: ^2.0.18
 
 
 dev_dependencies:
@@ -75,14 +79,22 @@ flutter:
     - assets/image/back_login.png
     - assets/image/scan.png
     - assets/image/cross.png
-    - assets/image/success.png
     - assets/image/phone.png
     - assets/image/exit.png
     - assets/image/Rp.png
     - assets/image/failed.png
+    - assets/image/bg-login.png
     - assets/image/shop.png
     - assets/image/qrex.png
+    - assets/image/store-icon.png
+    - assets/image/Indonesia.png
     - assets/image/back_money2.png
+    - assets/image/backspace.png
+    - assets/launcher/ic_launcher.png
+    - assets/launcher/icon_launcher_2.png
+    - assets/image/search-all.png
+    - assets/image/failed-topup.png
+    - assets/image/success-topup.png
 
 
   # An image asset can refer to one or more resolution-specific "variants", see
