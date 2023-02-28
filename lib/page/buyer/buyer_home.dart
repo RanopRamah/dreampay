@@ -152,6 +152,7 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
   initState() {
     _foundUsers = _allUsers;
     _saldo = fetchSaldo('15');
+    _topup = fetchTopUp('15');
     super.initState();
   }
 
@@ -193,365 +194,372 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
           padding: EdgeInsets.only(left: 30, right: 30),
           borderRadius: BorderRadius.only(
               topRight: Radius.circular(30), topLeft: Radius.circular(30)),
-        body:FutureBuilder(
+        body: FutureBuilder(
           future: _saldo,
-          builder: (BuildContext context,snapshot ) {
-            return SingleChildScrollView(
-              child: Container(
-                height: 800,
-                decoration: const BoxDecoration(color: Color(0xFFFBFBFB)),
-                padding:
-                const EdgeInsets.only(right: 25, left: 25, top: 80, bottom: 74),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text(
-                              'Assalamualaikum 👋',
-                              style: TextStyle(
-                                fontFamily: 'Euclid Circular B',
-                                fontWeight: FontWeight.w500,
-                                fontSize: 16,
-                                color: Color(0xff777777),
-                              ),
-                            ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Container(
-                              width: 250,
-                              child:Text(
-                                'Abi Ranop',
-                                textAlign: TextAlign.left,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  fontFamily: 'Euclid Circular B',
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 30,
-                                  color: Color(0xff222222),
-                                ),
-                              ),),
-                          ],
-                        ),
-                        Column(children: <Widget>[
-                          GestureDetector(
-                            onTap : (){
-
-                            },
-                            child:Container(
-                              width: 52,
-                              height: 54,
-                              padding: EdgeInsets.all(3),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(13),
-                                  border:
-                                  Border.all(width: 1, color: Color(0xffD2D2D2))),
-                              child: TextButton(
-                                child: Image.asset('assets/image/logout.png'),
-                                onPressed: () {},
-                              ),
-                            ),),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          Text(
-                            'Keluar',
-                            style: TextStyle(
-                                fontFamily: 'Euclid Circular B',
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                color: Color(0xffadadad)),
-                          )
-                        ])
-                      ],
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Container(
-                        padding: EdgeInsets.only(top: 20, left: 30, right: 30),
-                        height: 172,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                            color: Color(0xffD7D0FF),
-                            borderRadius: BorderRadius.circular(22)),
-                        child: Column(children: <Widget>[
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          builder: (BuildContext context, snapshot) {
+            if (snapshot.hasData) {
+              return SingleChildScrollView(
+                child: Container(
+                  height: 800,
+                  decoration: const BoxDecoration(color: Color(0xFFFBFBFB)),
+                  padding:
+                  const EdgeInsets.only(right: 25, left: 25, top: 80, bottom: 74),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Text(
-                                'Saldo Anda',
+                                'Assalamualaikum 👋',
                                 style: TextStyle(
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.w500,
-                                    fontFamily: 'Euclid Circular B'),
-                              ),
-                              Image.asset('assets/image/wallet.png')
-                            ],
-                          ),
-                          SizedBox(
-                            height: 22,
-                          ),
-                          Container(
-                              padding: EdgeInsets.only(left: 17, top: 20),
-                              width: 253,
-                              height: 90,
-                              decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                      image:
-                                      AssetImage('assets/image/back_money.png'))),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: <Widget>[
-                                  Row(
-                                    children: <Widget>[
-                                      Padding(
-                                        padding: EdgeInsets.only(bottom: 45, left: 10),
-                                        child: Text(
-                                          'Rp',
-                                          style: TextStyle(
-                                              fontFamily: 'SF Pro Display',
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.w400,
-                                              color: Colors.white),
-                                        ),
-                                      ),
-                                      Text(
-                                        snapshot.data!.saldo,
-                                        style: TextStyle(
-                                            fontFamily: 'SF Pro Display',
-                                            fontSize: 44,
-                                            fontWeight: FontWeight.w700,
-                                            color: Colors.white),
-                                      ),
-                                    ],
-                                  )
-                                ],
-                              )),
-                        ])),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Row(children: [
-                      Text(
-                        'Riwayat',
-                        style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 24,
-                            fontFamily: 'Euclid Circular B',
-                            color: Color(0xff172437)),
-                      ),
-                      SizedBox(
-                        width: 5,
-                      ),
-                      Text(
-                        'Saldo',
-                        style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 24,
-                            fontFamily: 'Euclid Circular B',
-                            color: Color(0xff172437)),
-                      ),
-                    ]),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Container(
-                        height: 165,
-                        child: ListView(
-                            scrollDirection: Axis.horizontal,
-                            children:[
-                              Container(
-                                padding: EdgeInsets.only(top: 15, right: 10, left: 10),
-                                width: 163,
-                                height: 164,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(22),
-                                  color: Color(0xfffeedbb),
-                                ),
-                                child: Column(
-                                  children: <Widget>[
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: <Widget>[
-                                        Container(
-                                          decoration: BoxDecoration(
-                                              color: Color(0xffF4F0F0),
-                                              borderRadius: BorderRadius.circular(12)),
-                                          width: 33,
-                                          height: 35,
-                                          padding: EdgeInsets.all(5),
-                                          child: Image.asset('assets/image/trans.png'),
-                                        ),
-                                        Text(
-                                          'Pengeluaran',
-                                          style: TextStyle(
-                                              fontFamily: 'Euclid Circular B',
-                                              fontWeight: FontWeight.w500,
-                                              fontSize: 16,
-                                              color: Color(0xff222222)),
-                                        )
-                                      ],
-                                    ),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    Row(
-                                      children: <Widget>[
-                                        Padding(
-                                          padding: EdgeInsets.only(
-                                            bottom: 35,
-                                          ),
-                                          child: Text(
-                                            'Rp',
-                                            style: TextStyle(
-                                                fontFamily: 'SF Pro Display',
-                                                fontSize: 13,
-                                                fontWeight: FontWeight.w400,
-                                                color: Color(0xff606060)),
-                                          ),
-                                        ),
-                                        Text(
-                                          '150,000',
-                                          style: TextStyle(
-                                              fontFamily: 'SF Pro Display',
-                                              fontSize: 30,
-                                              fontWeight: FontWeight.w700,
-                                              color: Color(0xff222222)),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    GestureDetector(
-                                        onTap: () {
-                                          setState(() {
-                                            showTopup = true;
-                                            showPull = false;
-                                          });
-                                        },
-                                        child: Container(
-                                            padding: EdgeInsets.only(left: 49, top: 5),
-                                            width: double.infinity,
-                                            height: 30,
-                                            decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.circular(27),
-                                                border: Border.all(
-                                                    width: 1, color: Color(0xffBCBDC7))),
-                                            child: Text(
-                                              'Detail',
-                                              style: TextStyle(
-                                                  fontFamily: 'Euclid Circular B',
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w400,
-                                                  color: Color(0xff606169)),
-                                            )))
-                                  ],
+                                  fontFamily: 'Euclid Circular B',
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 16,
+                                  color: Color(0xff777777),
                                 ),
                               ),
                               SizedBox(
-                                width: 15,
+                                height: 5,
                               ),
                               Container(
-                                padding: EdgeInsets.only(top: 15, right: 10, left: 10),
-                                width: 163,
-                                height: 164,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(22),
-                                  color: Color(0xffB3B9F0),
-                                ),
-                                child: Column(
-                                  children: <Widget>[
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: <Widget>[
-                                        Container(
+                                width: 250,
+                                child:Text(
+                                  'Abi Ranop',
+                                  textAlign: TextAlign.left,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontFamily: 'Euclid Circular B',
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 30,
+                                    color: Color(0xff222222),
+                                  ),
+                                ),),
+                            ],
+                          ),
+                          Column(children: <Widget>[
+                            GestureDetector(
+                              onTap : (){
 
-                                          decoration: BoxDecoration(
-                                              color: Color(0xffF4F0F0),
-                                              borderRadius: BorderRadius.circular(12)),
-                                          width: 33,
-                                          height: 35,
-                                          padding: EdgeInsets.all(5),
-                                          child: Image.asset('assets/image/trans.png'),
-                                        ),
-                                        Text(
-                                          'Isi Ulang',
-                                          style: TextStyle(
-                                              fontFamily: 'Euclid Circular B',
-                                              fontWeight: FontWeight.w500,
-                                              fontSize: 16,
-                                              color: Color(0xff222222)),
-                                        )
-                                      ],
-                                    ),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
+                              },
+                              child:Container(
+                                width: 52,
+                                height: 54,
+                                padding: EdgeInsets.all(3),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(13),
+                                    border:
+                                    Border.all(width: 1, color: Color(0xffD2D2D2))),
+                                child: TextButton(
+                                  child: Image.asset('assets/image/logout.png'),
+                                  onPressed: () {},
+                                ),
+                              ),),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Text(
+                              'Keluar',
+                              style: TextStyle(
+                                  fontFamily: 'Euclid Circular B',
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: Color(0xffadadad)),
+                            )
+                          ])
+                        ],
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Container(
+                          padding: EdgeInsets.only(top: 20, left: 30, right: 30),
+                          height: 172,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                              color: Color(0xffD7D0FF),
+                              borderRadius: BorderRadius.circular(22)),
+                          child: Column(children: <Widget>[
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Text(
+                                  'Saldo Anda',
+                                  style: TextStyle(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.w500,
+                                      fontFamily: 'Euclid Circular B'),
+                                ),
+                                Image.asset('assets/image/wallet.png')
+                              ],
+                            ),
+                            SizedBox(
+                              height: 22,
+                            ),
+                            Container(
+                                padding: EdgeInsets.only(left: 17, top: 20),
+                                width: 253,
+                                height: 90,
+                                decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                        image:
+                                        AssetImage('assets/image/back_money.png'))),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: <Widget>[
                                     Row(
                                       children: <Widget>[
                                         Padding(
-                                          padding: EdgeInsets.only(
-                                            bottom: 35,
-                                          ),
+                                          padding: EdgeInsets.only(bottom: 45, left: 10),
                                           child: Text(
                                             'Rp',
                                             style: TextStyle(
                                                 fontFamily: 'SF Pro Display',
-                                                fontSize: 13,
+                                                fontSize: 20,
                                                 fontWeight: FontWeight.w400,
-                                                color: Color(0xff606060)),
+                                                color: Colors.white),
                                           ),
                                         ),
                                         Text(
-                                          '150,000',
+                                          snapshot.data!.saldo.toString(),
                                           style: TextStyle(
                                               fontFamily: 'SF Pro Display',
-                                              fontSize: 30,
+                                              fontSize: 44,
                                               fontWeight: FontWeight.w700,
-                                              color: Color(0xff222222)),
+                                              color: Colors.white),
                                         ),
                                       ],
-                                    ),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    GestureDetector(
-                                        onTap: () {
-                                          setState(() {
-                                            showPull = true;
-                                            showTopup = false;
-                                          });
-                                        },
-                                        child: Container(
-                                            padding: EdgeInsets.only(left: 49, top: 5),
-                                            width: double.infinity,
-                                            height: 30,
-                                            decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.circular(27),
-                                                border: Border.all(
-                                                    width: 1, color: Color(0xffDBDDF0))),
-                                            child: Text(
-                                              'Detail',
-                                              style: TextStyle(
-                                                  fontFamily: 'Euclid Circular B',
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w400,
-                                                  color: Color(0xff606169)),
-                                            )))
+                                    )
                                   ],
+                                )),
+                          ])),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Row(children: [
+                        Text(
+                          'Riwayat',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 24,
+                              fontFamily: 'Euclid Circular B',
+                              color: Color(0xff172437)),
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Text(
+                          'Saldo',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 24,
+                              fontFamily: 'Euclid Circular B',
+                              color: Color(0xff172437)),
+                        ),
+                      ]),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Container(
+                          height: 165,
+                          child: ListView(
+                              scrollDirection: Axis.horizontal,
+                              children:[
+                                Container(
+                                  padding: EdgeInsets.only(top: 15, right: 10, left: 10),
+                                  width: 163,
+                                  height: 164,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(22),
+                                    color: Color(0xfffeedbb),
+                                  ),
+                                  child: Column(
+                                    children: <Widget>[
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: <Widget>[
+                                          Container(
+                                            decoration: BoxDecoration(
+                                                color: Color(0xffF4F0F0),
+                                                borderRadius: BorderRadius.circular(12)),
+                                            width: 33,
+                                            height: 35,
+                                            padding: EdgeInsets.all(5),
+                                            child: Image.asset('assets/image/trans.png'),
+                                          ),
+                                          Text(
+                                            'Pengeluaran',
+                                            style: TextStyle(
+                                                fontFamily: 'Euclid Circular B',
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 16,
+                                                color: Color(0xff222222)),
+                                          )
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      Row(
+                                        children: <Widget>[
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                              bottom: 35,
+                                            ),
+                                            child: Text(
+                                              'Rp',
+                                              style: TextStyle(
+                                                  fontFamily: 'SF Pro Display',
+                                                  fontSize: 13,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: Color(0xff606060)),
+                                            ),
+                                          ),
+                                          Text(
+                                            '150,000',
+                                            style: TextStyle(
+                                                fontFamily: 'SF Pro Display',
+                                                fontSize: 30,
+                                                fontWeight: FontWeight.w700,
+                                                color: Color(0xff222222)),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              showTopup = true;
+                                              showPull = false;
+                                            });
+                                          },
+                                          child: Container(
+                                              padding: EdgeInsets.only(left: 49, top: 5),
+                                              width: double.infinity,
+                                              height: 30,
+                                              decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.circular(27),
+                                                  border: Border.all(
+                                                      width: 1, color: Color(0xffBCBDC7))),
+                                              child: Text(
+                                                'Detail',
+                                                style: TextStyle(
+                                                    fontFamily: 'Euclid Circular B',
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w400,
+                                                    color: Color(0xff606169)),
+                                              )))
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            ]))
-                  ],
+                                SizedBox(
+                                  width: 15,
+                                ),
+                                Container(
+                                  padding: EdgeInsets.only(top: 15, right: 10, left: 10),
+                                  width: 163,
+                                  height: 164,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(22),
+                                    color: Color(0xffB3B9F0),
+                                  ),
+                                  child: Column(
+                                    children: <Widget>[
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: <Widget>[
+                                          Container(
+
+                                            decoration: BoxDecoration(
+                                                color: Color(0xffF4F0F0),
+                                                borderRadius: BorderRadius.circular(12)),
+                                            width: 33,
+                                            height: 35,
+                                            padding: EdgeInsets.all(5),
+                                            child: Image.asset('assets/image/trans.png'),
+                                          ),
+                                          Text(
+                                            'Isi Ulang',
+                                            style: TextStyle(
+                                                fontFamily: 'Euclid Circular B',
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 16,
+                                                color: Color(0xff222222)),
+                                          )
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      Row(
+                                        children: <Widget>[
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                              bottom: 35,
+                                            ),
+                                            child: Text(
+                                              'Rp',
+                                              style: TextStyle(
+                                                  fontFamily: 'SF Pro Display',
+                                                  fontSize: 13,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: Color(0xff606060)),
+                                            ),
+                                          ),
+                                          Text(
+                                            '150,000',
+                                            style: TextStyle(
+                                                fontFamily: 'SF Pro Display',
+                                                fontSize: 30,
+                                                fontWeight: FontWeight.w700,
+                                                color: Color(0xff222222)),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              showPull = true;
+                                              showTopup = false;
+                                            });
+                                          },
+                                          child: Container(
+                                              padding: EdgeInsets.only(left: 49, top: 5),
+                                              width: double.infinity,
+                                              height: 30,
+                                              decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.circular(27),
+                                                  border: Border.all(
+                                                      width: 1, color: Color(0xffDBDDF0))),
+                                              child: Text(
+                                                'Detail',
+                                                style: TextStyle(
+                                                    fontFamily: 'Euclid Circular B',
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w400,
+                                                    color: Color(0xff606169)),
+                                              )))
+                                    ],
+                                  ),
+                                ),
+                              ]))
+                    ],
+                  ),
                 ),
-              ),);
+              );
+            } else if (snapshot.hasError) {
+              return Text('${snapshot.error}');
+            }
+
+            return const Center(child: CircularProgressIndicator());
           },
 
         ) ,
