@@ -4,18 +4,19 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:searchfield/searchfield.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
+var url = dotenv.env['API_URL'];
+
 Future<List> fetchUsers() async {
   final response = await http.get(
-    Uri.parse('http://server.sekolahimpian.com:3000/api/cashier/1'),
+    Uri.parse('${url}cashier/3'),
   );
 
   if (response.statusCode == 200) {
-    // final List<Map<dynamic, dynamic>> jsonResponse = jsonDecode(response.body)['list_buyer'];
-    // print(jsonDecode(response.body)['list_buyer']);
     return jsonDecode(response.body)['list_buyer'];
   } else {
     throw Exception('Failed to Load');
@@ -23,12 +24,13 @@ Future<List> fetchUsers() async {
 }
 Future<List<TopUp>> fetchTopUp() async {
   final response = await http.get(
-    Uri.parse('http://server.sekolahimpian.com:3000/api/cashier/1'),
+    Uri.parse('${url}cashier/3'),
   );
+
+  print(response.body);
 
   if (response.statusCode == 200) {
     List jsonResponse = jsonDecode(response.body)['list_topup'];
-    print(jsonResponse);
     return jsonResponse.map((e) => TopUp.fromJson(e)).toList();
   } else {
     throw Exception('Failed to Load');
@@ -261,7 +263,6 @@ class _CashierPageState extends State<CashierPage> {
                           onSuggestionTap: (SearchFieldListItem<Users> x) {
                             setState(() {
                               _selectedUsers = x.item!;
-                              print(_selectedUsers.nama);
                             });
                           },
                         ),
@@ -527,7 +528,6 @@ class _CashierPageState extends State<CashierPage> {
             return Center(child: Text('${snapshot.error}'));
           }
 
-          print(snapshot.data);
           return const Center(child: CircularProgressIndicator());
         },
       ),
