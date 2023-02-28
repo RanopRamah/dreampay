@@ -124,278 +124,285 @@ class _NominalPageState extends State<NominalPage> {
                 ],
               ),
             ),
-            Expanded(
-              child: Container(
-                padding: const EdgeInsets.only(top: 36),
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(13),
-                      topRight: Radius.circular(13),
-                    ),
-                  boxShadow: [
-                      BoxShadow(
-                        color: Color.fromRGBO(0, 0, 0, 0.1),
-                        blurStyle: BlurStyle.normal,
-                        blurRadius: 10,
-                        offset: Offset(1, 1),
-                      ),
-                    ],
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Center(
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 46),
-                        child: Column(
-                          children: [
-                            Row(
-                              children: [
-                                GestureDetector(
-                                  child: const Text(
-                                    '1',
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontFamily: 'SF Pro Display',
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 36,
-                                    ),
-                                  ),
-                                  onTap: () {
-                                    setState(() {
-                                      _controller.text += '1';
-                                    });
-                                  },
-                                ),
-                                const SizedBox(width: 120),
-                                GestureDetector(
-                                  child: const Text(
-                                    '2',
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontFamily: 'SF Pro Display',
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 36,
-                                    ),
-                                  ),
-                                  onTap: () {
-                                    setState(() {
-                                      _controller.text += '2';
-                                    });
-                                  },
-                                ),
-                                const SizedBox(width: 120),
-                                GestureDetector(
-                                  child: const Text(
-                                    '3',
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontFamily: 'SF Pro Display',
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 36,
-                                    ),
-                                  ),
-                                  onTap: () {
-                                    setState(() {
-                                      _controller.text += '3';
-                                    });
-                                  },
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 36.11),
-                            Row(
-                              children: [
-                                GestureDetector(
-                                  child: const Text(
-                                    '4',
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontFamily: 'SF Pro Display',
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 36,
-                                    ),
-                                  ),
-                                  onTap: () {
-                                    setState(() {
-                                      _controller.text += '4';
-                                    });
-                                  },
-                                ),
-                                const SizedBox(width: 120),
-                                GestureDetector(
-                                  child: const Text(
-                                    '5',
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontFamily: 'SF Pro Display',
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 36,
-                                    ),
-                                  ),
-                                  onTap: () {
-                                    setState(() {
-                                      _controller.text += '5';
-                                    });
-                                  },
-                                ),
-                                const SizedBox(width: 120),
-                                GestureDetector(
-                                  child: const Text(
-                                    '6',
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontFamily: 'SF Pro Display',
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 36,
-                                    ),
-                                  ),
-                                  onTap: () {
-                                    setState(() {
-                                      _controller.text += '6';
-                                    });
-                                  },
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 36.11),
-                            Row(
-                              children: [
-                                GestureDetector(
-                                  child: const Text(
-                                    '7',
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontFamily: 'SF Pro Display',
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 36,
-                                    ),
-                                  ),
-                                  onTap: () {
-                                    setState(() {
-                                      _controller.text += '7';
-                                    });
-                                  },
-                                ),
-                                const SizedBox(width: 120),
-                                GestureDetector(
-                                  child: const Text(
-                                    '8',
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontFamily: 'SF Pro Display',
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 36,
-                                    ),
-                                  ),
-                                  onTap: () {
-                                    setState(() {
-                                      _controller.text += '8';
-                                    });
-                                  },
-                                ),
-                                const SizedBox(width: 120),
-                                GestureDetector(
-                                  child: const Text(
-                                    '9',
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontFamily: 'SF Pro Display',
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 36,
-                                    ),
-                                  ),
-                                  onTap: () {
-                                    setState(() {
-                                      _controller.text += '9';
-                                    });
-                                  },
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 36.11),
-                            Row(
-                              children: [
-                                GestureDetector(
-                                  child: const Text(
-                                    '0',
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontFamily: 'SF Pro Display',
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 36,
-                                    ),
-                                  ),
-                                  onTap: () {
-                                    setState(() {
-                                      _controller.text += '0';
-                                    });
-                                  },
-                                ),
-                                const SizedBox(width: 100),
-                                GestureDetector(
-                                  child: const Text(
-                                    '000',
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontFamily: 'SF Pro Display',
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 36,
-                                    ),
-                                  ),
-                                  onTap: () {
-                                    setState(() {
-                                      _controller.text += '000';
-                                    });
-                                  },
-                                ),
-                                const SizedBox(width: 85),
-                                GestureDetector(
-                                  child: Image.asset('assets/image/backspace.png', width: 38, height: 32),
-                                  onTap: () {
-                                    setState(() {
-                                      _controller.text = "";
-                                    });
-                                  },
-                                ),
-                              ],
-                            ),
-                          ],
+            Stack(
+              children: [
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Expanded(
+                    child: Container(
+                      padding: const EdgeInsets.only(top: 36),
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(13),
+                          topRight: Radius.circular(13),
                         ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Color.fromRGBO(0, 0, 0, 0.1),
+                            blurStyle: BlurStyle.normal,
+                            blurRadius: 10,
+                            offset: Offset(1, 1),
+                          ),
+                        ],
                       ),
-                    ),
-                    const SizedBox(height: 48),
-                    SizedBox(
-                      width: 342,
-                      height: 73,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          print(_controller.text);
-                          print(widget.id_seller);
-                        },
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(const Color(0xFF5258D4)),
-                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                            const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(8)),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Center(
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 46),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      GestureDetector(
+                                        child: const Text(
+                                          '1',
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontFamily: 'SF Pro Display',
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 36,
+                                          ),
+                                        ),
+                                        onTap: () {
+                                          setState(() {
+                                            _controller.text += '1';
+                                          });
+                                        },
+                                      ),
+                                      const SizedBox(width: 120),
+                                      GestureDetector(
+                                        child: const Text(
+                                          '2',
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontFamily: 'SF Pro Display',
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 36,
+                                          ),
+                                        ),
+                                        onTap: () {
+                                          setState(() {
+                                            _controller.text += '2';
+                                          });
+                                        },
+                                      ),
+                                      const SizedBox(width: 120),
+                                      GestureDetector(
+                                        child: const Text(
+                                          '3',
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontFamily: 'SF Pro Display',
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 36,
+                                          ),
+                                        ),
+                                        onTap: () {
+                                          setState(() {
+                                            _controller.text += '3';
+                                          });
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 36.11),
+                                  Row(
+                                    children: [
+                                      GestureDetector(
+                                        child: const Text(
+                                          '4',
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontFamily: 'SF Pro Display',
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 36,
+                                          ),
+                                        ),
+                                        onTap: () {
+                                          setState(() {
+                                            _controller.text += '4';
+                                          });
+                                        },
+                                      ),
+                                      const SizedBox(width: 120),
+                                      GestureDetector(
+                                        child: const Text(
+                                          '5',
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontFamily: 'SF Pro Display',
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 36,
+                                          ),
+                                        ),
+                                        onTap: () {
+                                          setState(() {
+                                            _controller.text += '5';
+                                          });
+                                        },
+                                      ),
+                                      const SizedBox(width: 120),
+                                      GestureDetector(
+                                        child: const Text(
+                                          '6',
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontFamily: 'SF Pro Display',
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 36,
+                                          ),
+                                        ),
+                                        onTap: () {
+                                          setState(() {
+                                            _controller.text += '6';
+                                          });
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 36.11),
+                                  Row(
+                                    children: [
+                                      GestureDetector(
+                                        child: const Text(
+                                          '7',
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontFamily: 'SF Pro Display',
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 36,
+                                          ),
+                                        ),
+                                        onTap: () {
+                                          setState(() {
+                                            _controller.text += '7';
+                                          });
+                                        },
+                                      ),
+                                      const SizedBox(width: 120),
+                                      GestureDetector(
+                                        child: const Text(
+                                          '8',
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontFamily: 'SF Pro Display',
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 36,
+                                          ),
+                                        ),
+                                        onTap: () {
+                                          setState(() {
+                                            _controller.text += '8';
+                                          });
+                                        },
+                                      ),
+                                      const SizedBox(width: 120),
+                                      GestureDetector(
+                                        child: const Text(
+                                          '9',
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontFamily: 'SF Pro Display',
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 36,
+                                          ),
+                                        ),
+                                        onTap: () {
+                                          setState(() {
+                                            _controller.text += '9';
+                                          });
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 36.11),
+                                  Row(
+                                    children: [
+                                      GestureDetector(
+                                        child: const Text(
+                                          '0',
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontFamily: 'SF Pro Display',
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 36,
+                                          ),
+                                        ),
+                                        onTap: () {
+                                          setState(() {
+                                            _controller.text += '0';
+                                          });
+                                        },
+                                      ),
+                                      const SizedBox(width: 100),
+                                      GestureDetector(
+                                        child: const Text(
+                                          '000',
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontFamily: 'SF Pro Display',
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 36,
+                                          ),
+                                        ),
+                                        onTap: () {
+                                          setState(() {
+                                            _controller.text += '000';
+                                          });
+                                        },
+                                      ),
+                                      const SizedBox(width: 85),
+                                      GestureDetector(
+                                        child: Image.asset('assets/image/backspace.png', width: 38, height: 32),
+                                        onTap: () {
+                                          setState(() {
+                                            _controller.text = "";
+                                          });
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                        child: const Text(
-                          'Konfirmasi',
-                          style: TextStyle(
-                            color: Color(0xFFFFFFFF),
-                            fontFamily: 'Euclid Circular B',
-                            fontWeight: FontWeight.w600,
-                            fontSize: 24,
+                          const SizedBox(height: 48),
+                          SizedBox(
+                            width: 342,
+                            height: 73,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                print(_controller.text);
+                                print(widget.id_seller);
+                              },
+                              style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all<Color>(const Color(0xFF5258D4)),
+                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(Radius.circular(8)),
+                                  ),
+                                ),
+                              ),
+                              child: const Text(
+                                'Konfirmasi',
+                                style: TextStyle(
+                                  color: Color(0xFFFFFFFF),
+                                  fontFamily: 'Euclid Circular B',
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 24,
+                                ),
+                              ),
+                            ),
                           ),
-                        ),
+                        ],
                       ),
                     ),
-                  ],
+                  ),
                 ),
-              ),
+              ],
             ),
           ],
         ),
