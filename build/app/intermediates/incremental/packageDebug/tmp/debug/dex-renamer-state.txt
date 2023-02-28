@@ -1,4 +1,4 @@
-#Mon Feb 27 21:21:50 WIB 2023
-base.0=/Users/ariefsonn_/AndroidStudioProjects/dreampay/build/app/intermediates/dex/debug/mergeDexDebug/classes.dex
+#Tue Feb 28 14:53:19 ICT 2023
+base.0=C\:\\Users\\Lenovo\\StudioProjects\\dreampay\\build\\app\\intermediates\\dex\\debug\\mergeDexDebug\\classes.dex
 renamed.0=classes.dex
 path.0=classes.dex

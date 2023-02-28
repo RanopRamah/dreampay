@@ -158,7 +158,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> sendPhone(String no) async {
     final response = await http.post(
-      Uri.parse('http://dreampay.kokbisa.shop/api/authenticate'),
+      Uri.parse('http://server.sekolahimpian.com:3000/authenticate'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
       },
@@ -187,7 +187,7 @@ class _LoginPageState extends State<LoginPage> {
     });
 
     if (type == 'B') {
-      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (ctx) => const BuyerHomePage()), (route) => false);
+      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (ctx) => BuyerHomePage()), (route) => false);
     } else if (type == 'C') {
       Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (ctx) => const CashierPage()), (route) => false);
     } else {
@@ -197,12 +197,13 @@ class _LoginPageState extends State<LoginPage> {
 
   void checkLogin() async {
     _pref = await SharedPreferences.getInstance();
+    var name = _pref.getString('name_customer');
     var isLogin = _pref.getBool('is_login');
     var type = _pref.getString('type_customer');
 
     if (isLogin != null && isLogin) {
       if (type == 'B') {
-        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (ctx) => const BuyerHomePage()), (route) => false);
+        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (ctx) => BuyerHomePage()), (route) => false);
       } else if (type == 'C') {
         Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (ctx) => const CashierPage()), (route) => false);
       } else {
