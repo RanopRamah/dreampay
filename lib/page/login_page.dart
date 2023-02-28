@@ -2,11 +2,16 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:dreampay/page/admin/make_account.dart';
 import 'package:dreampay/page/buyer/buyer_home.dart';
 import 'package:dreampay/page/cashier/cashier_page.dart';
+import 'package:dreampay/page/merchant/merchant.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+
+var url = dotenv.env['API_URL'];
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -17,6 +22,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   late SharedPreferences _pref;
+  late SharedPreferences preferences;
   final TextEditingController _controller = TextEditingController();
   bool isChecked = false;
 
@@ -158,7 +164,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> sendPhone(String no) async {
     final response = await http.post(
-      Uri.parse('http://server.sekolahimpian.com:3000/authenticate'),
+      Uri.parse('${url}authenticate'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
       },
@@ -169,27 +175,37 @@ class _LoginPageState extends State<LoginPage> {
 
     if (response.statusCode == 200) {
       var output = jsonDecode(response.body);
-      saveSession(output['id'], output['no_hp'], output['nama'], output['pin'], output['tipe']);
+
+      saveSession(
+          output['id'],
+          output['no_hp'],
+          output['nama'],
+          output['pin'],
+          output['tipe'],
+      );
     } else {
       throw Exception('Failed to Create');
     }
   }
 
-  void saveSession(id, number, name, pin, type) {
-    Future<SharedPreferences> prefs = SharedPreferences.getInstance();
-    prefs.then((pref) {
-      pref.setString('id_customer', id);
-      pref.setString('phone_customer', number);
-      pref.setString('name_customer', name);
-      pref.setString('pin_customer', pin);
-      pref.setString('type_customer', type);
-      pref.setBool('is_login', true);
-    });
+  void saveSession(id, number, name, pin, type) async {
+    preferences = await SharedPreferences.getInstance();
+    preferences.setString('id_customer', id.toString());
+    preferences.setString('phone_customer', number);
+    preferences.setString('name_customer', name);
+    preferences.setString('pin_customer', pin);
+    preferences.setString('type_customer', type);
+    preferences.setBool('is_login', true);
 
+    print(preferences.getString('id_customer'));
     if (type == 'B') {
       Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (ctx) => BuyerHomePage()), (route) => false);
     } else if (type == 'C') {
       Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (ctx) => const CashierPage()), (route) => false);
+    } else if (type == 'S') {
+      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (ctx) => const MerchantPage()), (route) => false);
+    } else if (type == 'A') {
+      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (ctx) => MakeAccountPage()), (route) => false);
     } else {
       null;
     }
@@ -197,7 +213,6 @@ class _LoginPageState extends State<LoginPage> {
 
   void checkLogin() async {
     _pref = await SharedPreferences.getInstance();
-    var name = _pref.getString('name_customer');
     var isLogin = _pref.getBool('is_login');
     var type = _pref.getString('type_customer');
 
@@ -206,6 +221,10 @@ class _LoginPageState extends State<LoginPage> {
         Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (ctx) => BuyerHomePage()), (route) => false);
       } else if (type == 'C') {
         Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (ctx) => const CashierPage()), (route) => false);
+      } else if (type == 'S'){
+        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (ctx) => const MerchantPage()), (route) => false);
+      } else if (type == 'A') {
+        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (ctx) => MakeAccountPage()), (route) => false);
       } else {
         null;
       }
