@@ -9,6 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
+import '../login_page.dart';
+
 var url = dotenv.env['API_URL'];
 
 Future<Saldo> fetchSaldo(String id) async {
@@ -168,6 +170,8 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
 
   PanelController _panelController = PanelController();
 
+
+
   @override
   void togglePanel() => _panelController.isPanelOpen
       ? _panelController.close()
@@ -217,7 +221,7 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                               Container(
                                 width: 250,
                                 child:Text(
-                                  name.toString(),
+                                  'Abi Ranop',
                                   textAlign: TextAlign.left,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
@@ -244,7 +248,17 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                                     Border.all(width: 1, color: Color(0xffD2D2D2))),
                                 child: TextButton(
                                   child: Image.asset('assets/image/logout.png'),
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    setState(() {
+                                      prefs.remove('id_customer');
+                                      prefs.remove('phone_customer');
+                                      prefs.remove('name_customer');
+                                      prefs.remove('pin_customer');
+                                      prefs.remove('type_customer');
+                                      prefs.remove('is_login');
+                                      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (ctx) => LoginPage()), (route) => false);
+                                    });
+                                  },
                                 ),
                               ),),
                             SizedBox(
@@ -408,7 +422,7 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                                             ),
                                           ),
                                           Text(
-                                            snapshot.data!.total_pengeluaran.toString(),
+                                            '150,000',
                                             style: TextStyle(
                                                 fontFamily: 'SF Pro Display',
                                                 fontSize: 30,
@@ -501,7 +515,7 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                                             ),
                                           ),
                                           Text(
-                                            snapshot.data!.total_topup.toString(),
+                                            '150,000',
                                             style: TextStyle(
                                                 fontFamily: 'SF Pro Display',
                                                 fontSize: 30,
@@ -577,7 +591,7 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                     child: Column(children: [
                       Center(
                           child: Text(
-                        'Detail Isi Ulang',
+                        'Detail Pengeluaran',
                         style: TextStyle(
                             fontWeight: FontWeight.w600,
                             fontSize: 24,
@@ -585,6 +599,7 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                             color: Color(0xff172437)),
                       )),
                       TextField(
+                        onChanged: (value) => _runFilter(value),
                         decoration: const InputDecoration(
                             labelText: 'Cari Transaksi',
                             labelStyle: TextStyle(
@@ -613,7 +628,6 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                     itemCount: snapshot.data!.length,
                     itemBuilder: (BuildContext context, i) {
                       return Container(
-                        margin: EdgeInsets.only(bottom: 30),
                           height: 50,
                           child: Column(
                           children: <Widget>[
@@ -675,110 +689,78 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                     )
           ]
           ),),
-
                 Visibility(
-                  visible: showPull,
-                  child: Column(children: [
-                    Center(
-                        child: Text(
-                          'Detail Pengeluaran',
-                          style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 24,
-                              fontFamily: 'Euclid Circular B',
-                              color: Color(0xff172437)),
-                        )),
-                    TextField(
-                      decoration: const InputDecoration(
-                          labelText: 'Cari Transaksi',
-                          labelStyle: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w400,
-                              fontFamily: 'Euclid Circular B',
-                              color: Color(0xffbdbdbd)),
-                          prefixIcon: Icon(Icons.search)),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Container(
-                        child: SingleChildScrollView(
-                            child: Container(
-                                height: 290,
-                                child: Column(children: [
-                                  Container(
-                                      height: 280,
-                                      child:FutureBuilder(
-                                        future: _pengeluaran,
-                                        builder: (context,snapshot){
-                                          if (snapshot.hasData)
-                                          {
-                                            return ListView.builder(
-                                                itemCount: snapshot.data!.length,
-                                                itemBuilder: (BuildContext context, i) {
-                                                  return Container(
-                                                    margin: EdgeInsets.only(bottom: 30),
-                                                      height: 50,
-                                                      child: Column(
-                                                          children: <Widget>[
-                                                            Row(
-                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                              children: [
-
-                                                                Column(
-                                                                  crossAxisAlignment:
-                                                                  CrossAxisAlignment.start,
-                                                                  children: <Widget>[
-                                                                    Text(
-                                                                      snapshot.data![i].penerima,
-                                                                      style: TextStyle(
-                                                                          fontFamily:
-                                                                          'Euclid Circular B',
-                                                                          fontWeight: FontWeight.w600,
-                                                                          fontSize: 20),
-                                                                    ),
-                                                                    Text(
-                                                                      snapshot.data![i].created_at,
-                                                                      style: TextStyle(
-                                                                          fontFamily:
-                                                                          'Euclid Circular B',
-                                                                          fontWeight: FontWeight.w400,
-                                                                          fontSize: 16,
-                                                                          color: Color(0xffbebebe)),
-                                                                    )
-                                                                  ],
-                                                                ),
-                                                                Text('+Rp ${snapshot.data![i].nominal}', style: TextStyle(
-                                                                    fontWeight: FontWeight.w400,
-                                                                    fontFamily: 'Euclid Circular B',
-                                                                    fontSize: 20,
-                                                                    color: Color(0xff222222)
-                                                                ),)
-                                                              ],
-                                                            ),
-                                                          ])
-                                                  );
-                                                }
-                                            );
-
-                                          }
-                                          else if (snapshot.hasError) {
-                                            return Text('${snapshot.error}');
-                                          }
-
-                                          // By default, show a loading spinner.
-                                          return const CircularProgressIndicator();
-                                        },
-
-
+                    visible: showPull,
+                    child: Column(children: [
+                      Center(
+                          child: Text(
+                        'Detail Isi Ulang',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 24,
+                            fontFamily: 'Euclid Circular B',
+                            color: Color(0xff172437)),
+                      )),
+                      TextField(
+                        onChanged: (value) => _runFilter(value),
+                        decoration: const InputDecoration(
+                            labelText: 'Cari Transaksi',
+                            labelStyle: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w400,
+                                fontFamily: 'Euclid Circular B',
+                                color: Color(0xffbdbdbd)),
+                            prefixIcon: Icon(Icons.search)),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Container(
+                          child: SingleChildScrollView(
+                              child: Container(
+                        height: 290,
+                        child: Column(children: [
+                          Container(
+                              height: 280,
+                              child: ListView(children: [
+                                Container(
+                                  height: 100,
+                                  child: Row(
+                                    children: [
+                                      Column(
+                                        children: [
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: <Widget>[
+                                              Text(
+                                                'HEFTIVE',
+                                                style: TextStyle(
+                                                    fontFamily:
+                                                        'Euclid Circular B',
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: 20),
+                                              ),
+                                              Text(
+                                                'Produk',
+                                                style: TextStyle(
+                                                    fontFamily:
+                                                        'Euclid Circular B',
+                                                    fontWeight: FontWeight.w400,
+                                                    fontSize: 16,
+                                                    color: Color(0xffbebebe)),
+                                              )
+                                            ],
+                                          )
+                                        ],
                                       )
-
-                                  ),]
-                                ))
-                        )
-                    )
-                  ]
-                  ),),
+                                    ],
+                                  ),
+                                ),
+                              ])),
+                        ]),
+                      )))
+                    ]))
               ]);
         },
       ),

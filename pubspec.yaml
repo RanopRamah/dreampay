@@ -95,6 +95,7 @@ flutter:
     - assets/image/back_money2.png
     - assets/image/backspace.png
     - assets/launcher/ic_launcher.png
+    - assets/image/success.png
     - assets/launcher/icon_launcher_2.png
     - assets/image/search-all.png
     - assets/image/failed-topup.png
