@@ -44,7 +44,9 @@ class _MerchantPageState extends State<MerchantPage> {
       padding: EdgeInsets.only(left: 30, right: 30),
       borderRadius: BorderRadius.only(
           topRight: Radius.circular(30), topLeft: Radius.circular(30)),
-      body: Container(
+      body: SingleChildScrollView(
+    child:Container(
+    height: 900,
         decoration: const BoxDecoration(color: Color(0xFFFBFBFB)),
         padding: const EdgeInsets.only(top: 60, left: 25, right: 25),
         child: Center(
@@ -216,7 +218,7 @@ class _MerchantPageState extends State<MerchantPage> {
                                     padding: EdgeInsets.all(5),
                                     badgeColor: Colors.white),
                                 child: Container(
-                                  padding: EdgeInsets.only(left: 17, top: 5),
+                                  padding: EdgeInsets.only(left: 12, top: 5),
                                   width: 124,
                                   height: 48,
                                   decoration: BoxDecoration(
@@ -254,7 +256,10 @@ class _MerchantPageState extends State<MerchantPage> {
                           SizedBox(
                             height: 10,
                           ),
-                          Row(
+                          Container(
+                            height: 141,
+                          child: ListView(
+                            scrollDirection: Axis.horizontal,
                             children: <Widget>[
                               Container(
                                 padding: EdgeInsets.only(
@@ -305,7 +310,7 @@ class _MerchantPageState extends State<MerchantPage> {
                                             'Rp',
                                             style: TextStyle(
                                                 fontFamily: 'SF Pro Display',
-                                                fontSize: 12,
+                                                fontSize: 10,
                                                 fontWeight: FontWeight.w400,
                                                 color: Color(0xff606060)),
                                           ),
@@ -314,7 +319,7 @@ class _MerchantPageState extends State<MerchantPage> {
                                           '150,000',
                                           style: TextStyle(
                                               fontFamily: 'SF Pro Display',
-                                              fontSize: 28,
+                                              fontSize: 26,
                                               fontWeight: FontWeight.w700,
                                               color: Color(0xff222222)),
                                         ),
@@ -405,7 +410,7 @@ class _MerchantPageState extends State<MerchantPage> {
                                             'Rp',
                                             style: TextStyle(
                                                 fontFamily: 'SF Pro Display',
-                                                fontSize: 12,
+                                                fontSize: 10,
                                                 fontWeight: FontWeight.w400,
                                                 color: Color(0xff606060)),
                                           ),
@@ -414,7 +419,7 @@ class _MerchantPageState extends State<MerchantPage> {
                                           '150,000',
                                           style: TextStyle(
                                               fontFamily: 'SF Pro Display',
-                                              fontSize: 28,
+                                              fontSize: 26,
                                               fontWeight: FontWeight.w700,
                                               color: Color(0xff222222)),
                                         ),
@@ -455,12 +460,14 @@ class _MerchantPageState extends State<MerchantPage> {
                               ),
                             ],
                           )
+                          )
                         ],
+
                       ),
                     )
                   ])
             ])),
-      ),
+      ),),
       panelBuilder: (controller) {
         return Column(
             crossAxisAlignment: CrossAxisAlignment.start,

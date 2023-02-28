@@ -153,7 +153,7 @@ class _QRPageState extends State<QRPage> {
     if (response['nama'] != null) {
       Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => NominalPage(response['no_hp'], response['nama'])));
     } else {
-      Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => const BuyerHomePage()));
+      Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => BuyerHomePage()));
     }
   }
 }

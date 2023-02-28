@@ -95,6 +95,13 @@ flutter:
     - assets/image/search-all.png
     - assets/image/failed-topup.png
     - assets/image/success-topup.png
+    - assets/image/hamburger.png
+    - assets/image/logo.png
+    - assets/image/account.png
+    - assets/image/transaction.png
+    - assets/image/topup.png
+    - assets/image/withdraw.png
+    - assets/image/trade.png
 
 
   # An image asset can refer to one or more resolution-specific "variants", see
@@ -121,6 +128,8 @@ flutter:
         - asset: assets/font/Euclid Circular B Regular.ttf
         - asset: assets/font/Euclid Circular B SemiBold.ttf
         - asset: assets/font/Euclid Circular B SemiBold Italic.ttf
+    - family: SF Pro Display
+      fonts:
         - asset: assets/font/SF-Pro-Text-Bold.otf
         - asset: assets/font/SF-Pro-Text-Regular.otf
         - asset: assets/font/SF-Pro-Text-SemiBold.otf

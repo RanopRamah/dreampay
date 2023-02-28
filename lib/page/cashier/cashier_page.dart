@@ -149,6 +149,7 @@ class _CashierPageState extends State<CashierPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: SlidingUpPanel(
         controller: _controller,
         maxHeight: 590,

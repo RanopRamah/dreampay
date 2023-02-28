@@ -37,9 +37,10 @@ class _SuccessPayPageState extends State<SuccessPayPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Container(
+        body: SingleChildScrollView(
+        child: Container(
           width: double.infinity,
-height: double.infinity,
+height: 1000,
               decoration: const BoxDecoration(color: Colors.white),
 
               padding: const EdgeInsets.only(top: 100,bottom: 0.1
@@ -221,7 +222,7 @@ SizedBox(
               ),
 
 
-
+)
     );
   }
 
