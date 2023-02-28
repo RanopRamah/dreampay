@@ -4,46 +4,44 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:searchfield/searchfield.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
+var url = dotenv.env['API_URL'];
+
 Future<List> fetchUsers() async {
   final response = await http.get(
-    Uri.parse('http://server.sekolahimpian.com:3000/api/cashier/1'),
+    Uri.parse('${url}cashier/3'),
   );
 
   if (response.statusCode == 200) {
-    // final List<Map<dynamic, dynamic>> jsonResponse = jsonDecode(response.body)['list_buyer'];
-    // print(jsonDecode(response.body)['list_buyer']);
     return jsonDecode(response.body)['list_buyer'];
   } else {
     throw Exception('Failed to Load');
   }
 }
+
 Future<List<TopUp>> fetchTopUp() async {
   final response = await http.get(
-    Uri.parse('http://server.sekolahimpian.com:3000/api/cashier/1'),
+    Uri.parse('${url}cashier/3'),
   );
 
   if (response.statusCode == 200) {
     List jsonResponse = jsonDecode(response.body)['list_topup'];
-    print(jsonResponse);
     return jsonResponse.map((e) => TopUp.fromJson(e)).toList();
   } else {
     throw Exception('Failed to Load');
   }
 }
+
 class Users {
   final dynamic id;
   final dynamic nama;
   final dynamic no_hp;
 
-  const Users({
-    required this.id,
-    required this.nama,
-    required this.no_hp
-  });
+  const Users({required this.id, required this.nama, required this.no_hp});
 
   Users.init()
       : id = 0,
@@ -51,9 +49,9 @@ class Users {
         no_hp = '00000000000';
 
   Users.fromMap(Map<dynamic, dynamic> map)
-      : id = map['id'] as Int,
-        nama = map['nama'] as String,
-        no_hp = map['no_hp'] as String;
+      : id = map['id'],
+        nama = map['nama'],
+        no_hp = map['no_hp'];
 
   factory Users.fromJson(Map<dynamic, dynamic> json) {
     return Users(
@@ -63,6 +61,7 @@ class Users {
     );
   }
 }
+
 class TopUp {
   final dynamic id;
   final dynamic penerima;
@@ -122,23 +121,21 @@ class _CashierPageState extends State<CashierPage> {
 
   @override
   void togglePanel() {
-    _controller.isPanelOpen
-        ? _controller.close()
-        : _controller.open();
+    _controller.isPanelOpen ? _controller.close() : _controller.open();
   }
 
   void dvs() async {
     List<dynamic> data = await fetchUsers();
-    user = data.map((e) => Users.fromJson(e)).toList();
-    //
-    // var h = user.map((e) => e.nama);
-    // print(h);
+
+    setState(() {
+      user = data.map((e) => Users.fromMap(e)).toList();
+    });
   }
 
   bool containsUser(String text) {
     final Users result = user.firstWhere(
-            (Users u) => u.nama.toLowerCase() == text.toLowerCase(),
-            orElse: () => Users.init());
+        (Users u) => u.nama.toLowerCase() == text.toLowerCase(),
+        orElse: () => Users.init());
 
     if (result!.nama.isEmpty) {
       return false;
@@ -155,7 +152,8 @@ class _CashierPageState extends State<CashierPage> {
         maxHeight: 590,
         minHeight: 150,
         padding: const EdgeInsets.only(left: 30, right: 30),
-        borderRadius: const BorderRadius.only(topRight: Radius.circular(20), topLeft: Radius.circular(20)),
+        borderRadius: const BorderRadius.only(
+            topRight: Radius.circular(20), topLeft: Radius.circular(20)),
         body: Container(
           decoration: const BoxDecoration(
             color: Color(0xFFFDFDFD),
@@ -177,13 +175,15 @@ class _CashierPageState extends State<CashierPage> {
                             height: 54,
                             decoration: BoxDecoration(
                               color: const Color(0xFFFFFFFF),
-                              borderRadius: const BorderRadius.all(Radius.circular(13)),
-                              border: Border.all(color: const Color(0xFFD2D2D2), width: 1),
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(13)),
+                              border: Border.all(
+                                  color: const Color(0xFFD2D2D2), width: 1),
                             ),
                             child: Center(
-                              child: Image.asset('assets/image/logout.png', width: 27.03, height: 27.05),
-                            )
-                        ),
+                              child: Image.asset('assets/image/logout.png',
+                                  width: 27.03, height: 27.05),
+                            )),
                         const Text(
                           'Keluar',
                           style: TextStyle(
@@ -213,8 +213,7 @@ class _CashierPageState extends State<CashierPage> {
                           spreadRadius: 2.0,
                           offset: Offset(0.0, 0.0),
                         ),
-                      ]
-                  ),
+                      ]),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -222,7 +221,7 @@ class _CashierPageState extends State<CashierPage> {
                         width: 322,
                         height: 62,
                         margin: const EdgeInsets.only(top: 26.88),
-                        child: SearchField(
+                        child: SearchField<dynamic>(
                           searchInputDecoration: InputDecoration(
                             enabledBorder: const UnderlineInputBorder(
                               borderSide: BorderSide(color: Color(0xFFF1F1F1)),
@@ -246,7 +245,27 @@ class _CashierPageState extends State<CashierPage> {
                               child: Image.asset('assets/image/search-all.png'),
                             ),
                           ),
-                          suggestions: user.map((e) => SearchFieldListItem(e.nama, item: e)).toList(),
+                          suggestions: user
+                              .map(
+                                (e) => SearchFieldListItem(
+                                  e.nama,
+                                  item: e,
+                                  // Use child to show Custom Widgets in the suggestions
+                                  // defaults to Text widget
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      children: [
+                                        SizedBox(
+                                          width: 10,
+                                        ),
+                                        Text(e.nama),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              )
+                              .toList(),
                           suggestionState: Suggestion.hidden,
                           controller: searchController,
                           inputType: TextInputType.text,
@@ -258,10 +277,9 @@ class _CashierPageState extends State<CashierPage> {
                               return null;
                             }
                           },
-                          onSuggestionTap: (SearchFieldListItem<Users> x) {
+                          onSuggestionTap: (SearchFieldListItem v) {
                             setState(() {
-                              _selectedUsers = x.item!;
-                              print(_selectedUsers.nama);
+                              _selectedUsers = v.item!;
                             });
                           },
                         ),
@@ -273,8 +291,8 @@ class _CashierPageState extends State<CashierPage> {
                         padding: const EdgeInsets.only(top: 18.58, left: 15.2),
                         decoration: const BoxDecoration(
                             color: Color(0xFF7C81DF),
-                            borderRadius: BorderRadius.all(Radius.circular(18.6053))
-                        ),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(18.6053))),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -305,27 +323,32 @@ class _CashierPageState extends State<CashierPage> {
                         height: 67.51,
                         margin: const EdgeInsets.only(top: 38.61),
                         child: TextField(
+                          style: const TextStyle(
+                              fontSize: 23, color: Colors.black),
                           decoration: const InputDecoration(
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
                                 width: 0.912281,
                                 color: Color(0xFFC8BDBD),
                               ),
-                              borderRadius: BorderRadius.all(Radius.circular(6.38596)),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(6.38596)),
                             ),
                             disabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
                                 width: 0.912281,
                                 color: Color(0xFFC8BDBD),
                               ),
-                              borderRadius: BorderRadius.all(Radius.circular(6.38596)),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(6.38596)),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderSide: BorderSide(
                                 width: 0.912281,
                                 color: Color(0xFFC8BDBD),
                               ),
-                              borderRadius: BorderRadius.all(Radius.circular(6.38596)),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(6.38596)),
                             ),
                             labelText: 'Nominal Top Up',
                             hintText: 'Rp0',
@@ -358,11 +381,13 @@ class _CashierPageState extends State<CashierPage> {
                             });
                           },
                           style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all<Color>(const Color(0xFF5258D4)),
-                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                                const Color(0xFF5258D4)),
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(
                               const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.all(Radius.circular(6.59649))
-                              ),
+                                  borderRadius: BorderRadius.all(
+                                      Radius.circular(6.59649))),
                             ),
                           ),
                           child: const Text(
@@ -463,6 +488,7 @@ class _CashierPageState extends State<CashierPage> {
       ),
     );
   }
+
   Widget scrollingList(ScrollController sc) {
     return Container(
       height: 450,
@@ -515,8 +541,7 @@ class _CashierPageState extends State<CashierPage> {
                             color: Color(0xFF222222),
                             fontWeight: FontWeight.w400,
                             fontSize: 20,
-                            fontFamily: 'SF Pro Display'
-                        ),
+                            fontFamily: 'SF Pro Display'),
                       ),
                     ),
                   ],
@@ -527,7 +552,6 @@ class _CashierPageState extends State<CashierPage> {
             return Center(child: Text('${snapshot.error}'));
           }
 
-          print(snapshot.data);
           return const Center(child: CircularProgressIndicator());
         },
       ),
