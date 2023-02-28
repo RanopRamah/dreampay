@@ -137,42 +137,36 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
   bool showPull = true;
   bool showTopup = false;
 
-  final List<Map<String, dynamic>> _allUsers = [
-    {"id": 1, "name": "HEFTIVE"},
-    {"id": 2, "name": "PASTRIP"},
-    {"id": 3, "name": "DreamBoba"},
-    {"id": 4, "name": "Aksesoris STFQ"},
-  ];
-  List<Map<String, dynamic>> _foundUsers = [];
+
   late Future<Saldo> _saldo;
   late Future<List<Pengeluaran>> _pengeluaran;
   late Future<List<TopUp>> _topup;
 
   @override
   initState() {
-    _foundUsers = _allUsers;
+
     _saldo = fetchSaldo('19');
     _topup = fetchTopUp('19');
     _pengeluaran = fetchPengeluaran('19');
     super.initState();
   }
 
-  void _runFilterPengeluaran(String enteredKeyword) {
-    List<Map<String, dynamic>> results = [];
-    if (enteredKeyword.isEmpty) {
-      // if the search field is empty or only contains white-space, we'll display all users
-      results = _allUsers;
-    } else {
-      results = _allUsers
-          .where((user) =>
-              user["name"].toLowerCase().contains(enteredKeyword.toLowerCase()))
-          .toList();
-      // we use the toLowerCase() method to make it case-insensitive
-    }
-    setState(() {
-      _foundUsers = results;
-    });
-  }
+  // void _runFilterPengeluaran(String enteredKeyword) {
+  //   List<Map<String, dynamic>> results = [];
+  //   if (enteredKeyword.isEmpty) {
+  //     // if the search field is empty or only contains white-space, we'll display all users
+  //     results = _allUsers;
+  //   } else {
+  //     results = _allUsers
+  //         .where((user) =>
+  //             user["name"].toLowerCase().contains(enteredKeyword.toLowerCase()))
+  //         .toList();
+  //     // we use the toLowerCase() method to make it case-insensitive
+  //   }
+  //   setState(() {
+  //     _foundUsers = results;
+  //   });
+  // }
 
   PanelController _panelController = PanelController();
 

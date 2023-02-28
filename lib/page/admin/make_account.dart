@@ -6,12 +6,15 @@ import 'package:dreampay/page/admin/transaction.dart';
 import 'package:dreampay/page/admin/withdraw.dart';
 import 'package:dreampay/page/buyer/buyer_home.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
+
+var url = dotenv.env['API_URL'];
 Future<List<Users>> fetchUsers() async {
   final response = await http.get(
-    Uri.parse('http://env-8409188.jh-beon.cloud/api/admin/list-user'),
+    Uri.parse('${url}/admin/list-user'),
   );
 
   if (response.statusCode == 200) {

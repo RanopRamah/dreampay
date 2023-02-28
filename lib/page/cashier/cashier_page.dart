@@ -1,19 +1,22 @@
 import 'dart:ffi';
 import 'dart:convert';
 import 'dart:async';
-
+import 'seperator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:searchfield/searchfield.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
+
+import '../admin/make_account.dart';
 
 var url = dotenv.env['API_URL'];
 
 Future<List> fetchUsers() async {
   final response = await http.get(
-    Uri.parse('${url}cashier/3'),
+    Uri.parse('${url}cashier/'),
   );
 
   if (response.statusCode == 200) {
@@ -93,6 +96,7 @@ class CashierPage extends StatefulWidget {
 }
 
 class _CashierPageState extends State<CashierPage> {
+
   final searchController = TextEditingController();
 
   List<Users> user = [];
@@ -106,8 +110,24 @@ class _CashierPageState extends State<CashierPage> {
   final PanelController _controller = PanelController();
   late Future<List<TopUp>> topup;
 
+  late String base;
+  String? phone;
+  String? name;
+  String? id;
+
+
+  late SharedPreferences prefs;
+
+  Future<void> setValue() async {
+    prefs = await SharedPreferences.getInstance();
+    phone = prefs.getString('phone_customer') ?? '111';
+    name = prefs.getString('name_customer') ?? 'id';
+    id = prefs.getString('id_customer') ?? '';
+  }
+
   @override
   void initState() {
+    setValue();
     super.initState();
     dvs();
     topup = fetchTopUp();
@@ -134,7 +154,7 @@ class _CashierPageState extends State<CashierPage> {
 
   bool containsUser(String text) {
     final Users result = user.firstWhere(
-        (Users u) => u.nama.toLowerCase() == text.toLowerCase(),
+            (Users u) => u.nama.toLowerCase() == text.toLowerCase(),
         orElse: () => Users.init());
 
     if (result!.nama.isEmpty) {
@@ -142,6 +162,8 @@ class _CashierPageState extends State<CashierPage> {
     }
     return true;
   }
+
+  TextEditingController _topupcontrol = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -176,7 +198,7 @@ class _CashierPageState extends State<CashierPage> {
                             decoration: BoxDecoration(
                               color: const Color(0xFFFFFFFF),
                               borderRadius:
-                                  const BorderRadius.all(Radius.circular(13)),
+                              const BorderRadius.all(Radius.circular(13)),
                               border: Border.all(
                                   color: const Color(0xFFD2D2D2), width: 1),
                             ),
@@ -247,7 +269,8 @@ class _CashierPageState extends State<CashierPage> {
                           ),
                           suggestions: user
                               .map(
-                                (e) => SearchFieldListItem(
+                                (e) =>
+                                SearchFieldListItem(
                                   e.nama,
                                   item: e,
                                   // Use child to show Custom Widgets in the suggestions
@@ -264,7 +287,7 @@ class _CashierPageState extends State<CashierPage> {
                                     ),
                                   ),
                                 ),
-                              )
+                          )
                               .toList(),
                           suggestionState: Suggestion.hidden,
                           controller: searchController,
@@ -292,7 +315,7 @@ class _CashierPageState extends State<CashierPage> {
                         decoration: const BoxDecoration(
                             color: Color(0xFF7C81DF),
                             borderRadius:
-                                BorderRadius.all(Radius.circular(18.6053))),
+                            BorderRadius.all(Radius.circular(18.6053))),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -323,6 +346,7 @@ class _CashierPageState extends State<CashierPage> {
                         height: 67.51,
                         margin: const EdgeInsets.only(top: 38.61),
                         child: TextField(
+                          controller: _topupcontrol,
                           style: const TextStyle(
                               fontSize: 23, color: Colors.black),
                           decoration: const InputDecoration(
@@ -332,7 +356,7 @@ class _CashierPageState extends State<CashierPage> {
                                 color: Color(0xFFC8BDBD),
                               ),
                               borderRadius:
-                                  BorderRadius.all(Radius.circular(6.38596)),
+                              BorderRadius.all(Radius.circular(6.38596)),
                             ),
                             disabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
@@ -340,7 +364,7 @@ class _CashierPageState extends State<CashierPage> {
                                 color: Color(0xFFC8BDBD),
                               ),
                               borderRadius:
-                                  BorderRadius.all(Radius.circular(6.38596)),
+                              BorderRadius.all(Radius.circular(6.38596)),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderSide: BorderSide(
@@ -348,7 +372,7 @@ class _CashierPageState extends State<CashierPage> {
                                 color: Color(0xFFC8BDBD),
                               ),
                               borderRadius:
-                                  BorderRadius.all(Radius.circular(6.38596)),
+                              BorderRadius.all(Radius.circular(6.38596)),
                             ),
                             labelText: 'Nominal Top Up',
                             hintText: 'Rp0',
@@ -377,7 +401,7 @@ class _CashierPageState extends State<CashierPage> {
                         child: ElevatedButton(
                           onPressed: () {
                             setState(() {
-                              fetchTopUp();
+                              createTopup();
                             });
                           },
                           style: ButtonStyle(
@@ -557,51 +581,37 @@ class _CashierPageState extends State<CashierPage> {
       ),
     );
   }
-}
 
-class ThousandsSeparatorInputFormatter extends TextInputFormatter {
-  static const separator = '.'; // Change this to '.' for other locales
+  Future<void> createTopup() async {
+    final response = await http.post(
+      Uri.parse('http://env-8409188.jh-beon.cloud/api/cashier/topup'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'cashier_id': '3',
+        'buyer_id': '4',
+        'nominal': _topupcontrol.text.toString(),
 
-  @override
-  TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue, TextEditingValue newValue) {
-    // Short-circuit if the new value is empty
-    if (newValue.text.isEmpty) {
-      return newValue.copyWith(text: '');
-    }
 
-    // Handle "deletion" of separator character
-    String oldValueText = oldValue.text.replaceAll(separator, '');
-    String newValueText = newValue.text.replaceAll(separator, '');
-
-    if (oldValue.text.endsWith(separator) &&
-        oldValue.text.length == newValue.text.length + 1) {
-      newValueText = newValueText.substring(0, newValueText.length - 1);
-    }
-
-    // Only process if the old value and new value are different
-    if (oldValueText != newValueText) {
-      int selectionIndex =
-          newValue.text.length - newValue.selection.extentOffset;
-      final chars = newValueText.split('');
-
-      String newString = '';
-      for (int i = chars.length - 1; i >= 0; i--) {
-        if ((chars.length - 1 - i) % 3 == 0 && i != chars.length - 1) {
-          newString = separator + newString;
-        }
-        newString = chars[i] + newString;
       }
+      ),
+    );
+    if (response.statusCode == 200) {
+      // If the server did return a 201 CREATED response,
+      // then parse the JSON.
+      var output = jsonDecode(response.body);
+      print('success make');
+      print(response.body);
 
-      return TextEditingValue(
-        text: newString.toString(),
-        selection: TextSelection.collapsed(
-          offset: newString.length - selectionIndex,
-        ),
-      );
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (ctx) => MakeAccountPage()), (
+          route) => false);
+    } else {
+      throw Exception(response.body);
     }
-
-    // If the new value and old value are the same, just return as-is
-    return newValue;
   }
+
+
 }
+
