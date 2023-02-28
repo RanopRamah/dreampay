@@ -1,3 +1,4 @@
+import 'package:dreampay/page/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -109,13 +110,14 @@ class _MerchantPageState extends State<MerchantPage> {
     phone = prefs.getString('phone_customer') ?? '111';
     name = prefs.getString('name_customer') ?? 'id';
     id = prefs.getString('id_customer') ?? '';
+
+    _seller = fetchSeller(id.toString());
+    _detail = fetchDetail(id.toString());
   }
 
   @override
   void initState() {
     setValue();
-    _seller = fetchSeller(id.toString());
-    _detail = fetchDetail(id.toString());
     super.initState();
   }
 
@@ -198,7 +200,17 @@ class _MerchantPageState extends State<MerchantPage> {
                               Border.all(width: 1, color: Color(0xffD2D2D2))),
                       child: TextButton(
                         child: Image.asset('assets/image/logout.png'),
-                        onPressed: () {},
+                        onPressed: () {
+                          setState(() {
+                            prefs.remove('id_customer');
+                            prefs.remove('phone_customer');
+                            prefs.remove('name_customer');
+                            prefs.remove('pin_customer');
+                            prefs.remove('type_customer');
+                            prefs.remove('is_login');
+                            Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (ctx) => LoginPage()), (route) => false);
+                          });
+                        },
                       ),
                     ),
                     SizedBox(

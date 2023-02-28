@@ -9,11 +9,13 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
+import '../login_page.dart';
+
 var url = dotenv.env['API_URL'];
 
 Future<Saldo> fetchSaldo(String id) async {
   final response = await http.get(
-    Uri.parse('${url}buyer/19'),
+    Uri.parse('${url}buyer/$id'),
   );
 
   if (response.statusCode == 200) {
@@ -45,7 +47,7 @@ class Saldo {
 
 Future<List<TopUp>> fetchTopUp(String id) async {
   final response = await http.get(
-    Uri.parse('${url}buyer/19'),
+    Uri.parse('${url}buyer/$id'),
   );
 
   if (response.statusCode == 200) {
@@ -87,7 +89,7 @@ class TopUp {
 
 Future<List<Pengeluaran>> fetchPengeluaran(String id) async {
   final response = await http.get(
-    Uri.parse('${url}/buyer/19'),
+    Uri.parse('${url}/buyer/$id'),
   );
 
   if (response.statusCode == 200) {
@@ -138,6 +140,7 @@ class BuyerHomePage extends StatefulWidget {
 class _BuyerHomePageState extends State<BuyerHomePage> {
   bool showPull = false;
   bool showTopup = true;
+  late SharedPreferences prefs;
 
   final List<Map<String, dynamic>> _allUsers = [
     {"id": 1, "name": "HEFTIVE"},
@@ -150,23 +153,22 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
    late Future<List<Pengeluaran>> _pengeluaran;
    late Future<List<TopUp>> _topup;
 
+   String? id;
+
   @override
   initState() {
-    hah();
+    initvalue();
     _foundUsers = _allUsers;
-    _saldo = fetchSaldo('19');
-    _topup = fetchTopUp('19');
-    _pengeluaran = fetchPengeluaran('19');
     super.initState();
   }
 
-  void hah() async {
-    var dnsv;
-    Future<SharedPreferences> preferences =  SharedPreferences.getInstance();
-    preferences.then((value) {
-      dnsv = value.getString('pin_customer');
-    });
+  Future<void> initvalue() async {
+    prefs = await SharedPreferences.getInstance();
+    id = prefs.getString('id_customer');
 
+    _saldo = fetchSaldo(id.toString());
+    _topup = fetchTopUp(id.toString());
+    _pengeluaran = fetchPengeluaran(id.toString());
   }
 
   void _runFilter(String enteredKeyword) {
@@ -187,8 +189,6 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
   }
 
   PanelController _panelController = PanelController();
-
-
 
 
 
@@ -268,7 +268,17 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                                     Border.all(width: 1, color: Color(0xffD2D2D2))),
                                 child: TextButton(
                                   child: Image.asset('assets/image/logout.png'),
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    setState(() {
+                                      prefs.remove('id_customer');
+                                      prefs.remove('phone_customer');
+                                      prefs.remove('name_customer');
+                                      prefs.remove('pin_customer');
+                                      prefs.remove('type_customer');
+                                      prefs.remove('is_login');
+                                      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (ctx) => LoginPage()), (route) => false);
+                                    });
+                                  },
                                 ),
                               ),),
                             SizedBox(
