@@ -27,8 +27,6 @@ Future<List<TopUp>> fetchTopUp() async {
     Uri.parse('${url}cashier/3'),
   );
 
-  print(response.body);
-
   if (response.statusCode == 200) {
     List jsonResponse = jsonDecode(response.body)['list_topup'];
     return jsonResponse.map((e) => TopUp.fromJson(e)).toList();
@@ -53,9 +51,9 @@ class Users {
         no_hp = '00000000000';
 
   Users.fromMap(Map<dynamic, dynamic> map)
-      : id = map['id'] as Int,
-        nama = map['nama'] as String,
-        no_hp = map['no_hp'] as String;
+      : id = map['id'],
+        nama = map['nama'],
+        no_hp = map['no_hp'];
 
   factory Users.fromJson(Map<dynamic, dynamic> json) {
     return Users(
@@ -131,10 +129,8 @@ class _CashierPageState extends State<CashierPage> {
 
   void dvs() async {
     List<dynamic> data = await fetchUsers();
-    user = data.map((e) => Users.fromJson(e)).toList();
-    //
-    // var h = user.map((e) => e.nama);
-    // print(h);
+    user = data.map((e) => Users.fromMap(e)).toList();
+    print(user);
   }
 
   bool containsUser(String text) {
@@ -224,7 +220,7 @@ class _CashierPageState extends State<CashierPage> {
                         width: 322,
                         height: 62,
                         margin: const EdgeInsets.only(top: 26.88),
-                        child: SearchField(
+                        child: SearchField<dynamic>(
                           searchInputDecoration: InputDecoration(
                             enabledBorder: const UnderlineInputBorder(
                               borderSide: BorderSide(color: Color(0xFFF1F1F1)),
@@ -248,7 +244,27 @@ class _CashierPageState extends State<CashierPage> {
                               child: Image.asset('assets/image/search-all.png'),
                             ),
                           ),
-                          suggestions: user.map((e) => SearchFieldListItem(e.nama, item: e)).toList(),
+                          // suggestions: user.map((e) => SearchFieldListItem(e.nama, item: e)).toList(),
+                          suggestions: user
+                              .map(
+                                (e) => SearchFieldListItem(
+                              e.nama,
+                              item: e,
+                              // Use child to show Custom Widgets in the suggestions
+                              // defaults to Text widget
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  children: [
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(e.nama),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ).toList(),
                           suggestionState: Suggestion.hidden,
                           controller: searchController,
                           inputType: TextInputType.text,
@@ -260,11 +276,11 @@ class _CashierPageState extends State<CashierPage> {
                               return null;
                             }
                           },
-                          onSuggestionTap: (SearchFieldListItem<Users> x) {
-                            setState(() {
-                              _selectedUsers = x.item!;
-                            });
-                          },
+                          // onSuggestionTap: (SearchFieldListItem<Users> x) {
+                          //   setState(() {
+                          //     _selectedUsers = x.item!;
+                          //   });
+                          // },
                         ),
                       ),
                       Container(

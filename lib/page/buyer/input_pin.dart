@@ -5,26 +5,38 @@ import 'package:bcrypt/bcrypt.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ArticleMainPage extends StatefulWidget {
-  const ArticleMainPage(this.seller_id, this.nominal, {super.key}) : super();
+  const ArticleMainPage({super.key}) : super();
 
-  final seller_id;
-  final nominal;
+  // final seller_id;
+  // final nominal;
 
   @override
   State<ArticleMainPage> createState() => _ArticleMainPageState();
 }
 
 class _ArticleMainPageState extends State<ArticleMainPage> {
+  late SharedPreferences prefs;
+  String? _pin;
+
   TextEditingController controller = TextEditingController();
   String hashPIN = "";
   int pinLength = 4;
   bool checkPIN = false;
   bool hasError = false;
 
+  void setPIN() async {
+    prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _pin = prefs.getString('pin_customer') ?? '111';
+    });
+  }
+
   @override
   void initState() {
+
     super.initState();
   }
 
