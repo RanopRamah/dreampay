@@ -82,7 +82,8 @@ class TopUp {
       nominal: json['nominal'],
       created_at: json['created_at'],
     );
-  }}
+  }
+}
 
 Future<List<Pengeluaran>> fetchPengeluaran(String id) async {
   final response = await http.get(
@@ -153,8 +154,9 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
   initState() {
     hah();
     _foundUsers = _allUsers;
-    _saldo = fetchSaldo('15');
-    _topup = fetchTopUp('15');
+    _saldo = fetchSaldo('19');
+    _topup = fetchTopUp('19');
+    _pengeluaran = fetchPengeluaran('19');
     super.initState();
   }
 
@@ -199,12 +201,12 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
     return Scaffold(
         body: Stack(children: <Widget>[
       SlidingUpPanel(
-          controller: _panelController,
-          maxHeight: 450,
-          minHeight: 200,
-          padding: EdgeInsets.only(left: 30, right: 30),
-          borderRadius: BorderRadius.only(
-              topRight: Radius.circular(30), topLeft: Radius.circular(30)),
+        controller: _panelController,
+        maxHeight: 450,
+        minHeight: 200,
+        padding: EdgeInsets.only(left: 30, right: 30),
+        borderRadius: BorderRadius.only(
+            topRight: Radius.circular(30), topLeft: Radius.circular(30)),
         body: FutureBuilder(
           future: _saldo,
           builder: (BuildContext context, snapshot) {
@@ -213,8 +215,8 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                 child: Container(
                   height: 800,
                   decoration: const BoxDecoration(color: Color(0xFFFBFBFB)),
-                  padding:
-                  const EdgeInsets.only(right: 25, left: 25, top: 80, bottom: 74),
+                  padding: const EdgeInsets.only(
+                      right: 25, left: 25, top: 80, bottom: 74),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[

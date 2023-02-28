@@ -1,12 +1,51 @@
+import 'dart:convert';
+import 'dart:ffi';
+
 import 'package:dreampay/page/admin/topup.dart';
 import 'package:dreampay/page/admin/transaction.dart';
 import 'package:dreampay/page/admin/withdraw.dart';
 import 'package:dreampay/page/buyer/buyer_home.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
+Future<List<Users>> fetchUsers() async {
+  final response = await http.get(
+    Uri.parse('http://env-8409188.jh-beon.cloud/api/admin/list-user'),
+  );
 
-enum SingingCharacter { user, cashier, seller }
+  if (response.statusCode == 200) {
+
+    List jsonResponse = jsonDecode(response.body)['list_user'];
+    print(jsonResponse);
+    return jsonResponse.map((e) => Users.fromJson(e)).toList();
+  } else {
+    throw Exception('Failed to Load');
+  }
+}
+
+class Users {
+  final dynamic id;
+  final dynamic nama;
+  final dynamic no_hp;
+
+  const Users({
+    required this.id,
+    required this.nama,
+    required this.no_hp
+  });
+
+
+  factory Users.fromJson(Map<dynamic, dynamic> json) {
+    return Users(
+      id: json['id'],
+      nama: json['nama'],
+      no_hp: json['no_hp'],
+    );
+  }
+}
+
+enum SingingCharacter { C, B, S }
 
 class MakeAccountPage extends StatefulWidget {
   MakeAccountPage({Key? key}) : super(key: key);
@@ -16,45 +55,45 @@ class MakeAccountPage extends StatefulWidget {
 }
 
 
-SingingCharacter _character = SingingCharacter.user;
+String _selectedType = 'B';
 
 class _MakeAccountPageState extends State<MakeAccountPage> {
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   PanelController _panelController = PanelController();
 
-  final List<Map<String, dynamic>> _allUsers = [
-    {"id": 1, "name": "HEFTIVE", "number": "62876545678"},
-    {"id": 2, "name": "PASTRIP", "number": "62234567758"},
-    {"id": 3, "name": "DreamBoba","number": "62876587683"},
-    {"id": 4, "name": "Aksesoris STFQ","number": "628765123478"},
-    {"id": 5, "name": "Akae","number": "628765123478"},
-    {"id": 6, "name": "Akseaefsoris STFQ","number": "628765123478"},
-    {"id": 7, "name": "Aksesoris faeSTFQ","number": "628765123478"},
-  ];
-  List<Map<String, dynamic>> _foundUsers = [];
+ TextEditingController _nama = TextEditingController();
+ TextEditingController _no_hp = TextEditingController();
+ TextEditingController _pin = TextEditingController();
 
+  List<Users> user = [];
+
+
+
+
+  late Future<List<Users>> _listuser;
   @override
   initState() {
-    _foundUsers = _allUsers;
+
+    _listuser = fetchUsers();
     super.initState();
   }
 
-  void _runFilter(String enteredKeyword) {
-    List<Map<String, dynamic>> results = [];
-    if (enteredKeyword.isEmpty) {
-      // if the search field is empty or only contains white-space, we'll display all users
-      results = _allUsers;
-    } else {
-      results = _allUsers
-          .where((user) =>
-          user["name"].toLowerCase().contains(enteredKeyword.toLowerCase()))
-          .toList();
-      // we use the toLowerCase() method to make it case-insensitive
-    }
-    setState(() {
-      _foundUsers = results;
-    });
-  }
+  // void _runFilter(String enteredKeyword) {
+  //   List<Map<String, dynamic>> results = [];
+  //   if (enteredKeyword.isEmpty) {
+  //     // if the search field is empty or only contains white-space, we'll display all users
+  //     results = _allUsers;
+  //   } else {
+  //     results = _allUsers
+  //         .where((user) =>
+  //         user["name"].toLowerCase().contains(enteredKeyword.toLowerCase()))
+  //         .toList();
+  //     // we use the toLowerCase() method to make it case-insensitive
+  //   }
+  //   setState(() {
+  //     _foundUsers = results;
+  //   });
+  // }
 
   @override
   void togglePanel() => _panelController.isPanelOpen
@@ -440,6 +479,7 @@ class _MakeAccountPageState extends State<MakeAccountPage> {
                     height: 40,
                   ),
                   TextField(
+                    controller: _nama,
                     style: TextStyle(
                         fontFamily: 'Euclid Circular B'
                     ),
@@ -460,6 +500,7 @@ class _MakeAccountPageState extends State<MakeAccountPage> {
                     height: 40,
                   ),
                   TextField(
+                    controller: _no_hp,
                     style: TextStyle(
                         fontFamily: 'Euclid Circular B'
                     ),
@@ -482,6 +523,7 @@ class _MakeAccountPageState extends State<MakeAccountPage> {
                     height: 50,
                   ),
                   TextField(
+                    controller: _pin,
                     keyboardType: TextInputType.number,
                     style: TextStyle(
                         fontFamily: 'Euclid Circular B'
@@ -531,12 +573,12 @@ class _MakeAccountPageState extends State<MakeAccountPage> {
                       flex: 1,
                       child: Row(
                         children: [
-                          Radio<SingingCharacter>(
-                              value: SingingCharacter.user,
-                              groupValue: _character,
-                              onChanged: (SingingCharacter? value) {
+                          Radio(
+                              value: "B",
+                              groupValue: _selectedType,
+                              onChanged: (value) {
                                 setState(() {
-                                  _character = value!;
+                                  _selectedType = value!;
                                 });
                               }),
                           Expanded(
@@ -557,13 +599,14 @@ class _MakeAccountPageState extends State<MakeAccountPage> {
                       child: Row(
                         children: [
                           Radio(
-                              value: SingingCharacter.cashier,
-                              groupValue: _character,
-                              onChanged: (SingingCharacter? value) {
+                              value: "C",
+                              groupValue: _selectedType,
+                              onChanged: (value) {
                                 setState(() {
-                                  _character = value!;
+                                  _selectedType = value!;
                                 });
                               }),
+
                           Text('Cashier',style: TextStyle(
                             fontWeight: FontWeight.w400,
                             fontFamily: 'Euclid Circular B',
@@ -578,11 +621,11 @@ class _MakeAccountPageState extends State<MakeAccountPage> {
                       child: Row(
                         children: [
                           Radio(
-                              value: SingingCharacter.seller,
-                              groupValue: _character,
-                              onChanged: (SingingCharacter? value) {
+                              value: "S",
+                              groupValue: _selectedType,
+                              onChanged: (value) {
                                 setState(() {
-                                  _character = value!;
+                                  _selectedType = value!;
                                 });
                               }),
                           Text('Seller',style: TextStyle(
@@ -595,7 +638,13 @@ class _MakeAccountPageState extends State<MakeAccountPage> {
                       ),
                     ),
                   ]),
-                  TextButton(onPressed: (){}, child: Container(
+                  TextButton(onPressed: (){
+                    setState(() {
+                      createUsers();
+                      print(_nama);
+                      print(_selectedType);
+                    });
+                  }, child: Container(
 
                     width: double.infinity,
                     height: 60,
@@ -653,7 +702,7 @@ class _MakeAccountPageState extends State<MakeAccountPage> {
                   style: TextStyle(
                     fontFamily: 'Euclid Circular B'
                   ),
-                  onChanged: (value) => _runFilter(value),
+                  // onChanged: (value) => _runFilter(value),
                   decoration: const InputDecoration(
 
                       labelText: 'Cari Transaksi',
@@ -677,63 +726,102 @@ _scrollingList(sc)
   }
 
   Widget _scrollingList(ScrollController sc){
-    return     Expanded(
-      child: _foundUsers.isNotEmpty
-          ? ListView.builder(
-        controller: sc,
-        itemCount: _foundUsers.length,
-        itemBuilder: (context, index) => Container(
-          padding: EdgeInsets.only(top: 25,bottom: 25,left: 30,right: 20),
-          key: ValueKey(_foundUsers[index]["id"]),
+    return  FutureBuilder(
+      future: _listuser,
+      builder: (context, snapshot) {
+      return Container(
+      height: 300,
+          child: ListView.builder(
+          controller: sc,
+          itemCount: snapshot.data!.length,
+          itemBuilder: (BuildContext context, i) =>
+              Container(
+              padding: EdgeInsets.only(top: 25,bottom: 25,left: 30,right: 20),
 
 
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
 
-             Text(_foundUsers[index]['name'], style:TextStyle(
-                fontWeight: FontWeight.w600,
-               fontFamily: 'Euclid Circular B',
-               fontSize: 20,
-               color: Color(0xff172437)
-            )),
-            Text(
-                _foundUsers[index]['number'].toString(),style:TextStyle(
-                fontWeight: FontWeight.w400,
-                fontFamily: 'Euclid Circular B',
-                fontSize: 16,
-                color: Color(0xffbebebe)
-            )),
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
 
-        ]),
-                TextButton(onPressed: (){}, child: Container(
-                  width: 101,
-                  height: 36,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(49),
-                    border: Border.all(width: 0.5,color: Color(0xffe6e6e6))
-                  ),child: Center (child:Text('Detail',style: TextStyle(
-                    fontWeight: FontWeight.w400,
-                    fontFamily: 'Euclid Circular B',
-                    fontSize: 16,
-                    color: Color(0xff222222)
-                ),),)
-                ))
-            ]
+                        Text(snapshot.data![i].nama, style:TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontFamily: 'Euclid Circular B',
+                            fontSize: 20,
+                            color: Color(0xff172437)
+                        )),
+                        Text(snapshot.data![i].no_hp,style:TextStyle(
+                            fontWeight: FontWeight.w400,
+                            fontFamily: 'Euclid Circular B',
+                            fontSize: 16,
+                            color: Color(0xffbebebe)
+                        )),
+
+                      ]),
+                    TextButton(
+                        onPressed: (){}, child: Container(
+                        width: 101,
+                        height: 36,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(49),
+                            border: Border.all(width: 0.5,color: Color(0xffe6e6e6))
+                        ),child: Center (child:Text('Detail',style: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        fontFamily: 'Euclid Circular B',
+                        fontSize: 16,
+                        color: Color(0xff222222)
+                    ),),)
+                    ))
+                  ]
+              )
+          ),
           )
-        ),
-      )
-          : const Text(
-        'No results found',
-        style: TextStyle(fontSize: 24),
-      ),
+           );
+    },
+
     );
 
 
   }
+  Future<void> createUsers() async {
+    final response = await http.post(Uri.parse('http://env-8409188.jh-beon.cloud/api/admin/add-user'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'no_hp': _no_hp.text,
+        'nama': _nama.text,
+        'pin': _pin.text,
+        'tipe': _selectedType.toString(),
+
+      }
+      ),
+    );
+    if (response.statusCode == 200) {
+      // If the server did return a 201 CREATED response,
+      // then parse the JSON.
+      var output = jsonDecode(response.body);
+      print('success make');
+      print(response.body);
+      if (output['pin'] != null){
+        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (ctx) => MakeAccountPage()), (route) => false);
+
+      } else{
+        throw Exception('error');
+      }
+    } else {
+      throw Exception(response.body);
+      // If the server did not return a 201 CREATED response,
+      // then throw an exception.
+      throw Exception('Gagal cok hadeh gimana si lu');
+    }
+  }
 }
+
+
+
 
 
 
