@@ -180,7 +180,7 @@ class _ArticleMainPageState extends State<ArticleMainPage> {
     if (response.statusCode == 200) {
       var output = jsonDecode(response.body);
       if (output['nota'] != null) {
-        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (ctx) => SuccessPayPage(output['seller'])), (route) => false);
+        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (ctx) => SuccessPayPage(output['seller'], output['nota'], output['nominal'])), (route) => false);
       } else {
         Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (ctx) => FailedResponsePage()), (route) => false);
       }

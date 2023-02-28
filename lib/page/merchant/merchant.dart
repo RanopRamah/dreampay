@@ -17,7 +17,7 @@ import 'package:signed_spacing_flex/signed_spacing_flex.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 var url = dotenv.env['API_URL'];
 
-Future<Seller> fetchSeller(String? id_seller) async {
+Future<Seller> fetchSeller(String id_seller) async {
   print(id_seller);
   final response = await http.get(
     Uri.parse('${url}seller/$id_seller'),
@@ -29,7 +29,7 @@ Future<Seller> fetchSeller(String? id_seller) async {
     throw Exception('Failed to Fetch');
   }
 }
-Future<List<Detail>> fetchDetail(String? id) async {
+Future<List<Detail>> fetchDetail(String id) async {
   final response = await http.get(
     Uri.parse('${url}seller/$id'),
   );
@@ -114,8 +114,8 @@ class _MerchantPageState extends State<MerchantPage> {
   @override
   void initState() {
     setValue();
-    _seller = fetchSeller('$id');
-    _detail = fetchDetail('$id');
+    _seller = fetchSeller(id.toString());
+    _detail = fetchDetail(id.toString());
     super.initState();
   }
 

@@ -13,9 +13,11 @@ import 'dart:convert';
 
 
 class SuccessPayPage extends StatefulWidget {
-  const SuccessPayPage(this.seller, {super.key}) : super();
+  const SuccessPayPage(this.seller, this.nota, this.nominal, {super.key}) : super();
 
   final seller;
+  final nota;
+  final nominal;
 
   @override
   State<SuccessPayPage> createState() => _SuccessPayPageState();
@@ -52,19 +54,6 @@ height: 1000,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
-Container(
-  width: 52,
-  height: 54,
-  margin: EdgeInsets.only(left: 20),
-  decoration: BoxDecoration(
-    border: Border.all(width: 1,color: Color(0xffD2D2D2)),
-    borderRadius: BorderRadius.circular(13)
-  ),
-  child: TextButton(
-    onPressed: (){},
-    child: Image.asset('assets/image/cross.png'),
-  ),
-),
 Container(
   height: 300,
   child:
@@ -138,7 +127,7 @@ SizedBox(
                                 fontSize: 16,
                                 color: Color(0xffbebcbc)
                               ),),
-                              Text('Rp 12,500',style: TextStyle(
+                              Text('Rp ${widget.nominal}',style: TextStyle(
                                   fontWeight: FontWeight.w500,
                                   fontFamily: 'Euclid Circular B',
                                   fontSize: 16,
@@ -153,13 +142,13 @@ SizedBox(
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
-                              Text(widget.seller,style: TextStyle(
+                              Text('Merchant',style: TextStyle(
                                   fontWeight: FontWeight.w500,
                                   fontFamily: 'Euclid Circular B',
                                   fontSize: 16,
                                   color: Color(0xffbebcbc)
                               ),),
-                              Text('Susu Kocok Madjid',style: TextStyle(
+                              Text(widget.seller,style: TextStyle(
                                   fontWeight: FontWeight.w500,
                                   fontFamily: 'Euclid Circular B',
                                   fontSize: 16,
@@ -180,7 +169,7 @@ SizedBox(
                                   fontSize: 16,
                                   color: Color(0xffbebcbc)
                               ),),
-                              Text('000000125427',style: TextStyle(
+                              Text(widget.nota,style: TextStyle(
                                   fontWeight: FontWeight.w500,
                                   fontFamily: 'Euclid Circular B',
                                   fontSize: 16,
