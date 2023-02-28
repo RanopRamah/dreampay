@@ -13,7 +13,7 @@ var url = dotenv.env['API_URL'];
 
 Future<Saldo> fetchSaldo(String id) async {
   final response = await http.get(
-    Uri.parse('${url}buyer/19'),
+    Uri.parse('${url}buyer/$id'),
   );
 
   if (response.statusCode == 200) {
@@ -45,7 +45,7 @@ class Saldo {
 
 Future<List<TopUp>> fetchTopUp(String id) async {
   final response = await http.get(
-    Uri.parse('${url}buyer/19'),
+    Uri.parse('${url}buyer/$id}'),
   );
 
   if (response.statusCode == 200) {
@@ -87,7 +87,7 @@ class TopUp {
 
 Future<List<Pengeluaran>> fetchPengeluaran(String id) async {
   final response = await http.get(
-    Uri.parse('${url}/buyer/19'),
+    Uri.parse('${url}/buyer/$id'),
   );
 
   if (response.statusCode == 200) {
@@ -139,58 +139,34 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
   bool showPull = false;
   bool showTopup = true;
 
-  final List<Map<String, dynamic>> _allUsers = [
-    {"id": 1, "name": "HEFTIVE"},
-    {"id": 2, "name": "PASTRIP"},
-    {"id": 3, "name": "DreamBoba"},
-    {"id": 4, "name": "Aksesoris STFQ"},
-  ];
-  List<Map<String, dynamic>> _foundUsers = [];
-   late Future<Saldo> _saldo;
-   late Future<List<Pengeluaran>> _pengeluaran;
-   late Future<List<TopUp>> _topup;
+
+   Future<Saldo>? _saldo;
+   Future<List<Pengeluaran>>? _pengeluaran;
+   Future<List<TopUp>>? _topup;
 
   @override
   initState() {
-    hah();
-    _foundUsers = _allUsers;
-    _saldo = fetchSaldo('19');
-    _topup = fetchTopUp('19');
-    _pengeluaran = fetchPengeluaran('19');
+    setValue();
     super.initState();
   }
 
-  void hah() async {
-    var dnsv;
-    Future<SharedPreferences> preferences =  SharedPreferences.getInstance();
-    preferences.then((value) {
-      dnsv = value.getString('pin_customer');
-    });
+  String? phone;
+  String? name;
+  String? id;
+  late SharedPreferences prefs;
 
-  }
+  Future<void> setValue() async {
+    prefs = await SharedPreferences.getInstance();
+    phone = prefs.getString('phone_customer') ?? '111';
+    name = prefs.getString('name_customer') ?? 'id';
+    id = prefs.getString('id_customer') ?? '';
 
-  void _runFilter(String enteredKeyword) {
-    List<Map<String, dynamic>> results = [];
-    if (enteredKeyword.isEmpty) {
-      // if the search field is empty or only contains white-space, we'll display all users
-      results = _allUsers;
-    } else {
-      results = _allUsers
-          .where((user) =>
-              user["name"].toLowerCase().contains(enteredKeyword.toLowerCase()))
-          .toList();
-      // we use the toLowerCase() method to make it case-insensitive
-    }
-    setState(() {
-      _foundUsers = results;
-    });
+    _saldo = fetchSaldo(id.toString());
+    _topup = fetchTopUp(id.toString());
+    _pengeluaran = fetchPengeluaran(id.toString());
   }
 
   PanelController _panelController = PanelController();
-
-
-
-
 
   @override
   void togglePanel() => _panelController.isPanelOpen
@@ -241,7 +217,7 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                               Container(
                                 width: 250,
                                 child:Text(
-                                  'Abi Ranop',
+                                  name.toString(),
                                   textAlign: TextAlign.left,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
@@ -432,7 +408,7 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                                             ),
                                           ),
                                           Text(
-                                            '150,000',
+                                            snapshot.data!.total_pengeluaran.toString(),
                                             style: TextStyle(
                                                 fontFamily: 'SF Pro Display',
                                                 fontSize: 30,
@@ -525,7 +501,7 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                                             ),
                                           ),
                                           Text(
-                                            '150,000',
+                                            snapshot.data!.total_topup.toString(),
                                             style: TextStyle(
                                                 fontFamily: 'SF Pro Display',
                                                 fontSize: 30,
@@ -601,7 +577,7 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                     child: Column(children: [
                       Center(
                           child: Text(
-                        'Detail Pengeluaran',
+                        'Detail Isi Ulang',
                         style: TextStyle(
                             fontWeight: FontWeight.w600,
                             fontSize: 24,
@@ -609,7 +585,6 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                             color: Color(0xff172437)),
                       )),
                       TextField(
-                        onChanged: (value) => _runFilter(value),
                         decoration: const InputDecoration(
                             labelText: 'Cari Transaksi',
                             labelStyle: TextStyle(
@@ -638,6 +613,7 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                     itemCount: snapshot.data!.length,
                     itemBuilder: (BuildContext context, i) {
                       return Container(
+                        margin: EdgeInsets.only(bottom: 30),
                           height: 50,
                           child: Column(
                           children: <Widget>[
@@ -699,78 +675,110 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                     )
           ]
           ),),
+
                 Visibility(
-                    visible: showPull,
-                    child: Column(children: [
-                      Center(
-                          child: Text(
-                        'Detail Isi Ulang',
-                        style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 24,
-                            fontFamily: 'Euclid Circular B',
-                            color: Color(0xff172437)),
-                      )),
-                      TextField(
-                        onChanged: (value) => _runFilter(value),
-                        decoration: const InputDecoration(
-                            labelText: 'Cari Transaksi',
-                            labelStyle: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w400,
-                                fontFamily: 'Euclid Circular B',
-                                color: Color(0xffbdbdbd)),
-                            prefixIcon: Icon(Icons.search)),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Container(
-                          child: SingleChildScrollView(
-                              child: Container(
-                        height: 290,
-                        child: Column(children: [
-                          Container(
-                              height: 280,
-                              child: ListView(children: [
-                                Container(
-                                  height: 100,
-                                  child: Row(
-                                    children: [
-                                      Column(
-                                        children: [
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: <Widget>[
-                                              Text(
-                                                'HEFTIVE',
-                                                style: TextStyle(
-                                                    fontFamily:
-                                                        'Euclid Circular B',
-                                                    fontWeight: FontWeight.w600,
-                                                    fontSize: 20),
-                                              ),
-                                              Text(
-                                                'Produk',
-                                                style: TextStyle(
-                                                    fontFamily:
-                                                        'Euclid Circular B',
-                                                    fontWeight: FontWeight.w400,
-                                                    fontSize: 16,
-                                                    color: Color(0xffbebebe)),
-                                              )
-                                            ],
-                                          )
-                                        ],
+                  visible: showPull,
+                  child: Column(children: [
+                    Center(
+                        child: Text(
+                          'Detail Pengeluaran',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 24,
+                              fontFamily: 'Euclid Circular B',
+                              color: Color(0xff172437)),
+                        )),
+                    TextField(
+                      decoration: const InputDecoration(
+                          labelText: 'Cari Transaksi',
+                          labelStyle: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w400,
+                              fontFamily: 'Euclid Circular B',
+                              color: Color(0xffbdbdbd)),
+                          prefixIcon: Icon(Icons.search)),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Container(
+                        child: SingleChildScrollView(
+                            child: Container(
+                                height: 290,
+                                child: Column(children: [
+                                  Container(
+                                      height: 280,
+                                      child:FutureBuilder(
+                                        future: _pengeluaran,
+                                        builder: (context,snapshot){
+                                          if (snapshot.hasData)
+                                          {
+                                            return ListView.builder(
+                                                itemCount: snapshot.data!.length,
+                                                itemBuilder: (BuildContext context, i) {
+                                                  return Container(
+                                                    margin: EdgeInsets.only(bottom: 30),
+                                                      height: 50,
+                                                      child: Column(
+                                                          children: <Widget>[
+                                                            Row(
+                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                              children: [
+
+                                                                Column(
+                                                                  crossAxisAlignment:
+                                                                  CrossAxisAlignment.start,
+                                                                  children: <Widget>[
+                                                                    Text(
+                                                                      snapshot.data![i].penerima,
+                                                                      style: TextStyle(
+                                                                          fontFamily:
+                                                                          'Euclid Circular B',
+                                                                          fontWeight: FontWeight.w600,
+                                                                          fontSize: 20),
+                                                                    ),
+                                                                    Text(
+                                                                      snapshot.data![i].created_at,
+                                                                      style: TextStyle(
+                                                                          fontFamily:
+                                                                          'Euclid Circular B',
+                                                                          fontWeight: FontWeight.w400,
+                                                                          fontSize: 16,
+                                                                          color: Color(0xffbebebe)),
+                                                                    )
+                                                                  ],
+                                                                ),
+                                                                Text('+Rp ${snapshot.data![i].nominal}', style: TextStyle(
+                                                                    fontWeight: FontWeight.w400,
+                                                                    fontFamily: 'Euclid Circular B',
+                                                                    fontSize: 20,
+                                                                    color: Color(0xff222222)
+                                                                ),)
+                                                              ],
+                                                            ),
+                                                          ])
+                                                  );
+                                                }
+                                            );
+
+                                          }
+                                          else if (snapshot.hasError) {
+                                            return Text('${snapshot.error}');
+                                          }
+
+                                          // By default, show a loading spinner.
+                                          return const CircularProgressIndicator();
+                                        },
+
+
                                       )
-                                    ],
-                                  ),
-                                ),
-                              ])),
-                        ]),
-                      )))
-                    ]))
+
+                                  ),]
+                                ))
+                        )
+                    )
+                  ]
+                  ),),
               ]);
         },
       ),

@@ -16,9 +16,9 @@ var url = dotenv.env['API_URL'];
 
 Future<List> fetchUsers() async {
   final response = await http.get(
-    Uri.parse('${url}cashier/'),
+    Uri.parse('${url}cashier/3'),
   );
-
+print(response.body);
   if (response.statusCode == 200) {
     return jsonDecode(response.body)['list_buyer'];
   } else {
@@ -110,12 +110,10 @@ class _CashierPageState extends State<CashierPage> {
   final PanelController _controller = PanelController();
   late Future<List<TopUp>> topup;
 
-  late String base;
+
   String? phone;
   String? name;
   String? id;
-
-
   late SharedPreferences prefs;
 
   Future<void> setValue() async {
@@ -391,7 +389,7 @@ class _CashierPageState extends State<CashierPage> {
                             floatingLabelBehavior: FloatingLabelBehavior.always,
                           ),
                           keyboardType: TextInputType.number,
-                          inputFormatters: [ThousandsSeparatorInputFormatter()],
+
                         ),
                       ),
                       Container(
@@ -590,7 +588,7 @@ class _CashierPageState extends State<CashierPage> {
       },
       body: jsonEncode(<String, String>{
         'cashier_id': '3',
-        'buyer_id': '4',
+        'buyer_id': '${_selectedUsers.id}',
         'nominal': _topupcontrol.text.toString(),
 
 
@@ -605,7 +603,7 @@ class _CashierPageState extends State<CashierPage> {
       print(response.body);
 
       Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (ctx) => MakeAccountPage()), (
+          MaterialPageRoute(builder: (ctx) => CashierPage()), (
           route) => false);
     } else {
       throw Exception(response.body);

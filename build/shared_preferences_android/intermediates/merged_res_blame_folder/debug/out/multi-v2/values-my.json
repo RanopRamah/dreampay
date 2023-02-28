@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "/Users/ariefsonn_/AndroidStudioProjects/dreampay/build/shared_preferences_android/intermediates/res/merged/debug/values-my/values-my.xml",
+            "outputFile": "C:\\Users\\Lenovo\\StudioProjects\\dreampay\\build\\shared_preferences_android\\intermediates\\res\\merged\\debug\\values-my\\values-my.xml",
             "map": [
                 {
-                    "source": "/Users/ariefsonn_/.gradle/caches/transforms-3/a98bef4ff4dcc0d951c040e4cf7a8a7d/transformed/core-1.6.0/res/values-my/values-my.xml",
+                    "source": "C:\\Users\\Lenovo\\.gradle\\caches\\transforms-3\\a98bef4ff4dcc0d951c040e4cf7a8a7d\\transformed\\core-1.6.0\\res\\values-my\\values-my.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",
@@ -16,10 +16,10 @@
             ]
         },
         {
-            "outputFile": "/Users/ariefsonn_/AndroidStudioProjects/dreampay/build/shared_preferences_android/intermediates/incremental/mergeDebugResources/merged.dir/values-my/values-my.xml",
+            "outputFile": "C:\\Users\\Lenovo\\StudioProjects\\dreampay\\build\\shared_preferences_android\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-my\\values-my.xml",
             "map": [
                 {
-                    "source": "/Users/ariefsonn_/.gradle/caches/transforms-3/a98bef4ff4dcc0d951c040e4cf7a8a7d/transformed/core-1.6.0/res/values-my/values-my.xml",
+                    "source": "C:\\Users\\Lenovo\\.gradle\\caches\\transforms-3\\a98bef4ff4dcc0d951c040e4cf7a8a7d\\transformed\\core-1.6.0\\res\\values-my\\values-my.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",
