@@ -13,7 +13,9 @@ import 'dart:convert';
 
 
 class SuccessPayPage extends StatefulWidget {
-  const SuccessPayPage({Key? key}) : super(key: key);
+  const SuccessPayPage(this.seller, {super.key}) : super();
+
+  final seller;
 
   @override
   State<SuccessPayPage> createState() => _SuccessPayPageState();
@@ -70,7 +72,7 @@ Container(
             child:
                 Column(
                   children : [
-          Image.asset('assets/image/success.png'),
+          Image.asset('assets/image/success.png', width: 102, height: 116,),
                     SizedBox(
                       height: 30,
                     ),
@@ -151,7 +153,7 @@ SizedBox(
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
-                              Text('Merchant',style: TextStyle(
+                              Text(widget.seller,style: TextStyle(
                                   fontWeight: FontWeight.w500,
                                   fontFamily: 'Euclid Circular B',
                                   fontSize: 16,

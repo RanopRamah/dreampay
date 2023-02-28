@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:dreampay/page/buyer/input_pin.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -375,8 +376,13 @@ class _NominalPageState extends State<NominalPage> {
                             height: 73,
                             child: ElevatedButton(
                               onPressed: () {
-                                print(_controller.text);
-                                print(widget.id_seller);
+                                setState(() {
+                                  if (widget.id_seller != null) {
+                                    Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => ArticleMainPage(widget.id_seller, _controller.text)));
+                                  } else {
+                                    null;
+                                  }
+                                });
                               },
                               style: ButtonStyle(
                                 backgroundColor: MaterialStateProperty.all<Color>(const Color(0xFF5258D4)),

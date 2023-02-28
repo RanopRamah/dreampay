@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:core';
 import 'dart:ui';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:dreampay/page/buyer/qr_page.dart';
@@ -8,9 +9,11 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
+var url = dotenv.env['API_URL'];
+
 Future<Saldo> fetchSaldo(String id) async {
   final response = await http.get(
-    Uri.parse('http://server.sekolahimpian.com:3000/api/buyer/19'),
+    Uri.parse('${url}buyer/19'),
   );
 
   if (response.statusCode == 200) {
@@ -42,12 +45,11 @@ class Saldo {
 
 Future<List<TopUp>> fetchTopUp(String id) async {
   final response = await http.get(
-    Uri.parse('http://server.sekolahimpian.com:3000/api/buyer/19'),
+    Uri.parse('${url}buyer/19'),
   );
 
   if (response.statusCode == 200) {
     List jsonResponse = jsonDecode(response.body)['list_topup'];
-    print(jsonResponse);
     return jsonResponse.map((e) => TopUp.fromJson(e)).toList();
   } else {
     throw Exception('Failed to Load');
@@ -84,12 +86,11 @@ class TopUp {
 
 Future<List<Pengeluaran>> fetchPengeluaran(String id) async {
   final response = await http.get(
-    Uri.parse('http://server.sekolahimpian.com:3000/api/buyer/19'),
+    Uri.parse('${url}/buyer/19'),
   );
 
   if (response.statusCode == 200) {
     List jsonResponse = jsonDecode(response.body)['list_pengeluaran'];
-    print(jsonResponse);
     return jsonResponse.map((e) => Pengeluaran.fromJson(e)).toList();
   } else {
     throw Exception('Failed to Load');
@@ -150,10 +151,20 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
 
   @override
   initState() {
+    hah();
     _foundUsers = _allUsers;
     _saldo = fetchSaldo('15');
     _topup = fetchTopUp('15');
     super.initState();
+  }
+
+  void hah() async {
+    var dnsv;
+    Future<SharedPreferences> preferences =  SharedPreferences.getInstance();
+    preferences.then((value) {
+      dnsv = value.getString('pin_customer');
+    });
+
   }
 
   void _runFilter(String enteredKeyword) {

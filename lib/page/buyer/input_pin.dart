@@ -2,16 +2,22 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:bcrypt/bcrypt.dart';
+import 'package:dreampay/page/buyer/closing/failed_response.dart';
+import 'package:dreampay/page/buyer/closing/success_pay.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
+
+var url = dotenv.env['API_URL'];
 
 class ArticleMainPage extends StatefulWidget {
-  const ArticleMainPage({super.key}) : super();
+  const ArticleMainPage(this.seller_id, this.nominal, {super.key}) : super();
 
-  // final seller_id;
-  // final nominal;
+  final seller_id;
+  final nominal;
 
   @override
   State<ArticleMainPage> createState() => _ArticleMainPageState();
@@ -20,6 +26,7 @@ class ArticleMainPage extends StatefulWidget {
 class _ArticleMainPageState extends State<ArticleMainPage> {
   late SharedPreferences prefs;
   String? _pin;
+  String? _id;
 
   TextEditingController controller = TextEditingController();
   String hashPIN = "";
@@ -27,16 +34,16 @@ class _ArticleMainPageState extends State<ArticleMainPage> {
   bool checkPIN = false;
   bool hasError = false;
 
-  void setPIN() async {
+  Future<void> setPIN() async {
     prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _pin = prefs.getString('pin_customer') ?? '111';
-    });
+    _pin = prefs.getString('pin_customer') ?? '111';
+    _id = prefs.getString('id_customer') ?? 'id';
+    print(_pin);
   }
 
   @override
   void initState() {
-
+    setPIN();
     super.initState();
   }
 
@@ -93,7 +100,6 @@ class _ArticleMainPageState extends State<ArticleMainPage> {
                       inactiveColor: Color(0xffd9d9d9),
                     ),
                     onChanged: (value){
-                      print(value);
                     },
                   ),
                 ),
@@ -131,10 +137,10 @@ class _ArticleMainPageState extends State<ArticleMainPage> {
                       child: TextButton(
                         onPressed: () {
                           setState(() {
-                            // hashPIN = BCrypt.hashpw(controller.text, BCrypt.gensalt());
-                            // print(hashPIN);
-                            checkPIN = BCrypt.checkpw(controller.text, '\$2a\$10\$VNEmRzkcUjAQ1ppfQ1gBo.TQzAZZo06TEZ97AdiznymQBfeIxMbiC');
-                            print(checkPIN);
+                            checkPIN = BCrypt.checkpw(controller.text, _pin.toString());
+                            if (checkPIN) {
+                              sendPay(_id, widget.seller_id, widget.nominal);
+                            }
                           });
                         },
                         child: const Text(
@@ -156,5 +162,30 @@ class _ArticleMainPageState extends State<ArticleMainPage> {
         ),
       ),
     );
+  }
+
+  Future<void> sendPay(buyer_id, seller_no_hp, nominal) async {
+    final response = await http.post(
+      Uri.parse('${url}buyer/pay'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8'
+      },
+      body: jsonEncode(<String, String>{
+        'buyer_id': buyer_id,
+        'seller_no_hp': seller_no_hp,
+        'nominal': nominal,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      var output = jsonDecode(response.body);
+      if (output['nota'] != null) {
+        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (ctx) => SuccessPayPage(output['seller'])), (route) => false);
+      } else {
+        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (ctx) => FailedResponsePage()), (route) => false);
+      }
+    } else {
+      throw Exception('Failed to Send');
+    }
   }
 }
