@@ -1,0 +1,22 @@
+[
+    {
+        "merged": "/Users/ariefsonn_/AndroidStudioProjects/dreampay/build/shared_preferences_android/intermediates/res/merged/debug/drawable-mdpi-v4/notification_bg_low_pressed.9.png",
+        "source": "/Users/ariefsonn_/.gradle/caches/transforms-3/a98bef4ff4dcc0d951c040e4cf7a8a7d/transformed/core-1.6.0/res/drawable-mdpi-v4/notification_bg_low_pressed.9.png"
+    },
+    {
+        "merged": "/Users/ariefsonn_/AndroidStudioProjects/dreampay/build/shared_preferences_android/intermediates/res/merged/debug/drawable-mdpi-v4/notification_bg_normal_pressed.9.png",
+        "source": "/Users/ariefsonn_/.gradle/caches/transforms-3/a98bef4ff4dcc0d951c040e4cf7a8a7d/transformed/core-1.6.0/res/drawable-mdpi-v4/notification_bg_normal_pressed.9.png"
+    },
+    {
+        "merged": "/Users/ariefsonn_/AndroidStudioProjects/dreampay/build/shared_preferences_android/intermediates/res/merged/debug/drawable-mdpi-v4/notification_bg_normal.9.png",
+        "source": "/Users/ariefsonn_/.gradle/caches/transforms-3/a98bef4ff4dcc0d951c040e4cf7a8a7d/transformed/core-1.6.0/res/drawable-mdpi-v4/notification_bg_normal.9.png"
+    },
+    {
+        "merged": "/Users/ariefsonn_/AndroidStudioProjects/dreampay/build/shared_preferences_android/intermediates/res/merged/debug/drawable-mdpi-v4/notify_panel_notification_icon_bg.png",
+        "source": "/Users/ariefsonn_/.gradle/caches/transforms-3/a98bef4ff4dcc0d951c040e4cf7a8a7d/transformed/core-1.6.0/res/drawable-mdpi-v4/notify_panel_notification_icon_bg.png"
+    },
+    {
+        "merged": "/Users/ariefsonn_/AndroidStudioProjects/dreampay/build/shared_preferences_android/intermediates/res/merged/debug/drawable-mdpi-v4/notification_bg_low_normal.9.png",
+        "source": "/Users/ariefsonn_/.gradle/caches/transforms-3/a98bef4ff4dcc0d951c040e4cf7a8a7d/transformed/core-1.6.0/res/drawable-mdpi-v4/notification_bg_low_normal.9.png"
+    }
+]

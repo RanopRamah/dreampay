@@ -1,0 +1,34 @@
+{
+    "logs": [
+        {
+            "outputFile": "/Users/ariefsonn_/AndroidStudioProjects/dreampay/build/shared_preferences_android/intermediates/incremental/mergeDebugResources/merged.dir/values-de/values-de.xml",
+            "map": [
+                {
+                    "source": "/Users/ariefsonn_/.gradle/caches/transforms-3/a98bef4ff4dcc0d951c040e4cf7a8a7d/transformed/core-1.6.0/res/values-de/values-de.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "100",
+                        "endOffsets": "151"
+                    }
+                }
+            ]
+        },
+        {
+            "outputFile": "/Users/ariefsonn_/AndroidStudioProjects/dreampay/build/shared_preferences_android/intermediates/res/merged/debug/values-de/values-de.xml",
+            "map": [
+                {
+                    "source": "/Users/ariefsonn_/.gradle/caches/transforms-3/a98bef4ff4dcc0d951c040e4cf7a8a7d/transformed/core-1.6.0/res/values-de/values-de.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "100",
+                        "endOffsets": "151"
+                    }
+                }
+            ]
+        }
+    ]
+}
