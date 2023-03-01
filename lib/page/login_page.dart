@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:math';
 
 import 'package:dreampay/page/admin/make_account.dart';
 import 'package:dreampay/page/buyer/buyer_home.dart';
@@ -49,7 +48,8 @@ class _LoginPageState extends State<LoginPage> {
           child: Center(
             child: Column(
               children: [
-                Image.asset('assets/image/bg-login.png', width: 370, height: 511),
+                Image.asset('assets/image/bg-login.png',
+                    width: 370, height: 511),
                 const SizedBox(height: 36),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -64,12 +64,13 @@ class _LoginPageState extends State<LoginPage> {
                         fontWeight: FontWeight.w400,
                         fontSize: 20,
                       ),
-                      border: const OutlineInputBorder (
+                      border: const OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(7)),
                       ),
                       prefixIcon: Padding(
                         padding: const EdgeInsets.all(10),
-                        child: Image.asset('assets/image/Indonesia.png', width: 37, height: 28),
+                        child: Image.asset('assets/image/Indonesia.png',
+                            width: 37, height: 28),
                       ),
                     ),
                     style: const TextStyle(
@@ -80,42 +81,6 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     keyboardType: TextInputType.number,
                   ),
-                ),
-                const SizedBox(height: 26),
-                Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 24),
-                      child: SizedBox(
-                        width: 25,
-                        height: 25,
-                        child: Checkbox(
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(6)),
-                            side: BorderSide(width: 1.0, color: Color(0xFFC8BDBD)),
-                          ),
-                          value: isChecked,
-                          checkColor: Colors.white,
-                          fillColor: MaterialStateProperty.all<Color>(Colors.blue),
-                          onChanged: (bool? value) {
-                            setState(() {
-                              isChecked = value!;
-                            });
-                          },
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    const Text(
-                      'Ingat Saya',
-                      style: TextStyle(
-                        color: Color(0xFF222222),
-                        fontFamily: 'Euclid Circular B',
-                        fontWeight: FontWeight.w400,
-                        fontSize: 16,
-                      ),
-                    ),
-                  ],
                 ),
                 const SizedBox(height: 32),
                 SizedBox(
@@ -128,11 +93,12 @@ class _LoginPageState extends State<LoginPage> {
                       });
                     },
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(const Color(0xFF5258D4)),
+                      backgroundColor: MaterialStateProperty.all<Color>(
+                          const Color(0xFF5258D4)),
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(49))
-                        ),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(49))),
                       ),
                     ),
                     child: const Text(
@@ -177,11 +143,11 @@ class _LoginPageState extends State<LoginPage> {
       var output = jsonDecode(response.body);
 
       saveSession(
-          output['id'],
-          output['no_hp'],
-          output['nama'],
-          output['pin'],
-          output['tipe'],
+        output['id'],
+        output['no_hp'],
+        output['nama'],
+        output['pin'],
+        output['tipe'],
       );
     } else {
       throw Exception('Failed to Create');
@@ -199,13 +165,21 @@ class _LoginPageState extends State<LoginPage> {
 
     print(preferences.getString('id_customer'));
     if (type == 'B') {
-      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (ctx) => BuyerHomePage()), (route) => false);
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (ctx) => BuyerHomePage()),
+          (route) => false);
     } else if (type == 'C') {
-      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (ctx) => const CashierPage()), (route) => false);
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (ctx) => const CashierPage()),
+          (route) => false);
     } else if (type == 'S') {
-      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (ctx) => const MerchantPage()), (route) => false);
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (ctx) => const MerchantPage()),
+          (route) => false);
     } else if (type == 'A') {
-      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (ctx) => MakeAccountPage()), (route) => false);
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (ctx) => MakeAccountPage()),
+          (route) => false);
     } else {
       null;
     }
@@ -218,13 +192,21 @@ class _LoginPageState extends State<LoginPage> {
 
     if (isLogin != null && isLogin) {
       if (type == 'B') {
-        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (ctx) => BuyerHomePage()), (route) => false);
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (ctx) => BuyerHomePage()),
+            (route) => false);
       } else if (type == 'C') {
-        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (ctx) => const CashierPage()), (route) => false);
-      } else if (type == 'S'){
-        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (ctx) => const MerchantPage()), (route) => false);
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (ctx) => const CashierPage()),
+            (route) => false);
+      } else if (type == 'S') {
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (ctx) => const MerchantPage()),
+            (route) => false);
       } else if (type == 'A') {
-        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (ctx) => MakeAccountPage()), (route) => false);
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (ctx) => MakeAccountPage()),
+            (route) => false);
       } else {
         null;
       }

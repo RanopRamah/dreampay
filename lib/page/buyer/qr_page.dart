@@ -4,7 +4,6 @@ import 'dart:io';
 
 import 'package:dreampay/page/buyer/buyer_home.dart';
 import 'package:dreampay/page/buyer/nominal_page.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
@@ -47,18 +46,19 @@ class _QRPageState extends State<QRPage> {
                 Navigator.pop(context);
                 controller!.pauseCamera();
               },
-              child: Image.asset('assets/image/exit.png', width: 52, height: 54),
+              child:
+                  Image.asset('assets/image/exit.png', width: 52, height: 54),
             ),
           ),
           Container(
             width: 342,
             height: 77,
             margin: const EdgeInsets.only(left: 35, top: 730),
-            padding: const EdgeInsets.only(left: 16, right: 22, top: 11, bottom: 11),
+            padding:
+                const EdgeInsets.only(left: 16, right: 22, top: 11, bottom: 11),
             decoration: const BoxDecoration(
                 color: Color(0xFFFDFDFD),
-                borderRadius: BorderRadius.all(Radius.circular(13))
-            ),
+                borderRadius: BorderRadius.all(Radius.circular(13))),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -100,7 +100,7 @@ class _QRPageState extends State<QRPage> {
   Widget _buildQrView(BuildContext context) {
     // For this example we check how width or tall the device is and change the scanArea and overlay accordingly.
     var scanArea = (MediaQuery.of(context).size.width < 400 ||
-        MediaQuery.of(context).size.height < 400)
+            MediaQuery.of(context).size.height < 400)
         ? 280.0
         : 370.0;
     // To ensure the Scanner view is properly sizes after rotation
@@ -151,9 +151,11 @@ class _QRPageState extends State<QRPage> {
     var response = jsonDecode(output!);
 
     if (response['nama'] != null) {
-      Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => NominalPage(response['no_hp'], response['nama'])));
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (ctx) => NominalPage(response['no_hp'], response['nama'])));
     } else {
-      Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => BuyerHomePage()));
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (ctx) => BuyerHomePage()));
     }
   }
 }
@@ -203,4 +205,3 @@ class ThousandsSeparatorInputFormatter extends TextInputFormatter {
     return newValue;
   }
 }
-

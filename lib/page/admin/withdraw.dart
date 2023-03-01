@@ -5,7 +5,6 @@ import 'dart:async';
 import 'package:dreampay/page/admin/make_account.dart';
 import 'package:dreampay/page/admin/topup.dart';
 import 'package:dreampay/page/admin/transaction.dart';
-import 'package:dreampay/page/admin/withdraw.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
@@ -19,12 +18,12 @@ Future<List> fetchUsers() async {
 
   if (response.statusCode == 200) {
     // final List<Map<dynamic, dynamic>> jsonResponse = jsonDecode(response.body)['list_buyer'];
-    print(jsonDecode(response.body)['list_buyer']);
     return jsonDecode(response.body)['list_buyer'];
   } else {
     throw Exception('Failed to Load');
   }
 }
+
 Future<List<Withdraw>> fetchWithdraw() async {
   final response = await http.get(
     Uri.parse('http://server.sekolahimpian.com:3000/api/admin/list-withdraw/'),
@@ -38,16 +37,13 @@ Future<List<Withdraw>> fetchWithdraw() async {
     throw Exception('Failed to Load');
   }
 }
+
 class Users {
   final dynamic id;
   final dynamic nama;
   final dynamic no_hp;
 
-  const Users({
-    required this.id,
-    required this.nama,
-    required this.no_hp
-  });
+  const Users({required this.id, required this.nama, required this.no_hp});
 
   Users.init()
       : id = 0,
@@ -67,6 +63,7 @@ class Users {
     );
   }
 }
+
 class Withdraw {
   final dynamic id;
   final dynamic nota;
@@ -133,9 +130,7 @@ class _AdminWithdrawPageState extends State<AdminWithdrawPage> {
 
   @override
   void togglePanel() {
-    _controller.isPanelOpen
-        ? _controller.close()
-        : _controller.open();
+    _controller.isPanelOpen ? _controller.close() : _controller.open();
   }
 
   void dvs() async {
@@ -148,10 +143,10 @@ class _AdminWithdrawPageState extends State<AdminWithdrawPage> {
 
   bool containsUser(String text) {
     final Users result = user.firstWhere(
-            (Users u) => u.nama.toLowerCase() == text.toLowerCase(),
+        (Users u) => u.nama.toLowerCase() == text.toLowerCase(),
         orElse: () => Users.init());
 
-    if (result!.nama.isEmpty) {
+    if (result.nama.isEmpty) {
       return false;
     }
     return true;
@@ -177,14 +172,13 @@ class _AdminWithdrawPageState extends State<AdminWithdrawPage> {
               Center(
                 child: ListTile(
                   onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (c) => MakeAccountPage()));
+                    Navigator.of(context).push(
+                        MaterialPageRoute(builder: (c) => MakeAccountPage()));
                   },
                   title: Container(
                     padding: EdgeInsets.only(right: 30, left: 40),
                     width: double.infinity,
                     height: 51,
-
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
@@ -259,7 +253,6 @@ class _AdminWithdrawPageState extends State<AdminWithdrawPage> {
                     padding: EdgeInsets.only(right: 45, left: 25),
                     width: 275,
                     height: 51,
-
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
@@ -289,7 +282,6 @@ class _AdminWithdrawPageState extends State<AdminWithdrawPage> {
               ),
               Center(
                 child: ListTile(
-
                   title: Container(
                     padding: EdgeInsets.only(right: 25, left: 27),
                     width: 275,
@@ -321,56 +313,55 @@ class _AdminWithdrawPageState extends State<AdminWithdrawPage> {
                   ),
                 ),
               ),
-
               SizedBox(
                 height: 15,
               ),
               Container(
-                padding: EdgeInsets.only(top: 10,left: 10,right: 10),
+                padding: EdgeInsets.only(top: 10, left: 10, right: 10),
                 width: double.infinity,
                 height: 98,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
-                    color: Color(0xff292B5A)
-                ),
+                    color: Color(0xff292B5A)),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text('Saldo A',style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontFamily: 'Euclid Circular B',
-                        fontSize: 14,
-                        color: Color(0xffbebebe)
-                    ),),
+                    Text(
+                      'Saldo A',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontFamily: 'Euclid Circular B',
+                          fontSize: 14,
+                          color: Color(0xffbebebe)),
+                    ),
                     SizedBox(
                       height: 5,
                     ),
                     Center(
-                        child:Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Padding(
-                              padding: EdgeInsets.only(bottom: 35),
-                              child: Text(
-                                'Rp',
-                                style: TextStyle(
-                                    fontFamily: 'SF Pro Display',
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.white),
-                              ),
-                            ),
-                            Text(
-                              '560,000',
-                              style: TextStyle(
-                                  fontFamily: 'SF Pro Display',
-                                  fontSize: 36,
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.white),
-                            ),
-                          ],
-                        )
-                    )
+                        child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(bottom: 35),
+                          child: Text(
+                            'Rp',
+                            style: TextStyle(
+                                fontFamily: 'SF Pro Display',
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white),
+                          ),
+                        ),
+                        Text(
+                          '560,000',
+                          style: TextStyle(
+                              fontFamily: 'SF Pro Display',
+                              fontSize: 36,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white),
+                        ),
+                      ],
+                    ))
                   ],
                 ),
               ),
@@ -378,51 +369,51 @@ class _AdminWithdrawPageState extends State<AdminWithdrawPage> {
                 height: 15,
               ),
               Container(
-                padding: EdgeInsets.only(top: 10,left: 10,right: 10),
+                padding: EdgeInsets.only(top: 10, left: 10, right: 10),
                 width: double.infinity,
                 height: 98,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
-                    color: Color(0xff3A2C62)
-                ),
+                    color: Color(0xff3A2C62)),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text('Saldo A',style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontFamily: 'Euclid Circular B',
-                        fontSize: 14,
-                        color: Color(0xffbebebe)
-                    ),),
+                    Text(
+                      'Saldo A',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontFamily: 'Euclid Circular B',
+                          fontSize: 14,
+                          color: Color(0xffbebebe)),
+                    ),
                     SizedBox(
                       height: 5,
                     ),
                     Center(
-                        child:Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Padding(
-                              padding: EdgeInsets.only(bottom: 35),
-                              child: Text(
-                                'Rp',
-                                style: TextStyle(
-                                    fontFamily: 'SF Pro Display',
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.white),
-                              ),
-                            ),
-                            Text(
-                              '560,000',
-                              style: TextStyle(
-                                  fontFamily: 'SF Pro Display',
-                                  fontSize: 36,
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.white),
-                            ),
-                          ],
-                        )
-                    )
+                        child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(bottom: 35),
+                          child: Text(
+                            'Rp',
+                            style: TextStyle(
+                                fontFamily: 'SF Pro Display',
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white),
+                          ),
+                        ),
+                        Text(
+                          '560,000',
+                          style: TextStyle(
+                              fontFamily: 'SF Pro Display',
+                              fontSize: 36,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white),
+                        ),
+                      ],
+                    ))
                   ],
                 ),
               ),
@@ -430,58 +421,57 @@ class _AdminWithdrawPageState extends State<AdminWithdrawPage> {
                 height: 15,
               ),
               Container(
-                padding: EdgeInsets.only(top: 10,left: 10,right: 10),
+                padding: EdgeInsets.only(top: 10, left: 10, right: 10),
                 width: double.infinity,
                 height: 98,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
-                    color: Color(0xff2E3346)
-                ),
+                    color: Color(0xff2E3346)),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text('Saldo A',style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontFamily: 'Euclid Circular B',
-                        fontSize: 14,
-                        color: Color(0xffbebebe)
-                    ),),
+                    Text(
+                      'Saldo A',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontFamily: 'Euclid Circular B',
+                          fontSize: 14,
+                          color: Color(0xffbebebe)),
+                    ),
                     SizedBox(
                       height: 5,
                     ),
                     Center(
-                        child:Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Padding(
-                              padding: EdgeInsets.only(bottom: 35),
-                              child: Text(
-                                'Rp',
-                                style: TextStyle(
-                                    fontFamily: 'SF Pro Display',
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.white),
-                              ),
-                            ),
-                            Text(
-                              '560,000',
-                              style: TextStyle(
-                                  fontFamily: 'SF Pro Display',
-                                  fontSize: 36,
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.white),
-                            ),
-                          ],
-                        )
-                    )
+                        child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(bottom: 35),
+                          child: Text(
+                            'Rp',
+                            style: TextStyle(
+                                fontFamily: 'SF Pro Display',
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white),
+                          ),
+                        ),
+                        Text(
+                          '560,000',
+                          style: TextStyle(
+                              fontFamily: 'SF Pro Display',
+                              fontSize: 36,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white),
+                        ),
+                      ],
+                    ))
                   ],
                 ),
               ),
               SizedBox(
                 height: 15,
               ),
-
             ],
           ),
         ),
@@ -492,16 +482,16 @@ class _AdminWithdrawPageState extends State<AdminWithdrawPage> {
         maxHeight: 590,
         minHeight: 150,
         padding: const EdgeInsets.only(left: 30, right: 30),
-        borderRadius: const BorderRadius.only(topRight: Radius.circular(20), topLeft: Radius.circular(20)),
+        borderRadius: const BorderRadius.only(
+            topRight: Radius.circular(20), topLeft: Radius.circular(20)),
         body: Container(
           decoration: const BoxDecoration(
             color: Color(0xFFFDFDFD),
           ),
-          padding: const EdgeInsets.only(top: 60,left: 20,right: 20),
+          padding: const EdgeInsets.only(top: 60, left: 20, right: 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
@@ -515,7 +505,6 @@ class _AdminWithdrawPageState extends State<AdminWithdrawPage> {
                   ),
                 ],
               ),
-
               const SizedBox(height: 55),
               Center(
                 child: Container(
@@ -531,8 +520,7 @@ class _AdminWithdrawPageState extends State<AdminWithdrawPage> {
                           spreadRadius: 2.0,
                           offset: Offset(0.0, 0.0),
                         ),
-                      ]
-                  ),
+                      ]),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -564,7 +552,9 @@ class _AdminWithdrawPageState extends State<AdminWithdrawPage> {
                               child: Image.asset('assets/image/search-all.png'),
                             ),
                           ),
-                          suggestions: user.map((e) => SearchFieldListItem(e.nama, item: e)).toList(),
+                          suggestions: user
+                              .map((e) => SearchFieldListItem(e.nama, item: e))
+                              .toList(),
                           // suggestionState: Suggestion.hidden,
                           controller: searchController,
                           inputType: TextInputType.text,
@@ -591,8 +581,8 @@ class _AdminWithdrawPageState extends State<AdminWithdrawPage> {
                         padding: const EdgeInsets.only(top: 18.58, left: 15.2),
                         decoration: const BoxDecoration(
                             color: Color(0xFF7C81DF),
-                            borderRadius: BorderRadius.all(Radius.circular(18.6053))
-                        ),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(18.6053))),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -624,31 +614,33 @@ class _AdminWithdrawPageState extends State<AdminWithdrawPage> {
                         margin: const EdgeInsets.only(top: 38.61),
                         child: TextField(
                           style: TextStyle(
-                            fontFamily: 'SF Pro Display',
-                            fontWeight: FontWeight.w700,
-                            fontSize: 21
-                          ),
+                              fontFamily: 'SF Pro Display',
+                              fontWeight: FontWeight.w700,
+                              fontSize: 21),
                           decoration: const InputDecoration(
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
                                 width: 0.912281,
                                 color: Color(0xFFC8BDBD),
                               ),
-                              borderRadius: BorderRadius.all(Radius.circular(6.38596)),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(6.38596)),
                             ),
                             disabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
                                 width: 0.912281,
                                 color: Color(0xFFC8BDBD),
                               ),
-                              borderRadius: BorderRadius.all(Radius.circular(6.38596)),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(6.38596)),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderSide: BorderSide(
                                 width: 0.912281,
                                 color: Color(0xFFC8BDBD),
                               ),
-                              borderRadius: BorderRadius.all(Radius.circular(6.38596)),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(6.38596)),
                             ),
                             labelText: 'Nominal Top Up',
                             hintText: 'Rp0',
@@ -681,11 +673,13 @@ class _AdminWithdrawPageState extends State<AdminWithdrawPage> {
                             });
                           },
                           style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all<Color>(const Color(0xFF5258D4)),
-                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                                const Color(0xFF5258D4)),
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(
                               const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.all(Radius.circular(6.59649))
-                              ),
+                                  borderRadius: BorderRadius.all(
+                                      Radius.circular(6.59649))),
                             ),
                           ),
                           child: const Text(
@@ -786,6 +780,7 @@ class _AdminWithdrawPageState extends State<AdminWithdrawPage> {
       ),
     );
   }
+
   Widget scrollingList(ScrollController sc) {
     return Container(
       height: 450,
@@ -838,8 +833,7 @@ class _AdminWithdrawPageState extends State<AdminWithdrawPage> {
                             color: Color(0xFF222222),
                             fontWeight: FontWeight.w400,
                             fontSize: 20,
-                            fontFamily: 'SF Pro Display'
-                        ),
+                            fontFamily: 'SF Pro Display'),
                       ),
                     ),
                   ],

@@ -10,15 +10,12 @@ import 'package:searchfield/searchfield.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
-import '../admin/make_account.dart';
-
 var url = dotenv.env['API_URL'];
 
 Future<List> fetchUsers() async {
   final response = await http.get(
     Uri.parse('${url}cashier/3'),
   );
-print(response.body);
   if (response.statusCode == 200) {
     return jsonDecode(response.body)['list_buyer'];
   } else {
@@ -96,7 +93,6 @@ class CashierPage extends StatefulWidget {
 }
 
 class _CashierPageState extends State<CashierPage> {
-
   final searchController = TextEditingController();
 
   List<Users> user = [];
@@ -109,7 +105,6 @@ class _CashierPageState extends State<CashierPage> {
 
   final PanelController _controller = PanelController();
   late Future<List<TopUp>> topup;
-
 
   String? phone;
   String? name;
@@ -152,7 +147,7 @@ class _CashierPageState extends State<CashierPage> {
 
   bool containsUser(String text) {
     final Users result = user.firstWhere(
-            (Users u) => u.nama.toLowerCase() == text.toLowerCase(),
+        (Users u) => u.nama.toLowerCase() == text.toLowerCase(),
         orElse: () => Users.init());
 
     if (result!.nama.isEmpty) {
@@ -196,7 +191,7 @@ class _CashierPageState extends State<CashierPage> {
                             decoration: BoxDecoration(
                               color: const Color(0xFFFFFFFF),
                               borderRadius:
-                              const BorderRadius.all(Radius.circular(13)),
+                                  const BorderRadius.all(Radius.circular(13)),
                               border: Border.all(
                                   color: const Color(0xFFD2D2D2), width: 1),
                             ),
@@ -267,8 +262,7 @@ class _CashierPageState extends State<CashierPage> {
                           ),
                           suggestions: user
                               .map(
-                                (e) =>
-                                SearchFieldListItem(
+                                (e) => SearchFieldListItem(
                                   e.nama,
                                   item: e,
                                   // Use child to show Custom Widgets in the suggestions
@@ -285,7 +279,7 @@ class _CashierPageState extends State<CashierPage> {
                                     ),
                                   ),
                                 ),
-                          )
+                              )
                               .toList(),
                           suggestionState: Suggestion.hidden,
                           controller: searchController,
@@ -313,7 +307,7 @@ class _CashierPageState extends State<CashierPage> {
                         decoration: const BoxDecoration(
                             color: Color(0xFF7C81DF),
                             borderRadius:
-                            BorderRadius.all(Radius.circular(18.6053))),
+                                BorderRadius.all(Radius.circular(18.6053))),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -354,7 +348,7 @@ class _CashierPageState extends State<CashierPage> {
                                 color: Color(0xFFC8BDBD),
                               ),
                               borderRadius:
-                              BorderRadius.all(Radius.circular(6.38596)),
+                                  BorderRadius.all(Radius.circular(6.38596)),
                             ),
                             disabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
@@ -362,7 +356,7 @@ class _CashierPageState extends State<CashierPage> {
                                 color: Color(0xFFC8BDBD),
                               ),
                               borderRadius:
-                              BorderRadius.all(Radius.circular(6.38596)),
+                                  BorderRadius.all(Radius.circular(6.38596)),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderSide: BorderSide(
@@ -370,7 +364,7 @@ class _CashierPageState extends State<CashierPage> {
                                 color: Color(0xFFC8BDBD),
                               ),
                               borderRadius:
-                              BorderRadius.all(Radius.circular(6.38596)),
+                                  BorderRadius.all(Radius.circular(6.38596)),
                             ),
                             labelText: 'Nominal Top Up',
                             hintText: 'Rp0',
@@ -389,7 +383,6 @@ class _CashierPageState extends State<CashierPage> {
                             floatingLabelBehavior: FloatingLabelBehavior.always,
                           ),
                           keyboardType: TextInputType.number,
-
                         ),
                       ),
                       Container(
@@ -590,10 +583,7 @@ class _CashierPageState extends State<CashierPage> {
         'cashier_id': '3',
         'buyer_id': '${_selectedUsers.id}',
         'nominal': _topupcontrol.text.toString(),
-
-
-      }
-      ),
+      }),
     );
     if (response.statusCode == 200) {
       // If the server did return a 201 CREATED response,
@@ -603,13 +593,9 @@ class _CashierPageState extends State<CashierPage> {
       print(response.body);
 
       Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (ctx) => CashierPage()), (
-          route) => false);
+          MaterialPageRoute(builder: (ctx) => CashierPage()), (route) => false);
     } else {
       throw Exception(response.body);
     }
   }
-
-
 }
-
