@@ -10,15 +10,18 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:searchfield/searchfield.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
-
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+var url = dotenv.env['API_URL'];
 Future<List> fetchUsers() async {
   final response = await http.get(
-    Uri.parse('http://server.sekolahimpian.com:3000/api/admin/list-withdraw'),
+    Uri.parse('${url}admin/list-withdraw'),
   );
 
   if (response.statusCode == 200) {
     // final List<Map<dynamic, dynamic>> jsonResponse = jsonDecode(response.body)['list_buyer'];
     return jsonDecode(response.body)['list_buyer'];
+    // print(jsonDecode(response.body)['list_buyer']);
+    return jsonDecode(response.body)['list_seller'];
   } else {
     throw Exception('Failed to Load');
   }
@@ -26,12 +29,12 @@ Future<List> fetchUsers() async {
 
 Future<List<Withdraw>> fetchWithdraw() async {
   final response = await http.get(
-    Uri.parse('http://server.sekolahimpian.com:3000/api/admin/list-withdraw/'),
+    Uri.parse('${url}admin/list-withdraw'),
   );
 
   if (response.statusCode == 200) {
     List jsonResponse = jsonDecode(response.body)['list_withdraw'];
-    print(jsonDecode(response.body)['list_withdraw']);
+    print(jsonResponse);
     return jsonResponse.map((e) => Withdraw.fromJson(e)).toList();
   } else {
     throw Exception('Failed to Load');
@@ -52,6 +55,7 @@ class Users {
 
   Users.fromMap(Map<dynamic, dynamic> map)
       : id = map['id'] as Int,
+
         nama = map['nama'] as String,
         no_hp = map['no_hp'] as String;
 
@@ -66,7 +70,6 @@ class Users {
 
 class Withdraw {
   final dynamic id;
-  final dynamic nota;
   final dynamic pengirim;
   final dynamic penerima;
   final dynamic nominal;
@@ -74,7 +77,6 @@ class Withdraw {
 
   const Withdraw({
     required this.id,
-    required this.nota,
     required this.pengirim,
     required this.penerima,
     required this.nominal,
@@ -84,7 +86,6 @@ class Withdraw {
   factory Withdraw.fromJson(Map<dynamic, dynamic> json) {
     return Withdraw(
       id: json['id'],
-      nota: json['nota'],
       pengirim: json['pengirim'],
       penerima: json['penerima'],
       nominal: json['nominal'],
@@ -104,11 +105,11 @@ class _AdminWithdrawPageState extends State<AdminWithdrawPage> {
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final searchController = TextEditingController();
 
+  TextEditingController _withdrawcontrol = TextEditingController();
+
   List<Users> user = [];
   Users _selectedUsers = Users.init();
 
-  bool showPull = false;
-  bool showTopup = true;
   bool visible = false;
   bool isSuccessful = false;
 
@@ -155,6 +156,7 @@ class _AdminWithdrawPageState extends State<AdminWithdrawPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       drawer: Drawer(
         child: Container(
           padding: EdgeInsets.all(20),
@@ -253,6 +255,9 @@ class _AdminWithdrawPageState extends State<AdminWithdrawPage> {
                     padding: EdgeInsets.only(right: 45, left: 25),
                     width: 275,
                     height: 51,
+                    decoration: BoxDecoration(
+                        color: Color(0xff8A8EF9),
+                        borderRadius: BorderRadius.circular(13)),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
@@ -282,13 +287,14 @@ class _AdminWithdrawPageState extends State<AdminWithdrawPage> {
               ),
               Center(
                 child: ListTile(
+                  onTap: () {
+                    Navigator.of(context).push(
+                        MaterialPageRoute(builder: (c) => AdminWithdrawPage()));
+                  },
                   title: Container(
                     padding: EdgeInsets.only(right: 25, left: 27),
                     width: 275,
                     height: 51,
-                    decoration: BoxDecoration(
-                        color: Color(0xff8A8EF9),
-                        borderRadius: BorderRadius.circular(13)),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
@@ -552,10 +558,8 @@ class _AdminWithdrawPageState extends State<AdminWithdrawPage> {
                               child: Image.asset('assets/image/search-all.png'),
                             ),
                           ),
-                          suggestions: user
-                              .map((e) => SearchFieldListItem(e.nama, item: e))
-                              .toList(),
-                          // suggestionState: Suggestion.hidden,
+                          suggestions: user.map((e) => SearchFieldListItem(e.nama, item: e)).toList(),
+                          suggestionState: Suggestion.hidden,
                           controller: searchController,
                           inputType: TextInputType.text,
                           itemHeight: 40,
@@ -613,10 +617,13 @@ class _AdminWithdrawPageState extends State<AdminWithdrawPage> {
                         height: 67.51,
                         margin: const EdgeInsets.only(top: 38.61),
                         child: TextField(
+                          controller: _withdrawcontrol,
                           style: TextStyle(
-                              fontFamily: 'SF Pro Display',
+                              fontSize: 23,
                               fontWeight: FontWeight.w700,
-                              fontSize: 21),
+                              fontFamily: 'SF Pro Display',
+                              color: Color(0xff222222)
+                          ),
                           decoration: const InputDecoration(
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
@@ -659,7 +666,7 @@ class _AdminWithdrawPageState extends State<AdminWithdrawPage> {
                             floatingLabelBehavior: FloatingLabelBehavior.always,
                           ),
                           keyboardType: TextInputType.number,
-                          inputFormatters: [ThousandsSeparatorInputFormatter()],
+
                         ),
                       ),
                       Container(
@@ -669,7 +676,7 @@ class _AdminWithdrawPageState extends State<AdminWithdrawPage> {
                         child: ElevatedButton(
                           onPressed: () {
                             setState(() {
-                              fetchTopUp();
+                              createWithdraw();
                             });
                           },
                           style: ButtonStyle(
@@ -683,7 +690,7 @@ class _AdminWithdrawPageState extends State<AdminWithdrawPage> {
                             ),
                           ),
                           child: const Text(
-                            'Top-Up',
+                            'Withdraw',
                             style: TextStyle(
                               color: Color(0xFFFFFFFF),
                               fontFamily: 'Euclid Circular B',
@@ -701,8 +708,8 @@ class _AdminWithdrawPageState extends State<AdminWithdrawPage> {
                             (isSuccessful)
                                 ? 'assets/image/success-topup.png'
                                 : 'assets/image/failed-topup.png',
-                            width: 153,
-                            height: 60,
+                            width: 20,
+                            height: 20,
                           ),
                         ),
                       ),
@@ -733,7 +740,7 @@ class _AdminWithdrawPageState extends State<AdminWithdrawPage> {
               const SizedBox(height: 12),
               const Center(
                 child: Text(
-                  'Riwayat Top-Up',
+                  'Riwayat Penarikan',
                   style: TextStyle(
                     color: Color(0xFF172437),
                     fontSize: 24,
@@ -803,7 +810,7 @@ class _AdminWithdrawPageState extends State<AdminWithdrawPage> {
                           height: 20,
                           width: 200,
                           child: Text(
-                            snapshot.data![i].penerima,
+                            snapshot.data![i].penerima.toString(),
                             overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
                               color: Color(0xFF172437),
@@ -814,7 +821,7 @@ class _AdminWithdrawPageState extends State<AdminWithdrawPage> {
                           ),
                         ),
                         Text(
-                          snapshot.data![i].created_at,
+                          snapshot.data![i].created_at.toString(),
                           style: const TextStyle(
                             color: Color(0xFFBEBEBE),
                             fontFamily: 'Euclid Circular B',
@@ -828,7 +835,7 @@ class _AdminWithdrawPageState extends State<AdminWithdrawPage> {
                     Padding(
                       padding: const EdgeInsets.only(bottom: 10),
                       child: Text(
-                        'Rp${snapshot.data![i].nominal.toString()}',
+                        '-Rp${snapshot.data![i].nominal.toString()}',
                         style: const TextStyle(
                             color: Color(0xFF222222),
                             fontWeight: FontWeight.w400,
@@ -850,49 +857,37 @@ class _AdminWithdrawPageState extends State<AdminWithdrawPage> {
       ),
     );
   }
+  Future<void> createWithdraw() async {
+    final response = await http.post(
+      Uri.parse('${url}admin/add-withdraw'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'admin_id': '1',
+        'seller_id': '${_selectedUsers.id}',
+        'nominal': _withdrawcontrol.text.toString(),
+
+
+      }
+      ),
+    );
+    if (response.statusCode == 200) {
+      // If the server did return a 201 CREATED response,
+      // then parse the JSON.
+      var output = jsonDecode(response.body);
+      isSuccessful = true;
+      print(response.body);
+
+    } else {
+
+      isSuccessful = false;
+    }
+  }
+
+
 }
 
-class ThousandsSeparatorInputFormatter extends TextInputFormatter {
-  static const separator = '.'; // Change this to '.' for other locales
-
-  @override
-  TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue, TextEditingValue newValue) {
-    // Short-circuit if the new value is empty
-    if (newValue.text.isEmpty) {
-      return newValue.copyWith(text: '');
-    }
-
-    // Handle "deletion" of separator character
-    String oldValueText = oldValue.text.replaceAll(separator, '');
-    String newValueText = newValue.text.replaceAll(separator, '');
-
-    if (oldValue.text.endsWith(separator) &&
-        oldValue.text.length == newValue.text.length + 1) {
-      newValueText = newValueText.substring(0, newValueText.length - 1);
-    }
-
-    // Only process if the old value and new value are different
-    if (oldValueText != newValueText) {
-      int selectionIndex =
-          newValue.text.length - newValue.selection.extentOffset;
-      final chars = newValueText.split('');
-
-      String newString = '';
-      for (int i = chars.length - 1; i >= 0; i--) {
-        if ((chars.length - 1 - i) % 3 == 0 && i != chars.length - 1) {
-          newString = separator + newString;
-        }
-        newString = chars[i] + newString;
-      }
-
-      return TextEditingValue(
-        text: newString.toString(),
-        selection: TextSelection.collapsed(
-          offset: newString.length - selectionIndex,
-        ),
-      );
-    }
 
     // If the new value and old value are the same, just return as-is
     return newValue;

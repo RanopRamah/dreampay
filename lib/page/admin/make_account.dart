@@ -764,7 +764,7 @@ class _MakeAccountPageState extends State<MakeAccountPage> {
 
   Future<void> createUsers() async {
     final response = await http.post(
-      Uri.parse('http://env-8409188.jh-beon.cloud/api/admin/add-user'),
+      Uri.parse('${url}admin/add-user'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },

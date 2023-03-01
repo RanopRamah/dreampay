@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dreampay/page/admin/make_account.dart';
 import 'package:dreampay/page/admin/topup.dart';
 import 'package:dreampay/page/admin/transaction.dart';
@@ -5,9 +7,52 @@ import 'package:dreampay/page/admin/withdraw.dart';
 import 'package:dreampay/page/buyer/buyer_home.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-enum SingingCharacter { user, cashier, seller }
+var url = dotenv.env['API_URL'];
+Future<List<Transactions>> fetchTransactions() async {
+  final response = await http.get(
+    Uri.parse('${url}admin/list-transaction'),
+  );
+
+  if (response.statusCode == 200) {
+    List jsonResponse = jsonDecode(response.body)['list_transaksi'];
+    print(jsonResponse);
+    return jsonResponse.map((e) => Transactions.fromJson(e)).toList();
+  } else {
+    throw Exception('Failed to Load');
+  }
+}
+class Transactions {
+  final dynamic id;
+  final dynamic nota;
+  final dynamic pengirim;
+  final dynamic penerima;
+  final dynamic nominal;
+  final dynamic created_at;
+
+  const Transactions({
+    required this.id,
+    required this.nota,
+    required this.pengirim,
+    required this.penerima,
+    required this.nominal,
+    required this.created_at,
+  });
+
+  factory Transactions.fromJson(Map<dynamic, dynamic> json) {
+    return Transactions(
+      id: json['id'],
+      nota: json['nota'],
+      pengirim: json['pengirim'],
+      penerima: json['penerima'],
+      nominal: json['nominal'],
+      created_at: json['created_at'],
+    );
+  }
+}
 
 class AdminTransactionPage extends StatefulWidget {
   AdminTransactionPage({Key? key}) : super(key: key);
@@ -65,35 +110,16 @@ class _AdminTransactionPageState extends State<AdminTransactionPage> {
     "amount": "Rp25,000"
     },
   ];
-  List<Map<String, dynamic>> _foundUsers = [];
+  late Future<List<Transactions>> transactionsList;
 
   @override
   initState() {
-    _foundUsers = _allUsers;
+   transactionsList = fetchTransactions();
     super.initState();
   }
 
-  void _runFilter(String enteredKeyword) {
-    List<Map<String, dynamic>> results = [];
-    if (enteredKeyword.isEmpty) {
-      // if the search field is empty or only contains white-space, we'll display all users
-      results = _allUsers;
-    } else {
-      results = _allUsers
-          .where((user) =>
-              user["name"].toLowerCase().contains(enteredKeyword.toLowerCase()))
-          .toList();
-      // we use the toLowerCase() method to make it case-insensitive
-    }
-    setState(() {
-      _foundUsers = results;
-    });
-  }
 
-  @override
-  void togglePanel() => _panelController.isPanelOpen
-      ? _panelController.close()
-      : _panelController.open();
+
 
   @override
   Widget build(BuildContext context) {
@@ -474,118 +500,127 @@ class _AdminTransactionPageState extends State<AdminTransactionPage> {
                           fontFamily: 'Euclid Circular B',
                           color: Color(0xff222222)),
                     ),
+FutureBuilder(
+  future: transactionsList,
+    builder: (context, snapshot) {
+  return Container(
+      height: 650,
+      child: ListView.builder(
+        itemCount: snapshot.data!.length,
+        itemBuilder: (BuildContext context, i) => Container(
+          height: 174,
+          width: double.infinity,
+          decoration: BoxDecoration(
+              color: Color(0xfff3f3f3),
+              borderRadius: BorderRadius.circular(18)),
+          margin: EdgeInsets.only(bottom: 15),
+          padding: EdgeInsets.only(
+              top: 25, bottom: 10, left: 30, right: 20),
 
-                    Container(
-                 height: 650,
-                 child: ListView.builder(
-                  itemCount: _foundUsers.length,
-                  itemBuilder: (context, index) => Container(
-                    height: 174,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                        color: Color(0xfff3f3f3),
-                        borderRadius: BorderRadius.circular(18)),
-                    margin: EdgeInsets.only(bottom: 15),
-                    padding: EdgeInsets.only(
-                        top: 25, bottom: 10, left: 30, right: 20),
-                    key: ValueKey(_foundUsers[index]["id"]),
-                    child: Column(
-                      children: <Widget>[
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('Buyer',style: TextStyle(
-                              fontFamily: 'Euclid Circular B',
-                              fontSize: 14,
-                              fontWeight: FontWeight.w400,
-                              color: Color(0xffa7a3a3)
-                            ),),
-                            Text('Merchant', style: TextStyle(
-                                fontFamily: 'Euclid Circular B',
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400,
-                                color: Color(0xffa7a3a3)
-                            ),)
-                          ],
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(_foundUsers[index]['buyer'],style: TextStyle(
-                                fontFamily: 'Euclid Circular B',
-                                fontSize: 17,
-                                fontWeight: FontWeight.w600,
-                                color: Color(0xff222222 )
-                            ),),
-                            Image.asset('assets/image/trade.png',width: 26,height: 26,),
-                            Container(
-                              width :100,
-                            child:Text(_foundUsers[index]['seller'],
-                            textAlign: TextAlign.end,
-                            overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontFamily: 'Euclid Circular B',
-                                fontSize: 17,
-                                fontWeight: FontWeight.w600,
-                                color: Color(0xff222222)
-                            ),))
-                          ],
-                        ),
-                        SizedBox(
-                          height: 30,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('Amount',style: TextStyle(
-                                fontFamily: 'Euclid Circular B',
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: Color(0xff9B9B9B )
-                            ),),
-
-
-                                Text(_foundUsers[index]['amount'],
-
-                                  style: TextStyle(
-                                      fontFamily: 'SF Pro Display',
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w700,
-                                      color: Color(0xff454649)
-                                  ),)
-                          ],
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('Unique Code',style: TextStyle(
-                                fontFamily: 'Euclid Circular B',
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: Color(0xff9B9B9B )
-                            ),),
+          child: Column(
+            children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Buyer',style: TextStyle(
+                      fontFamily: 'Euclid Circular B',
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      color: Color(0xffa7a3a3)
+                  ),),
+                  Text('Merchant', style: TextStyle(
+                      fontFamily: 'Euclid Circular B',
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      color: Color(0xffa7a3a3)
+                  ),)
+                ],
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    width: 120,
+                    child:
+                  Text(snapshot.data![i].pengirim.toString(),
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontFamily: 'Euclid Circular B',
+                      fontSize: 17,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xff222222 )
+                  ),),),
+                  Image.asset('assets/image/trade.png',width: 26,height: 26,),
+                  Container(
+                      width :100,
+                      child:Text(snapshot.data![i].penerima.toString(),
+                        textAlign: TextAlign.end,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                            fontFamily: 'Euclid Circular B',
+                            fontSize: 17,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xff222222)
+                        ),))
+                ],
+              ),
+              SizedBox(
+                height: 30,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Amount',style: TextStyle(
+                      fontFamily: 'Euclid Circular B',
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xff9B9B9B )
+                  ),),
 
 
-                            Text(_foundUsers[index]['uc'],
+                  Text('Rp${snapshot.data![i].nominal}',
 
-                              style: TextStyle(
-                                  fontFamily: 'SF Pro Display',
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w700,
-                                  color: Color(0xff454649)
-                              ),)
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                )),
+                    style: TextStyle(
+                        fontFamily: 'SF Pro Display',
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                        color: Color(0xff454649)
+                    ),)
+                ],
+              ),
+              SizedBox(
+                height: 5,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Unique Code',style: TextStyle(
+                      fontFamily: 'Euclid Circular B',
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xff9B9B9B )
+                  ),),
+
+
+                  Text(snapshot.data![i].nota.toString(),
+
+                    style: TextStyle(
+                        fontFamily: 'SF Pro Display',
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                        color: Color(0xff454649)
+                    ),)
+                ],
+              )
+            ],
+          ),
+        ),
+      ));
+}),
+
 
 
               ]),

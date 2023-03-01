@@ -10,10 +10,11 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:searchfield/searchfield.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
-
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+var url = dotenv.env['API_URL'];
 Future<List> fetchUsers() async {
   final response = await http.get(
-    Uri.parse('http://server.sekolahimpian.com:3000/api/cashier/1'),
+    Uri.parse('${url}admin/list-topup'),
   );
 
   if (response.statusCode == 200) {
@@ -27,7 +28,7 @@ Future<List> fetchUsers() async {
 
 Future<List<TopUp>> fetchTopUp() async {
   final response = await http.get(
-    Uri.parse('http://server.sekolahimpian.com:3000/api/cashier/1'),
+    Uri.parse('${url}admin/list-topup'),
   );
 
   if (response.statusCode == 200) {
@@ -66,12 +67,14 @@ class Users {
 
 class TopUp {
   final dynamic id;
+  final dynamic pengirim;
   final dynamic penerima;
   final dynamic nominal;
   final dynamic createdAt;
 
   const TopUp({
     required this.id,
+    required this.pengirim,
     required this.penerima,
     required this.nominal,
     required this.createdAt,
@@ -80,6 +83,7 @@ class TopUp {
   factory TopUp.fromJson(Map<dynamic, dynamic> json) {
     return TopUp(
       id: json['id'],
+      pengirim: json['pengirim'],
       penerima: json['penerima'],
       nominal: json['nominal'],
       createdAt: json['createdAt'],
@@ -97,6 +101,8 @@ class AdminTopupPage extends StatefulWidget {
 class _AdminTopupPageState extends State<AdminTopupPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final searchController = TextEditingController();
+
+  TextEditingController _topupcontrol = TextEditingController();
 
   List<Users> user = [];
   Users _selectedUsers = Users.init();
@@ -148,6 +154,7 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       drawer: Drawer(
         child: Container(
           padding: const EdgeInsets.all(20),
@@ -609,6 +616,13 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
                         height: 67.51,
                         margin: const EdgeInsets.only(top: 38.61),
                         child: TextField(
+                          controller: _topupcontrol,
+                          style: TextStyle(
+                            fontSize: 23,
+                            fontWeight: FontWeight.w700,
+                            fontFamily: 'SF Pro Display',
+                            color: Color(0xff222222)
+                          ),
                           decoration: const InputDecoration(
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
@@ -651,7 +665,7 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
                             floatingLabelBehavior: FloatingLabelBehavior.always,
                           ),
                           keyboardType: TextInputType.number,
-                          inputFormatters: [ThousandsSeparatorInputFormatter()],
+
                         ),
                       ),
                       Container(
@@ -661,7 +675,7 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
                         child: ElevatedButton(
                           onPressed: () {
                             setState(() {
-                              fetchTopUp();
+                              createTopup();
                             });
                           },
                           style: ButtonStyle(
@@ -739,6 +753,7 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
                 height: 30,
                 margin: const EdgeInsets.only(top: 29),
                 child: TextFormField(
+                  controller: _topupcontrol,
                   decoration: InputDecoration(
                     enabledBorder: const UnderlineInputBorder(
                       borderSide: BorderSide(color: Color(0xFFF1F1F1)),
@@ -795,7 +810,7 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
                           height: 20,
                           width: 200,
                           child: Text(
-                            snapshot.data![i].penerima,
+                            snapshot.data![i].penerima.toString(),
                             overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
                               color: Color(0xFF172437),
@@ -841,49 +856,39 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
       ),
     );
   }
+  Future<void> createTopup() async {
+    final response = await http.post(
+      Uri.parse('${url}admin/add-topup'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'admin_id': '1',
+        'buyer_id': '${_selectedUsers.id}',
+        'nominal': _topupcontrol.text.toString(),
+
+
+      }
+      ),
+    );
+    if (response.statusCode == 200) {
+      // If the server did return a 201 CREATED response,
+      // then parse the JSON.
+      var output = jsonDecode(response.body);
+      print('success make');
+      print(response.body);
+
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (ctx) => AdminTopupPage()), (
+          route) => false);
+    } else {
+      throw Exception(response.body);
+    }
+  }
+
+
 }
 
-class ThousandsSeparatorInputFormatter extends TextInputFormatter {
-  static const separator = '.'; // Change this to '.' for other locales
-
-  @override
-  TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue, TextEditingValue newValue) {
-    // Short-circuit if the new value is empty
-    if (newValue.text.isEmpty) {
-      return newValue.copyWith(text: '');
-    }
-
-    // Handle "deletion" of separator character
-    String oldValueText = oldValue.text.replaceAll(separator, '');
-    String newValueText = newValue.text.replaceAll(separator, '');
-
-    if (oldValue.text.endsWith(separator) &&
-        oldValue.text.length == newValue.text.length + 1) {
-      newValueText = newValueText.substring(0, newValueText.length - 1);
-    }
-
-    // Only process if the old value and new value are different
-    if (oldValueText != newValueText) {
-      int selectionIndex =
-          newValue.text.length - newValue.selection.extentOffset;
-      final chars = newValueText.split('');
-
-      String newString = '';
-      for (int i = chars.length - 1; i >= 0; i--) {
-        if ((chars.length - 1 - i) % 3 == 0 && i != chars.length - 1) {
-          newString = separator + newString;
-        }
-        newString = chars[i] + newString;
-      }
-
-      return TextEditingValue(
-        text: newString.toString(),
-        selection: TextSelection.collapsed(
-          offset: newString.length - selectionIndex,
-        ),
-      );
-    }
 
     // If the new value and old value are the same, just return as-is
     return newValue;
