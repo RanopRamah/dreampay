@@ -11,6 +11,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
+
 var url = dotenv.env['API_URL'];
 Future<List<Users>> fetchUsers() async {
   final response = await http.get(
@@ -789,7 +790,7 @@ _scrollingList(sc)
 
   }
   Future<void> createUsers() async {
-    final response = await http.post(Uri.parse('http://env-8409188.jh-beon.cloud/api/admin/add-user'),
+    final response = await http.post(Uri.parse('${url}admin/add-user'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
