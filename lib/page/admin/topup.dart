@@ -1,4 +1,3 @@
-import 'dart:ffi';
 import 'dart:convert';
 import 'dart:async';
 
@@ -6,11 +5,11 @@ import 'package:dreampay/page/admin/make_account.dart';
 import 'package:dreampay/page/admin/transaction.dart';
 import 'package:dreampay/page/admin/withdraw.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:searchfield/searchfield.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 var url = dotenv.env['API_URL'];
 Future<List> fetchUsers() async {
   final response = await http.get(
@@ -18,8 +17,6 @@ Future<List> fetchUsers() async {
   );
 
   if (response.statusCode == 200) {
-    // final List<Map<dynamic, dynamic>> jsonResponse = jsonDecode(response.body)['list_buyer'];
-    // print(jsonDecode(response.body)['list_buyer']);
     return jsonDecode(response.body)['list_buyer'];
   } else {
     throw Exception('Failed to Load');
@@ -52,7 +49,7 @@ class Users {
         noHp = '00000000000';
 
   Users.fromMap(Map<dynamic, dynamic> map)
-      : id = map['id'] as Int,
+      : id = map['id'] as int,
         nama = map['nama'] as String,
         noHp = map['noHp'] as String;
 
@@ -618,11 +615,10 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
                         child: TextField(
                           controller: _topupcontrol,
                           style: TextStyle(
-                            fontSize: 23,
-                            fontWeight: FontWeight.w700,
-                            fontFamily: 'SF Pro Display',
-                            color: Color(0xff222222)
-                          ),
+                              fontSize: 23,
+                              fontWeight: FontWeight.w700,
+                              fontFamily: 'SF Pro Display',
+                              color: Color(0xff222222)),
                           decoration: const InputDecoration(
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
@@ -665,7 +661,6 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
                             floatingLabelBehavior: FloatingLabelBehavior.always,
                           ),
                           keyboardType: TextInputType.number,
-
                         ),
                       ),
                       Container(
@@ -856,6 +851,7 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
       ),
     );
   }
+
   Future<void> createTopup() async {
     final response = await http.post(
       Uri.parse('${url}admin/add-topup'),
@@ -866,31 +862,14 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
         'admin_id': '1',
         'buyer_id': '${_selectedUsers.id}',
         'nominal': _topupcontrol.text.toString(),
-
-
-      }
-      ),
+      }),
     );
     if (response.statusCode == 200) {
-      // If the server did return a 201 CREATED response,
-      // then parse the JSON.
-      var output = jsonDecode(response.body);
-      print('success make');
-      print(response.body);
-
       Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (ctx) => AdminTopupPage()), (
-          route) => false);
+          MaterialPageRoute(builder: (ctx) => const AdminTopupPage()),
+          (route) => false);
     } else {
       throw Exception(response.body);
     }
-  }
-
-
-}
-
-
-    // If the new value and old value are the same, just return as-is
-    return newValue;
   }
 }

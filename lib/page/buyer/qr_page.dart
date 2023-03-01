@@ -20,8 +20,6 @@ class _QRPageState extends State<QRPage> {
   QRViewController? controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
 
-  final TextEditingController _controller = TextEditingController();
-
   @override
   void reassemble() {
     super.reassemble();
@@ -62,9 +60,9 @@ class _QRPageState extends State<QRPage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Column(
+                const Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
+                  children: [
                     // Text(result != null ? '${result!.code}' : 'belum bisa'),
                     Text(
                       'Pindai dari',
@@ -155,7 +153,7 @@ class _QRPageState extends State<QRPage> {
           builder: (ctx) => NominalPage(response['no_hp'], response['nama'])));
     } else {
       Navigator.of(context)
-          .push(MaterialPageRoute(builder: (ctx) => BuyerHomePage()));
+          .push(MaterialPageRoute(builder: (ctx) => const BuyerHomePage()));
     }
   }
 }
@@ -167,7 +165,7 @@ class ThousandsSeparatorInputFormatter extends TextInputFormatter {
   TextEditingValue formatEditUpdate(
       TextEditingValue oldValue, TextEditingValue newValue) {
     // Short-circuit if the new value is empty
-    if (newValue.text.length == 0) {
+    if (newValue.text.isEmpty) {
       return newValue.copyWith(text: '');
     }
 
@@ -188,8 +186,9 @@ class ThousandsSeparatorInputFormatter extends TextInputFormatter {
 
       String newString = '';
       for (int i = chars.length - 1; i >= 0; i--) {
-        if ((chars.length - 1 - i) % 3 == 0 && i != chars.length - 1)
+        if ((chars.length - 1 - i) % 3 == 0 && i != chars.length - 1) {
           newString = separator + newString;
+        }
         newString = chars[i] + newString;
       }
 

@@ -1,4 +1,3 @@
-import 'dart:ffi';
 import 'dart:convert';
 import 'dart:async';
 
@@ -6,11 +5,11 @@ import 'package:dreampay/page/admin/make_account.dart';
 import 'package:dreampay/page/admin/topup.dart';
 import 'package:dreampay/page/admin/transaction.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:searchfield/searchfield.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 var url = dotenv.env['API_URL'];
 Future<List> fetchUsers() async {
   final response = await http.get(
@@ -18,10 +17,7 @@ Future<List> fetchUsers() async {
   );
 
   if (response.statusCode == 200) {
-    // final List<Map<dynamic, dynamic>> jsonResponse = jsonDecode(response.body)['list_buyer'];
     return jsonDecode(response.body)['list_buyer'];
-    // print(jsonDecode(response.body)['list_buyer']);
-    return jsonDecode(response.body)['list_seller'];
   } else {
     throw Exception('Failed to Load');
   }
@@ -34,7 +30,6 @@ Future<List<Withdraw>> fetchWithdraw() async {
 
   if (response.statusCode == 200) {
     List jsonResponse = jsonDecode(response.body)['list_withdraw'];
-    print(jsonResponse);
     return jsonResponse.map((e) => Withdraw.fromJson(e)).toList();
   } else {
     throw Exception('Failed to Load');
@@ -54,8 +49,7 @@ class Users {
         no_hp = '00000000000';
 
   Users.fromMap(Map<dynamic, dynamic> map)
-      : id = map['id'] as Int,
-
+      : id = map['id'] as int,
         nama = map['nama'] as String,
         no_hp = map['no_hp'] as String;
 
@@ -137,9 +131,6 @@ class _AdminWithdrawPageState extends State<AdminWithdrawPage> {
   void dvs() async {
     List<dynamic> data = await fetchUsers();
     user = data.map((e) => Users.fromJson(e)).toList();
-    //
-    // var h = user.map((e) => e.nama);
-    // print(h);
   }
 
   bool containsUser(String text) {
@@ -558,7 +549,9 @@ class _AdminWithdrawPageState extends State<AdminWithdrawPage> {
                               child: Image.asset('assets/image/search-all.png'),
                             ),
                           ),
-                          suggestions: user.map((e) => SearchFieldListItem(e.nama, item: e)).toList(),
+                          suggestions: user
+                              .map((e) => SearchFieldListItem(e.nama, item: e))
+                              .toList(),
                           suggestionState: Suggestion.hidden,
                           controller: searchController,
                           inputType: TextInputType.text,
@@ -622,8 +615,7 @@ class _AdminWithdrawPageState extends State<AdminWithdrawPage> {
                               fontSize: 23,
                               fontWeight: FontWeight.w700,
                               fontFamily: 'SF Pro Display',
-                              color: Color(0xff222222)
-                          ),
+                              color: Color(0xff222222)),
                           decoration: const InputDecoration(
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
@@ -666,7 +658,6 @@ class _AdminWithdrawPageState extends State<AdminWithdrawPage> {
                             floatingLabelBehavior: FloatingLabelBehavior.always,
                           ),
                           keyboardType: TextInputType.number,
-
                         ),
                       ),
                       Container(
@@ -857,6 +848,7 @@ class _AdminWithdrawPageState extends State<AdminWithdrawPage> {
       ),
     );
   }
+
   Future<void> createWithdraw() async {
     final response = await http.post(
       Uri.parse('${url}admin/add-withdraw'),
@@ -867,10 +859,7 @@ class _AdminWithdrawPageState extends State<AdminWithdrawPage> {
         'admin_id': '1',
         'seller_id': '${_selectedUsers.id}',
         'nominal': _withdrawcontrol.text.toString(),
-
-
-      }
-      ),
+      }),
     );
     if (response.statusCode == 200) {
       // If the server did return a 201 CREATED response,
@@ -878,18 +867,8 @@ class _AdminWithdrawPageState extends State<AdminWithdrawPage> {
       var output = jsonDecode(response.body);
       isSuccessful = true;
       print(response.body);
-
     } else {
-
       isSuccessful = false;
     }
-  }
-
-
-}
-
-
-    // If the new value and old value are the same, just return as-is
-    return newValue;
   }
 }

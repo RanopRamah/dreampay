@@ -793,7 +793,9 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                                             return Text('${snapshot.error}');
                                           }
 
-                                          return const CircularProgressIndicator(); // By default, show a loading spinner.
+                                          return const Center(
+                                            child: CircularProgressIndicator(),
+                                          ); // By default, show a loading spinner.
                                         },
                                       )),
                                 ])))

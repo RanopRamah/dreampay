@@ -14,15 +14,15 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 var url = dotenv.env['API_URL'];
 
-Future<Seller> fetchUser(String id_seller) async {
+Future<Seller> fetchUser(String idSeller) async {
   final response = await http.get(
-    Uri.parse('${url}seller/$id_seller'),
+    Uri.parse('${url}seller/$idSeller'),
   );
 
   if (response.statusCode == 200) {
     return Seller.fromJson(jsonDecode(response.body));
   } else {
-    throw Exception('Failed to Fetch');
+    throw Exception(response.body);
   }
 }
 
@@ -35,7 +35,7 @@ Future<List<Detail>> fetchPemasukan(String id) async {
     List jsonResponse = jsonDecode(response.body)['list_pemasukan'];
     return jsonResponse.map((e) => Detail.fromJson(e)).toList();
   } else {
-    throw Exception('Failed to load');
+    throw Exception(response.body);
   }
 }
 
@@ -140,6 +140,14 @@ class _MerchantPageState extends State<MerchantPage> {
     super.dispose();
   }
 
+  setQr(user) {
+    var nama = user['nama'].toString();
+    var noHp = user['no_hp'].toString();
+    var data = {'nama': nama, 'no_hp': noHp};
+    final String jsonString = jsonEncode(data);
+    return jsonString;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -147,8 +155,8 @@ class _MerchantPageState extends State<MerchantPage> {
       controller: _panelController,
       maxHeight: 450,
       minHeight: 80,
-      padding: EdgeInsets.only(left: 30, right: 30),
-      borderRadius: BorderRadius.only(
+      padding: const EdgeInsets.only(left: 30, right: 30),
+      borderRadius: const BorderRadius.only(
           topRight: Radius.circular(30), topLeft: Radius.circular(30)),
       body: SingleChildScrollView(
         child: Container(
@@ -168,15 +176,15 @@ class _MerchantPageState extends State<MerchantPage> {
                           width: 47,
                           height: 47,
                           decoration: BoxDecoration(
-                              color: Color(0xfff6f6f6),
+                              color: const Color(0xfff6f6f6),
                               borderRadius: BorderRadius.circular(50)),
-                          padding: EdgeInsets.all(10),
+                          padding: const EdgeInsets.all(10),
                           child: Image.asset('assets/image/shop.png'),
                         ),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            Text(
+                            const Text(
                               'Assalamualaikum 👋',
                               style: TextStyle(
                                 fontFamily: 'Euclid Circular B',
@@ -192,7 +200,7 @@ class _MerchantPageState extends State<MerchantPage> {
                                 name.toString(),
                                 textAlign: TextAlign.left,
                                 overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontFamily: 'Euclid Circular B',
                                   fontWeight: FontWeight.w600,
                                   fontSize: 30,
@@ -210,8 +218,8 @@ class _MerchantPageState extends State<MerchantPage> {
                         height: 54,
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(13),
-                            border:
-                                Border.all(width: 1, color: Color(0xffD2D2D2))),
+                            border: Border.all(
+                                width: 1, color: const Color(0xffD2D2D2))),
                         child: TextButton(
                           child: Image.asset('assets/image/logout.png'),
                           onPressed: () {
@@ -224,16 +232,16 @@ class _MerchantPageState extends State<MerchantPage> {
                               prefs.remove('is_login');
                               Navigator.of(context).pushAndRemoveUntil(
                                   MaterialPageRoute(
-                                      builder: (ctx) => LoginPage()),
+                                      builder: (ctx) => const LoginPage()),
                                   (route) => false);
                             });
                           },
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 5,
                       ),
-                      Text(
+                      const Text(
                         'Keluar',
                         style: TextStyle(
                             fontFamily: 'Euclid Circular B',
@@ -244,7 +252,7 @@ class _MerchantPageState extends State<MerchantPage> {
                     ])
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 FutureBuilder(
@@ -256,35 +264,35 @@ class _MerchantPageState extends State<MerchantPage> {
                           stackingOrder: StackingOrder.lastOnTop,
                           children: <Widget>[
                             Container(
-                              padding:
-                                  EdgeInsets.only(top: 20, left: 45, right: 45),
+                              padding: const EdgeInsets.only(
+                                  top: 20, left: 45, right: 45),
                               width: double.infinity,
                               height: 417,
                               decoration: BoxDecoration(
-                                  color: Color(0xff5258D4),
+                                  color: const Color(0xff5258D4),
                                   borderRadius: BorderRadius.circular(14)),
                               child: Column(
                                 children: <Widget>[
                                   Text(
                                     name.toString(),
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         fontSize: 24,
                                         fontFamily: 'Euclid Circular B',
                                         fontWeight: FontWeight.w600,
                                         color: Colors.white),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 5,
                                   ),
                                   Text(
                                     'DPID: ${phone.toString()}',
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         fontSize: 16,
                                         fontFamily: 'SF Pro Display',
                                         fontWeight: FontWeight.w500,
                                         color: Colors.white),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 15,
                                   ),
                                   Container(
@@ -297,8 +305,7 @@ class _MerchantPageState extends State<MerchantPage> {
                                       child: Align(
                                         alignment: Alignment.center,
                                         child: QrImage(
-                                          data:
-                                              snapshot.data!.qrcode.toString(),
+                                          data: setQr(snapshot.data!.qrcode),
                                           version: QrVersions.auto,
                                           size: 170,
                                         ),
@@ -307,12 +314,12 @@ class _MerchantPageState extends State<MerchantPage> {
                               ),
                             ),
                             Container(
-                              padding:
-                                  EdgeInsets.only(top: 20, left: 13, right: 13),
+                              padding: const EdgeInsets.only(
+                                  top: 20, left: 13, right: 13),
                               width: double.infinity,
                               height: 244,
                               decoration: BoxDecoration(
-                                color: Color(0xffD7D0FF),
+                                color: const Color(0xffD7D0FF),
                                 borderRadius: BorderRadius.circular(35),
                               ),
                               child: Column(
@@ -321,7 +328,7 @@ class _MerchantPageState extends State<MerchantPage> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: <Widget>[
-                                      Row(
+                                      const Row(
                                         children: <Widget>[
                                           Text(
                                             'Saldo',
@@ -353,23 +360,23 @@ class _MerchantPageState extends State<MerchantPage> {
                                           width: 16,
                                           height: 16,
                                         ),
-                                        badgeStyle: badges.BadgeStyle(
+                                        badgeStyle: const badges.BadgeStyle(
                                             padding: EdgeInsets.all(5),
                                             badgeColor: Colors.white),
                                         child: Container(
-                                          padding:
-                                              EdgeInsets.only(left: 12, top: 5),
+                                          padding: const EdgeInsets.only(
+                                              left: 12, top: 5),
                                           width: 124,
                                           height: 48,
                                           decoration: BoxDecoration(
                                               borderRadius:
                                                   BorderRadius.circular(15),
-                                              image: DecorationImage(
+                                              image: const DecorationImage(
                                                   image: AssetImage(
                                                       'assets/image/back_money2.png'))),
                                           child: Row(
                                             children: <Widget>[
-                                              Padding(
+                                              const Padding(
                                                 padding:
                                                     EdgeInsets.only(bottom: 20),
                                                 child: Text(
@@ -385,7 +392,7 @@ class _MerchantPageState extends State<MerchantPage> {
                                               ),
                                               Text(
                                                 snapshot.data!.saldo.toString(),
-                                                style: TextStyle(
+                                                style: const TextStyle(
                                                     fontFamily:
                                                         'SF Pro Display',
                                                     fontSize: 21,
@@ -398,7 +405,7 @@ class _MerchantPageState extends State<MerchantPage> {
                                       ),
                                     ],
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 10,
                                   ),
                                   Container(
@@ -407,14 +414,14 @@ class _MerchantPageState extends State<MerchantPage> {
                                         scrollDirection: Axis.horizontal,
                                         children: <Widget>[
                                           Container(
-                                            padding: EdgeInsets.only(
+                                            padding: const EdgeInsets.only(
                                                 top: 10, right: 10, left: 10),
                                             width: 147,
                                             height: 140,
                                             decoration: BoxDecoration(
                                               borderRadius:
                                                   BorderRadius.circular(22),
-                                              color: Color(0xffB3B9F0),
+                                              color: const Color(0xffB3B9F0),
                                             ),
                                             child: Column(
                                               children: <Widget>[
@@ -425,10 +432,11 @@ class _MerchantPageState extends State<MerchantPage> {
                                                   children: <Widget>[
                                                     Container(
                                                       padding:
-                                                          EdgeInsets.all(5),
+                                                          const EdgeInsets.all(
+                                                              5),
                                                       decoration: BoxDecoration(
-                                                          color:
-                                                              Color(0xffF4F0F0),
+                                                          color: const Color(
+                                                              0xffF4F0F0),
                                                           borderRadius:
                                                               BorderRadius
                                                                   .circular(
@@ -438,7 +446,7 @@ class _MerchantPageState extends State<MerchantPage> {
                                                       child: Image.asset(
                                                           'assets/image/trans.png'),
                                                     ),
-                                                    Text(
+                                                    const Text(
                                                       'Pemasukan',
                                                       style: TextStyle(
                                                           fontFamily:
@@ -451,12 +459,12 @@ class _MerchantPageState extends State<MerchantPage> {
                                                     )
                                                   ],
                                                 ),
-                                                SizedBox(
+                                                const SizedBox(
                                                   height: 5,
                                                 ),
                                                 Row(
                                                   children: <Widget>[
-                                                    Padding(
+                                                    const Padding(
                                                       padding: EdgeInsets.only(
                                                         bottom: 35,
                                                       ),
@@ -475,7 +483,7 @@ class _MerchantPageState extends State<MerchantPage> {
                                                     Text(
                                                       snapshot.data!.pemasukan
                                                           .toString(),
-                                                      style: TextStyle(
+                                                      style: const TextStyle(
                                                           fontFamily:
                                                               'SF Pro Display',
                                                           fontSize: 26,
@@ -486,7 +494,7 @@ class _MerchantPageState extends State<MerchantPage> {
                                                     ),
                                                   ],
                                                 ),
-                                                SizedBox(
+                                                const SizedBox(
                                                   height: 5,
                                                 ),
                                                 GestureDetector(
@@ -498,7 +506,8 @@ class _MerchantPageState extends State<MerchantPage> {
                                                     },
                                                     child: Container(
                                                         padding:
-                                                            EdgeInsets.only(
+                                                            const EdgeInsets
+                                                                    .only(
                                                                 left: 49,
                                                                 top: 5),
                                                         width: double.infinity,
@@ -510,9 +519,9 @@ class _MerchantPageState extends State<MerchantPage> {
                                                                         27),
                                                             border: Border.all(
                                                                 width: 1,
-                                                                color: Color(
+                                                                color: const Color(
                                                                     0xffDBDDF0))),
-                                                        child: Text(
+                                                        child: const Text(
                                                           'Detail',
                                                           style: TextStyle(
                                                               fontFamily:
@@ -527,18 +536,18 @@ class _MerchantPageState extends State<MerchantPage> {
                                               ],
                                             ),
                                           ),
-                                          SizedBox(
+                                          const SizedBox(
                                             width: 8,
                                           ),
                                           Container(
-                                            padding: EdgeInsets.only(
+                                            padding: const EdgeInsets.only(
                                                 top: 10, right: 10, left: 10),
                                             width: 147,
                                             height: 140,
                                             decoration: BoxDecoration(
                                               borderRadius:
                                                   BorderRadius.circular(22),
-                                              color: Color(0xffF17996),
+                                              color: const Color(0xffF17996),
                                             ),
                                             child: Column(
                                               children: <Widget>[
@@ -549,10 +558,11 @@ class _MerchantPageState extends State<MerchantPage> {
                                                   children: <Widget>[
                                                     Container(
                                                       padding:
-                                                          EdgeInsets.all(5),
+                                                          const EdgeInsets.all(
+                                                              5),
                                                       decoration: BoxDecoration(
-                                                          color:
-                                                              Color(0xffF4F0F0),
+                                                          color: const Color(
+                                                              0xffF4F0F0),
                                                           borderRadius:
                                                               BorderRadius
                                                                   .circular(
@@ -562,7 +572,7 @@ class _MerchantPageState extends State<MerchantPage> {
                                                       child: Image.asset(
                                                           'assets/image/trans.png'),
                                                     ),
-                                                    Text(
+                                                    const Text(
                                                       'Penarikan',
                                                       style: TextStyle(
                                                           fontFamily:
@@ -575,12 +585,12 @@ class _MerchantPageState extends State<MerchantPage> {
                                                     )
                                                   ],
                                                 ),
-                                                SizedBox(
+                                                const SizedBox(
                                                   height: 5,
                                                 ),
                                                 Row(
                                                   children: <Widget>[
-                                                    Padding(
+                                                    const Padding(
                                                       padding: EdgeInsets.only(
                                                         bottom: 35,
                                                       ),
@@ -599,7 +609,7 @@ class _MerchantPageState extends State<MerchantPage> {
                                                     Text(
                                                       snapshot.data!.penarikan
                                                           .toString(),
-                                                      style: TextStyle(
+                                                      style: const TextStyle(
                                                           fontFamily:
                                                               'SF Pro Display',
                                                           fontSize: 26,
@@ -610,7 +620,7 @@ class _MerchantPageState extends State<MerchantPage> {
                                                     ),
                                                   ],
                                                 ),
-                                                SizedBox(
+                                                const SizedBox(
                                                   height: 5,
                                                 ),
                                                 GestureDetector(
@@ -622,7 +632,8 @@ class _MerchantPageState extends State<MerchantPage> {
                                                     },
                                                     child: Container(
                                                         padding:
-                                                            EdgeInsets.only(
+                                                            const EdgeInsets
+                                                                    .only(
                                                                 left: 49,
                                                                 top: 5),
                                                         width: double.infinity,
@@ -634,9 +645,9 @@ class _MerchantPageState extends State<MerchantPage> {
                                                                         27),
                                                             border: Border.all(
                                                                 width: 1,
-                                                                color: Color(
+                                                                color: const Color(
                                                                     0xffDBDDF0))),
-                                                        child: Text(
+                                                        child: const Text(
                                                           'Detail',
                                                           style: TextStyle(
                                                               fontFamily:
@@ -673,7 +684,7 @@ class _MerchantPageState extends State<MerchantPage> {
             // onTap: togglePanel,
             child: Center(
               child: Container(
-                margin: EdgeInsets.only(top: 10),
+                margin: const EdgeInsets.only(top: 10),
                 height: 5,
                 width: 90,
                 decoration: BoxDecoration(
@@ -682,14 +693,14 @@ class _MerchantPageState extends State<MerchantPage> {
               ),
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 15,
           ),
           Visibility(
               visible: showTopup,
               child: Expanded(
                 child: Column(children: [
-                  Center(
+                  const Center(
                       child: Text(
                     'Detail Pemasukan',
                     style: TextStyle(
@@ -698,9 +709,9 @@ class _MerchantPageState extends State<MerchantPage> {
                         fontFamily: 'Euclid Circular B',
                         color: Color(0xff172437)),
                   )),
-                  TextField(
+                  const TextField(
                     // onChanged: (value) => _runFilter(value),
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                         labelText: 'Cari Transaksi',
                         labelStyle: TextStyle(
                             fontSize: 20,
@@ -741,7 +752,7 @@ class _MerchantPageState extends State<MerchantPage> {
                                               child: Text(
                                                 snapshot.data![i].pengirim,
                                                 overflow: TextOverflow.ellipsis,
-                                                style: TextStyle(
+                                                style: const TextStyle(
                                                     fontFamily:
                                                         'Euclid Circular B',
                                                     fontWeight: FontWeight.w600,
@@ -750,7 +761,7 @@ class _MerchantPageState extends State<MerchantPage> {
                                             ),
                                             Text(
                                               snapshot.data![i].created_at,
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontFamily:
                                                       'Euclid Circular B',
                                                   fontWeight: FontWeight.w400,
@@ -761,7 +772,7 @@ class _MerchantPageState extends State<MerchantPage> {
                                         ),
                                         Text(
                                           '-Rp${snapshot.data![i].nominal.toString()}',
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                               fontWeight: FontWeight.w400,
                                               fontFamily: 'Euclid Circular B',
                                               fontSize: 20,
@@ -787,7 +798,7 @@ class _MerchantPageState extends State<MerchantPage> {
             visible: showPull,
             child: Column(
               children: [
-                Center(
+                const Center(
                     child: Text(
                   'Detail Penarikan',
                   style: TextStyle(
@@ -796,9 +807,9 @@ class _MerchantPageState extends State<MerchantPage> {
                       fontFamily: 'Euclid Circular B',
                       color: Color(0xff172437)),
                 )),
-                TextField(
+                const TextField(
                   // onChanged: (value) => _runFilter(value),
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                       labelText: 'Cari Transaksi',
                       labelStyle: TextStyle(
                           fontSize: 20,
@@ -839,7 +850,7 @@ class _MerchantPageState extends State<MerchantPage> {
                                             child: Text(
                                               snapshot.data![i].pengirim,
                                               overflow: TextOverflow.ellipsis,
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   fontFamily:
                                                       'Euclid Circular B',
                                                   fontWeight: FontWeight.w600,
@@ -848,7 +859,7 @@ class _MerchantPageState extends State<MerchantPage> {
                                           ),
                                           Text(
                                             snapshot.data![i].created_at,
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                                 fontFamily: 'Euclid Circular B',
                                                 fontWeight: FontWeight.w400,
                                                 fontSize: 16,
@@ -858,7 +869,7 @@ class _MerchantPageState extends State<MerchantPage> {
                                       ),
                                       Text(
                                         '-Rp${snapshot.data![i].nominal.toString()}',
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             fontWeight: FontWeight.w400,
                                             fontFamily: 'Euclid Circular B',
                                             fontSize: 20,

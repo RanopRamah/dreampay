@@ -163,10 +163,9 @@ class _LoginPageState extends State<LoginPage> {
     preferences.setString('type_customer', type);
     preferences.setBool('is_login', true);
 
-    print(preferences.getString('id_customer'));
     if (type == 'B') {
       Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (ctx) => BuyerHomePage()),
+          MaterialPageRoute(builder: (ctx) => const BuyerHomePage()),
           (route) => false);
     } else if (type == 'C') {
       Navigator.of(context).pushAndRemoveUntil(
@@ -178,7 +177,7 @@ class _LoginPageState extends State<LoginPage> {
           (route) => false);
     } else if (type == 'A') {
       Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (ctx) => MakeAccountPage()),
+          MaterialPageRoute(builder: (ctx) => const MakeAccountPage()),
           (route) => false);
     } else {
       null;
