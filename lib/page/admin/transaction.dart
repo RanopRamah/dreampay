@@ -12,7 +12,7 @@ var url = dotenv.env['API_URL'];
 
 Future<List<Transactions>> fetchTransactions() async {
   final response = await http.get(
-    Uri.parse('${url}admin/list-transaction'),
+    Uri.parse('$url/admin/list-transaction'),
   );
 
   if (response.statusCode == 200) {

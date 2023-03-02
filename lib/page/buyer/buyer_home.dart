@@ -15,7 +15,7 @@ var url = dotenv.env['API_URL'];
 // Fetch Saldo
 Future<Saldo> fetchSaldo(String id) async {
   final response = await http.get(
-    Uri.parse('${url}buyer/$id'),
+    Uri.parse('$url/buyer/$id'),
   );
 
   if (response.statusCode == 200) {
@@ -48,7 +48,7 @@ class Saldo {
 // Fetch List Pengeluaran
 Future<List<Pengeluaran>> fetchPengeluaran(String id) async {
   final response = await http.get(
-    Uri.parse('${url}buyer/$id}'),
+    Uri.parse('$url/buyer/$id}'),
   );
 
   if (response.statusCode == 200) {
@@ -91,7 +91,7 @@ class Pengeluaran {
 // Fetch List TopUp
 Future<List<TopUp>> fetchTopup(String id) async {
   final response = await http.get(
-    Uri.parse('${url}buyer/$id}'),
+    Uri.parse('$url/buyer/$id}'),
   );
   if (response.statusCode == 200) {
     List jsonResponse = jsonDecode(response.body)['list_topup'];
