@@ -24,6 +24,8 @@ class _LoginPageState extends State<LoginPage> {
   late SharedPreferences preferences;
   final TextEditingController _controller = TextEditingController();
   bool isChecked = false;
+  bool isError = false;
+  bool isSubmit = false;
 
   @override
   void initState() {
@@ -82,7 +84,19 @@ class _LoginPageState extends State<LoginPage> {
                     keyboardType: TextInputType.number,
                   ),
                 ),
-                const SizedBox(height: 32),
+                const SizedBox(height: 10),
+                Visibility(
+                  visible: isError,
+                  child: const Text(
+                    'No HP tidak ditemukan',
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontFamily: 'Euclid Circular B',
+                        color: Colors.redAccent,
+                        fontWeight: FontWeight.w600),
+                  ),
+                ),
+                const SizedBox(height: 20),
                 SizedBox(
                   width: 341,
                   height: 55,
@@ -112,6 +126,13 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                 ),
+                Visibility(
+                  visible: isSubmit,
+                  child: const Padding(
+                    padding: EdgeInsets.only(top: 20),
+                    child: CircularProgressIndicator(),
+                  ),
+                ),
               ],
             ),
           ),
@@ -124,7 +145,14 @@ class _LoginPageState extends State<LoginPage> {
     if (control == null) {
       return;
     } else {
-      sendPhone(control);
+      setState(() {
+        isSubmit = true;
+      });
+      sendPhone(control)
+          .catchError((e) => null)
+          .whenComplete(() => setState(() {
+                isSubmit = false;
+              }));
     }
   }
 
@@ -150,7 +178,10 @@ class _LoginPageState extends State<LoginPage> {
         output['tipe'],
       );
     } else {
-      throw Exception('Failed to Create');
+      setState(() {
+        isError = true;
+      });
+      throw Exception(response.body);
     }
   }
 

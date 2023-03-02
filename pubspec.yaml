@@ -93,6 +93,8 @@ flutter:
     - assets/image/bg-login.png
     - assets/image/shop.png
     - assets/image/qrex.png
+    - assets/image/edit_account.png
+    - assets/image/greensmile.png
     - assets/image/store-icon.png
     - assets/image/Indonesia.png
     - assets/image/back_money2.png
@@ -110,6 +112,7 @@ flutter:
     - assets/image/topup.png
     - assets/image/withdraw.png
     - assets/image/trade.png
+    - assets/image/failed_login.png
     - assets/image/wrong-pin.png
 
 

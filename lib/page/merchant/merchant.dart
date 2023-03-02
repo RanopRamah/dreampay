@@ -129,6 +129,8 @@ class _MerchantPageState extends State<MerchantPage> {
     });
   }
 
+  ScrollController penarikan = ScrollController();
+
   @override
   void initState() {
     setValue();
@@ -152,585 +154,587 @@ class _MerchantPageState extends State<MerchantPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: SlidingUpPanel(
-      controller: _panelController,
-      maxHeight: 450,
-      minHeight: 80,
-      padding: const EdgeInsets.only(left: 30, right: 30),
-      borderRadius: const BorderRadius.only(
-          topRight: Radius.circular(30), topLeft: Radius.circular(30)),
-      body: SingleChildScrollView(
-        child: Container(
-          height: 900,
-          decoration: const BoxDecoration(color: Color(0xFFFBFBFB)),
-          padding: const EdgeInsets.only(top: 60, left: 25, right: 25),
-          child: Center(
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Row(
+          controller: _panelController,
+          maxHeight: 450,
+          minHeight: 80,
+          padding: const EdgeInsets.only(left: 30, right: 30),
+          borderRadius: const BorderRadius.only(
+              topRight: Radius.circular(30), topLeft: Radius.circular(30)),
+          body: SingleChildScrollView(
+            child: Container(
+              height: 900,
+              decoration: const BoxDecoration(color: Color(0xFFFBFBFB)),
+              padding: const EdgeInsets.only(top: 60, left: 25, right: 25),
+              child: Center(
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
-                        Container(
-                          width: 47,
-                          height: 47,
-                          decoration: BoxDecoration(
-                              color: const Color(0xfff6f6f6),
-                              borderRadius: BorderRadius.circular(50)),
-                          padding: const EdgeInsets.all(10),
-                          child: Image.asset('assets/image/shop.png'),
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
-                            const Text(
-                              'Assalamualaikum 👋',
-                              style: TextStyle(
-                                fontFamily: 'Euclid Circular B',
-                                fontWeight: FontWeight.w500,
-                                fontSize: 16,
-                                color: Color(0xff777777),
-                              ),
+                            Row(
+                              children: <Widget>[
+                                Container(
+                                  width: 47,
+                                  height: 47,
+                                  decoration: BoxDecoration(
+                                      color: const Color(0xfff6f6f6),
+                                      borderRadius: BorderRadius.circular(50)),
+                                  padding: const EdgeInsets.all(10),
+                                  child: Image.asset('assets/image/shop.png'),
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    const Text(
+                                      'Assalamualaikum 👋',
+                                      style: TextStyle(
+                                        fontFamily: 'Euclid Circular B',
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 16,
+                                        color: Color(0xff777777),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 200,
+                                      height: 40,
+                                      child: Text(
+                                        name.toString(),
+                                        textAlign: TextAlign.left,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(
+                                          fontFamily: 'Euclid Circular B',
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 30,
+                                          color: Color(0xff222222),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              ],
                             ),
-                            SizedBox(
-                              width: 200,
-                              height: 40,
-                              child: Text(
-                                name.toString(),
-                                textAlign: TextAlign.left,
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
-                                  fontFamily: 'Euclid Circular B',
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 30,
-                                  color: Color(0xff222222),
+                            Column(children: <Widget>[
+                              Container(
+                                width: 52,
+                                height: 54,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(13),
+                                    border: Border.all(
+                                        width: 1, color: const Color(0xffD2D2D2))),
+                                child: TextButton(
+                                  child: Image.asset('assets/image/logout.png'),
+                                  onPressed: () {
+                                    setState(() {
+                                      prefs.remove('id_customer');
+                                      prefs.remove('phone_customer');
+                                      prefs.remove('name_customer');
+                                      prefs.remove('pin_customer');
+                                      prefs.remove('type_customer');
+                                      prefs.remove('is_login');
+                                      Navigator.of(context).pushAndRemoveUntil(
+                                          MaterialPageRoute(
+                                              builder: (ctx) => const LoginPage()),
+                                              (route) => false);
+                                    });
+                                  },
                                 ),
                               ),
-                            ),
+                              const SizedBox(
+                                height: 5,
+                              ),
+                              const Text(
+                                'Keluar',
+                                style: TextStyle(
+                                    fontFamily: 'Euclid Circular B',
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: Color(0xffadadad)),
+                              )
+                            ])
                           ],
-                        )
-                      ],
-                    ),
-                    Column(children: <Widget>[
-                      Container(
-                        width: 52,
-                        height: 54,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(13),
-                            border: Border.all(
-                                width: 1, color: const Color(0xffD2D2D2))),
-                        child: TextButton(
-                          child: Image.asset('assets/image/logout.png'),
-                          onPressed: () {
-                            setState(() {
-                              prefs.remove('id_customer');
-                              prefs.remove('phone_customer');
-                              prefs.remove('name_customer');
-                              prefs.remove('pin_customer');
-                              prefs.remove('type_customer');
-                              prefs.remove('is_login');
-                              Navigator.of(context).pushAndRemoveUntil(
-                                  MaterialPageRoute(
-                                      builder: (ctx) => const LoginPage()),
-                                  (route) => false);
-                            });
-                          },
                         ),
-                      ),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      const Text(
-                        'Keluar',
-                        style: TextStyle(
-                            fontFamily: 'Euclid Circular B',
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            color: Color(0xffadadad)),
-                      )
-                    ])
-                  ],
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                FutureBuilder(
-                  future: _seller,
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      return SignedSpacingColumn(
-                          spacing: -70.0,
-                          stackingOrder: StackingOrder.lastOnTop,
-                          children: <Widget>[
-                            Container(
-                              padding: const EdgeInsets.only(
-                                  top: 20, left: 45, right: 45),
-                              width: double.infinity,
-                              height: 417,
-                              decoration: BoxDecoration(
-                                  color: const Color(0xff5258D4),
-                                  borderRadius: BorderRadius.circular(14)),
-                              child: Column(
-                                children: <Widget>[
-                                  Text(
-                                    name.toString(),
-                                    style: const TextStyle(
-                                        fontSize: 24,
-                                        fontFamily: 'Euclid Circular B',
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.white),
-                                  ),
-                                  const SizedBox(
-                                    height: 5,
-                                  ),
-                                  Text(
-                                    'DPID: ${phone.toString()}',
-                                    style: const TextStyle(
-                                        fontSize: 16,
-                                        fontFamily: 'SF Pro Display',
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.white),
-                                  ),
-                                  const SizedBox(
-                                    height: 15,
-                                  ),
-                                  Container(
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        FutureBuilder(
+                          future: _seller,
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              return SignedSpacingColumn(
+                                  spacing: -70.0,
+                                  stackingOrder: StackingOrder.lastOnTop,
+                                  children: <Widget>[
+                                    Container(
+                                      padding: const EdgeInsets.only(
+                                          top: 20, left: 45, right: 45),
                                       width: double.infinity,
-                                      height: 241,
+                                      height: 417,
                                       decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(36)),
-                                      child: Align(
-                                        alignment: Alignment.center,
-                                        child: QrImage(
-                                          data: setQr(snapshot.data!.qrcode),
-                                          version: QrVersions.auto,
-                                          size: 170,
-                                        ),
-                                      ))
-                                ],
-                              ),
-                            ),
-                            Container(
-                              padding: const EdgeInsets.only(
-                                  top: 20, left: 13, right: 13),
-                              width: double.infinity,
-                              height: 244,
-                              decoration: BoxDecoration(
-                                color: const Color(0xffD7D0FF),
-                                borderRadius: BorderRadius.circular(35),
-                              ),
-                              child: Column(
-                                children: <Widget>[
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      const Row(
+                                          color: const Color(0xff5258D4),
+                                          borderRadius: BorderRadius.circular(14)),
+                                      child: Column(
                                         children: <Widget>[
                                           Text(
-                                            'Saldo',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w600,
+                                            name.toString(),
+                                            textAlign: TextAlign.center,
+                                            style: const TextStyle(
                                                 fontSize: 24,
                                                 fontFamily: 'Euclid Circular B',
-                                                color: Color(0xff172437)),
+                                                fontWeight: FontWeight.w600,
+                                                color: Colors.white),
                                           ),
-                                          SizedBox(
-                                            width: 5,
+                                          const SizedBox(
+                                            height: 5,
                                           ),
                                           Text(
-                                            'Toko',
-                                            style: TextStyle(
+                                            'DPID: ${phone.toString()}',
+                                            style: const TextStyle(
+                                                fontSize: 16,
+                                                fontFamily: 'SF Pro Display',
                                                 fontWeight: FontWeight.w500,
-                                                fontSize: 24,
-                                                fontFamily: 'Euclid Circular B',
-                                                color: Color(0xff172437)),
+                                                color: Colors.white),
                                           ),
+                                          const SizedBox(
+                                            height: 15,
+                                          ),
+                                          Container(
+                                              padding: EdgeInsets.zero,
+                                              width: double.infinity,
+                                              height: 241,
+                                              decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius:
+                                                  BorderRadius.circular(36)),
+                                              child: Align(
+                                                alignment: Alignment.center,
+                                                child: QrImage(
+                                                  data: setQr(snapshot.data!.qrcode),
+                                                  version: QrVersions.auto,
+                                                  size: 200,
+                                                ),
+                                              ))
                                         ],
                                       ),
-                                      badges.Badge(
-                                        position: badges.BadgePosition.topStart(
-                                          top: -15,
-                                        ),
-                                        badgeContent: Image.asset(
-                                          'assets/image/shop.png',
-                                          width: 16,
-                                          height: 16,
-                                        ),
-                                        badgeStyle: const badges.BadgeStyle(
-                                            padding: EdgeInsets.all(5),
-                                            badgeColor: Colors.white),
-                                        child: Container(
-                                          padding: const EdgeInsets.only(
-                                              left: 12, top: 5),
-                                          width: 124,
-                                          height: 48,
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(15),
-                                              image: const DecorationImage(
-                                                  image: AssetImage(
-                                                      'assets/image/back_money2.png'))),
-                                          child: Row(
+                                    ),
+                                    Container(
+                                      padding: const EdgeInsets.only(
+                                          top: 20, left: 13, right: 13),
+                                      width: double.infinity,
+                                      height: 244,
+                                      decoration: BoxDecoration(
+                                        color: const Color(0xffD7D0FF),
+                                        borderRadius: BorderRadius.circular(35),
+                                      ),
+                                      child: Column(
+                                        children: <Widget>[
+                                          Row(
+                                            mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
                                             children: <Widget>[
-                                              const Padding(
-                                                padding:
-                                                    EdgeInsets.only(bottom: 20),
-                                                child: Text(
-                                                  'Rp',
-                                                  style: TextStyle(
-                                                      fontFamily:
-                                                          'SF Pro Display',
-                                                      fontSize: 9,
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      color: Colors.white),
-                                                ),
+                                              Row(
+                                                children: <Widget>[
+                                                  Text(
+                                                    'Saldo',
+                                                    style: TextStyle(
+                                                        fontWeight: FontWeight.w600,
+                                                        fontSize: 24,
+                                                        fontFamily: 'Euclid Circular B',
+                                                        color: Color(0xff172437)),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 5,
+                                                  ),
+                                                  Text(
+                                                    'Toko',
+                                                    style: TextStyle(
+                                                        fontWeight: FontWeight.w500,
+                                                        fontSize: 24,
+                                                        fontFamily: 'Euclid Circular B',
+                                                        color: Color(0xff172437)),
+                                                  ),
+                                                ],
                                               ),
-                                              Text(
-                                                snapshot.data!.saldo.toString(),
-                                                style: const TextStyle(
-                                                    fontFamily:
-                                                        'SF Pro Display',
-                                                    fontSize: 21,
-                                                    fontWeight: FontWeight.w700,
-                                                    color: Colors.white),
+                                              badges.Badge(
+                                                position: badges.BadgePosition.topStart(
+                                                  top: -15,
+                                                ),
+                                                badgeContent: Image.asset(
+                                                  'assets/image/shop.png',
+                                                  width: 16,
+                                                  height: 16,
+                                                ),
+                                                badgeStyle: const badges.BadgeStyle(
+                                                    padding: EdgeInsets.all(5),
+                                                    badgeColor: Colors.white),
+                                                child: Container(
+                                                  padding: const EdgeInsets.only(
+                                                      left: 12, top: 5),
+                                                  width: 124,
+                                                  height: 48,
+                                                  decoration: BoxDecoration(
+                                                      borderRadius:
+                                                      BorderRadius.circular(15),
+                                                      image: const DecorationImage(
+                                                          image: AssetImage(
+                                                              'assets/image/back_money2.png'))),
+                                                  child: Row(
+                                                    children: <Widget>[
+                                                      const Padding(
+                                                        padding:
+                                                        EdgeInsets.only(bottom: 20),
+                                                        child: Text(
+                                                          'Rp',
+                                                          style: TextStyle(
+                                                              fontFamily:
+                                                              'SF Pro Display',
+                                                              fontSize: 9,
+                                                              fontWeight:
+                                                              FontWeight.w400,
+                                                              color: Colors.white),
+                                                        ),
+                                                      ),
+                                                      Text(
+                                                        snapshot.data!.saldo.toString(),
+                                                        style: const TextStyle(
+                                                            fontFamily:
+                                                            'SF Pro Display',
+                                                            fontSize: 21,
+                                                            fontWeight: FontWeight.w700,
+                                                            color: Colors.white),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
                                               ),
                                             ],
                                           ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  Container(
-                                      height: 141,
-                                      child: ListView(
-                                        scrollDirection: Axis.horizontal,
-                                        children: <Widget>[
-                                          Container(
-                                            padding: const EdgeInsets.only(
-                                                top: 10, right: 10, left: 10),
-                                            width: 147,
-                                            height: 140,
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(22),
-                                              color: const Color(0xffB3B9F0),
-                                            ),
-                                            child: Column(
-                                              children: <Widget>[
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: <Widget>[
-                                                    Container(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              5),
-                                                      decoration: BoxDecoration(
-                                                          color: const Color(
-                                                              0xffF4F0F0),
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      12)),
-                                                      width: 31,
-                                                      height: 33,
-                                                      child: Image.asset(
-                                                          'assets/image/trans.png'),
-                                                    ),
-                                                    const Text(
-                                                      'Pemasukan',
-                                                      style: TextStyle(
-                                                          fontFamily:
-                                                              'Euclid Circular B',
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                          fontSize: 15,
-                                                          color: Color(
-                                                              0xff222222)),
-                                                    )
-                                                  ],
-                                                ),
-                                                const SizedBox(
-                                                  height: 5,
-                                                ),
-                                                Row(
-                                                  children: <Widget>[
-                                                    const Padding(
-                                                      padding: EdgeInsets.only(
-                                                        bottom: 35,
-                                                      ),
-                                                      child: Text(
-                                                        'Rp',
-                                                        style: TextStyle(
-                                                            fontFamily:
-                                                                'SF Pro Display',
-                                                            fontSize: 10,
-                                                            fontWeight:
-                                                                FontWeight.w400,
-                                                            color: Color(
-                                                                0xff606060)),
-                                                      ),
-                                                    ),
-                                                    Text(
-                                                      snapshot.data!.pemasukan
-                                                          .toString(),
-                                                      style: const TextStyle(
-                                                          fontFamily:
-                                                              'SF Pro Display',
-                                                          fontSize: 26,
-                                                          fontWeight:
-                                                              FontWeight.w700,
-                                                          color: Color(
-                                                              0xff222222)),
-                                                    ),
-                                                  ],
-                                                ),
-                                                const SizedBox(
-                                                  height: 5,
-                                                ),
-                                                GestureDetector(
-                                                    onTap: () {
-                                                      setState(() {
-                                                        showPull = false;
-                                                        showTopup = true;
-                                                      });
-                                                    },
-                                                    child: Container(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                    .only(
-                                                                left: 49,
-                                                                top: 5),
-                                                        width: double.infinity,
-                                                        height: 28,
-                                                        decoration: BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        27),
-                                                            border: Border.all(
-                                                                width: 1,
-                                                                color: const Color(
-                                                                    0xffDBDDF0))),
-                                                        child: const Text(
-                                                          'Detail',
-                                                          style: TextStyle(
-                                                              fontFamily:
-                                                                  'Euclid Circular B',
-                                                              fontSize: 15,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w400,
-                                                              color: Color(
-                                                                  0xff606169)),
-                                                        )))
-                                              ],
-                                            ),
-                                          ),
                                           const SizedBox(
-                                            width: 8,
+                                            height: 10,
                                           ),
                                           Container(
-                                            padding: const EdgeInsets.only(
-                                                top: 10, right: 10, left: 10),
-                                            width: 147,
-                                            height: 140,
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(22),
-                                              color: const Color(0xffF17996),
-                                            ),
-                                            child: Column(
-                                              children: <Widget>[
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: <Widget>[
-                                                    Container(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              5),
-                                                      decoration: BoxDecoration(
-                                                          color: const Color(
-                                                              0xffF4F0F0),
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
+                                              height: 141,
+                                              child: ListView(
+                                                scrollDirection: Axis.horizontal,
+                                                children: <Widget>[
+                                                  Container(
+                                                    padding: const EdgeInsets.only(
+                                                        top: 10, right: 10, left: 10),
+                                                    width: 147,
+                                                    height: 140,
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                      BorderRadius.circular(22),
+                                                      color: const Color(0xffB3B9F0),
+                                                    ),
+                                                    child: Column(
+                                                      children: <Widget>[
+                                                        Row(
+                                                          mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                          children: <Widget>[
+                                                            Container(
+                                                              padding:
+                                                              const EdgeInsets.all(
+                                                                  5),
+                                                              decoration: BoxDecoration(
+                                                                  color: const Color(
+                                                                      0xffF4F0F0),
+                                                                  borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
                                                                       12)),
-                                                      width: 31,
-                                                      height: 33,
-                                                      child: Image.asset(
-                                                          'assets/image/trans.png'),
-                                                    ),
-                                                    const Text(
-                                                      'Penarikan',
-                                                      style: TextStyle(
-                                                          fontFamily:
-                                                              'Euclid Circular B',
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                          fontSize: 15,
-                                                          color: Color(
-                                                              0xff222222)),
-                                                    )
-                                                  ],
-                                                ),
-                                                const SizedBox(
-                                                  height: 5,
-                                                ),
-                                                Row(
-                                                  children: <Widget>[
-                                                    const Padding(
-                                                      padding: EdgeInsets.only(
-                                                        bottom: 35,
-                                                      ),
-                                                      child: Text(
-                                                        'Rp',
-                                                        style: TextStyle(
-                                                            fontFamily:
-                                                                'SF Pro Display',
-                                                            fontSize: 10,
-                                                            fontWeight:
-                                                                FontWeight.w400,
-                                                            color: Color(
-                                                                0xff606060)),
-                                                      ),
-                                                    ),
-                                                    Text(
-                                                      snapshot.data!.penarikan
-                                                          .toString(),
-                                                      style: const TextStyle(
-                                                          fontFamily:
-                                                              'SF Pro Display',
-                                                          fontSize: 26,
-                                                          fontWeight:
-                                                              FontWeight.w700,
-                                                          color: Color(
-                                                              0xff222222)),
-                                                    ),
-                                                  ],
-                                                ),
-                                                const SizedBox(
-                                                  height: 5,
-                                                ),
-                                                GestureDetector(
-                                                    onTap: () {
-                                                      setState(() {
-                                                        showTopup = false;
-                                                        showPull = true;
-                                                      });
-                                                    },
-                                                    child: Container(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                    .only(
-                                                                left: 49,
-                                                                top: 5),
-                                                        width: double.infinity,
-                                                        height: 28,
-                                                        decoration: BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        27),
-                                                            border: Border.all(
-                                                                width: 1,
-                                                                color: const Color(
-                                                                    0xffDBDDF0))),
-                                                        child: const Text(
-                                                          'Detail',
-                                                          style: TextStyle(
-                                                              fontFamily:
+                                                              width: 31,
+                                                              height: 33,
+                                                              child: Image.asset(
+                                                                  'assets/image/trans.png'),
+                                                            ),
+                                                            const Text(
+                                                              'Pemasukan',
+                                                              style: TextStyle(
+                                                                  fontFamily:
                                                                   'Euclid Circular B',
-                                                              fontSize: 15,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w400,
-                                                              color: Color(
-                                                                  0xff606169)),
-                                                        )))
-                                              ],
-                                            ),
-                                          ),
+                                                                  fontWeight:
+                                                                  FontWeight.w500,
+                                                                  fontSize: 15,
+                                                                  color: Color(
+                                                                      0xff222222)),
+                                                            )
+                                                          ],
+                                                        ),
+                                                        const SizedBox(
+                                                          height: 5,
+                                                        ),
+                                                        Row(
+                                                          children: <Widget>[
+                                                            const Padding(
+                                                              padding: EdgeInsets.only(
+                                                                bottom: 35,
+                                                              ),
+                                                              child: Text(
+                                                                'Rp',
+                                                                style: TextStyle(
+                                                                    fontFamily:
+                                                                    'SF Pro Display',
+                                                                    fontSize: 10,
+                                                                    fontWeight:
+                                                                    FontWeight.w400,
+                                                                    color: Color(
+                                                                        0xff606060)),
+                                                              ),
+                                                            ),
+                                                            Text(
+                                                              snapshot.data!.pemasukan
+                                                                  .toString(),
+                                                              style: const TextStyle(
+                                                                  fontFamily:
+                                                                  'SF Pro Display',
+                                                                  fontSize: 26,
+                                                                  fontWeight:
+                                                                  FontWeight.w700,
+                                                                  color: Color(
+                                                                      0xff222222)),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        const SizedBox(
+                                                          height: 5,
+                                                        ),
+                                                        GestureDetector(
+                                                            onTap: () {
+                                                              setState(() {
+                                                                showPull = false;
+                                                                showTopup = true;
+                                                              });
+                                                            },
+                                                            child: Container(
+                                                                padding:
+                                                                const EdgeInsets
+                                                                    .only(
+
+                                                                    top: 5),
+                                                                width: double.infinity,
+                                                                height: 28,
+                                                                decoration: BoxDecoration(
+                                                                    borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                        27),
+                                                                    border: Border.all(
+                                                                        width: 1,
+                                                                        color: const Color(
+                                                                            0xffDBDDF0))),
+                                                                child: Center(child: Text(
+                                                                  'Detail',
+                                                                  style: TextStyle(
+                                                                      fontFamily:
+                                                                      'Euclid Circular B',
+                                                                      fontSize: 15,
+                                                                      fontWeight:
+                                                                      FontWeight
+                                                                          .w400,
+                                                                      color: Color(
+                                                                          0xff606169)),
+                                                                ))))
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  const SizedBox(
+                                                    width: 8,
+                                                  ),
+                                                  Container(
+                                                    padding: const EdgeInsets.only(
+                                                        top: 10, right: 10, left: 10),
+                                                    width: 147,
+                                                    height: 140,
+                                                    decoration: BoxDecoration(
+                                                      borderRadius:
+                                                      BorderRadius.circular(22),
+                                                      color: const Color(0xffF17996),
+                                                    ),
+                                                    child: Column(
+                                                      children: <Widget>[
+                                                        Row(
+                                                          mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                          children: <Widget>[
+                                                            Container(
+                                                              padding:
+                                                              const EdgeInsets.all(
+                                                                  5),
+                                                              decoration: BoxDecoration(
+                                                                  color: const Color(
+                                                                      0xffF4F0F0),
+                                                                  borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                      12)),
+                                                              width: 31,
+                                                              height: 33,
+                                                              child: Image.asset(
+                                                                  'assets/image/trans.png'),
+                                                            ),
+                                                            const Text(
+                                                              'Penarikan',
+                                                              style: TextStyle(
+                                                                  fontFamily:
+                                                                  'Euclid Circular B',
+                                                                  fontWeight:
+                                                                  FontWeight.w500,
+                                                                  fontSize: 15,
+                                                                  color: Color(
+                                                                      0xff222222)),
+                                                            )
+                                                          ],
+                                                        ),
+                                                        const SizedBox(
+                                                          height: 5,
+                                                        ),
+                                                        Row(
+                                                          children: <Widget>[
+                                                            const Padding(
+                                                              padding: EdgeInsets.only(
+                                                                bottom: 35,
+                                                              ),
+                                                              child: Text(
+                                                                'Rp',
+                                                                style: TextStyle(
+                                                                    fontFamily:
+                                                                    'SF Pro Display',
+                                                                    fontSize: 10,
+                                                                    fontWeight:
+                                                                    FontWeight.w400,
+                                                                    color: Color(
+                                                                        0xff606060)),
+                                                              ),
+                                                            ),
+                                                            Text(
+                                                              snapshot.data!.penarikan
+                                                                  .toString(),
+                                                              style: const TextStyle(
+                                                                  fontFamily:
+                                                                  'SF Pro Display',
+                                                                  fontSize: 26,
+                                                                  fontWeight:
+                                                                  FontWeight.w700,
+                                                                  color: Color(
+                                                                      0xff222222)),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        const SizedBox(
+                                                          height: 5,
+                                                        ),
+                                                        GestureDetector(
+                                                            onTap: () {
+                                                              setState(() {
+                                                                showTopup = false;
+                                                                showPull = true;
+                                                              });
+                                                            },
+                                                            child: Container(
+
+                                                                width: double.infinity,
+                                                                height: 28,
+                                                                decoration: BoxDecoration(
+                                                                    borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                        27),
+                                                                    border: Border.all(
+                                                                        width: 1,
+                                                                        color: const Color(
+                                                                            0xffDBDDF0))),
+                                                                child: Center(
+                                                                    child:Text(
+                                                                      'Detail',
+                                                                      style: TextStyle(
+                                                                          fontFamily:
+                                                                          'Euclid Circular B',
+                                                                          fontSize: 15,
+                                                                          fontWeight:
+                                                                          FontWeight
+                                                                              .w400,
+                                                                          color: Color(
+                                                                              0xff606169)),
+                                                                    ))))
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
+                                              ))
                                         ],
-                                      ))
-                                ],
-                              ),
-                            )
-                          ]);
-                    } else if (snapshot.hasError) {
-                      return Text('${snapshot.error}');
-                    }
-                    return const Center(child: CircularProgressIndicator());
-                  },
-                )
-              ])),
-        ),
-      ),
-      panelBuilder: (controller) {
-        return Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
-            Widget>[
-          GestureDetector(
-            // onTap: togglePanel,
-            child: Center(
-              child: Container(
-                margin: const EdgeInsets.only(top: 10),
-                height: 5,
-                width: 90,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    color: Colors.grey.shade300),
-              ),
+                                      ),
+                                    )
+                                  ]);
+                            } else if (snapshot.hasError) {
+                              return Text('${snapshot.error}');
+                            }
+                            return const Center(child: CircularProgressIndicator());
+                          },
+                        )
+                      ])),
             ),
           ),
-          const SizedBox(
-            height: 15,
-          ),
-          Visibility(
-              visible: showTopup,
-              child: Expanded(
-                child: Column(children: [
-                  const Center(
-                      child: Text(
-                    'Detail Pemasukan',
-                    style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 24,
-                        fontFamily: 'Euclid Circular B',
-                        color: Color(0xff172437)),
-                  )),
-                  const TextField(
-                    // onChanged: (value) => _runFilter(value),
-                    decoration: InputDecoration(
-                        labelText: 'Cari Transaksi',
-                        labelStyle: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w400,
-                            fontFamily: 'Euclid Circular B',
-                            color: Color(0xffbdbdbd)),
-                        prefixIcon: Icon(Icons.search)),
+          panelBuilder: (ScrollController pemasukan) {
+            return Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
+                Widget>[
+              GestureDetector(
+                // onTap: togglePanel,
+                child: Center(
+                  child: Container(
+                    margin: const EdgeInsets.only(top: 10),
+                    height: 5,
+                    width: 90,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        color: Colors.grey.shade300),
                   ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Container(
-                    height: 260,
-                    child: SingleChildScrollView(
+                ),
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+
+
+              _pemasukanList(pemasukan),
+              Visibility(
+                  visible: showPull,
+                  child: Column(children: [
+                    const Center(
+                        child: Text(
+                          'Detail Penarikan',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 24,
+                              fontFamily: 'Euclid Circular B',
+                              color: Color(0xff172437)),
+                        )),
+                    const TextField(
+                      // onChanged: (value) => _runFilter(value),
+                      decoration: InputDecoration(
+                          labelText: 'Cari Transaksi',
+                          labelStyle: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w400,
+                              fontFamily: 'Euclid Circular B',
+                              color: Color(0xffbdbdbd)),
+                          prefixIcon: Icon(Icons.search)),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Container(
+                      height: 300,
                       child: FutureBuilder(
-                        future: _pemasukan,
+                        future: _penarikan,
                         builder: (context, snapshot) {
                           if (snapshot.hasData) {
                             return ListView.builder(
+                              padding: EdgeInsets.zero,
+                              controller: penarikan,
                               scrollDirection: Axis.vertical,
                               shrinkWrap: true,
                               itemCount: snapshot.data!.length,
@@ -740,11 +744,11 @@ class _MerchantPageState extends State<MerchantPage> {
                                     margin: const EdgeInsets.only(bottom: 15),
                                     child: Row(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.spaceBetween,
                                       children: [
                                         Column(
                                           crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          CrossAxisAlignment.start,
                                           children: <Widget>[
                                             SizedBox(
                                               height: 30,
@@ -754,7 +758,7 @@ class _MerchantPageState extends State<MerchantPage> {
                                                 overflow: TextOverflow.ellipsis,
                                                 style: const TextStyle(
                                                     fontFamily:
-                                                        'Euclid Circular B',
+                                                    'Euclid Circular B',
                                                     fontWeight: FontWeight.w600,
                                                     fontSize: 20),
                                               ),
@@ -763,7 +767,7 @@ class _MerchantPageState extends State<MerchantPage> {
                                               snapshot.data![i].created_at,
                                               style: const TextStyle(
                                                   fontFamily:
-                                                      'Euclid Circular B',
+                                                  'Euclid Circular B',
                                                   fontWeight: FontWeight.w400,
                                                   fontSize: 16,
                                                   color: Color(0xffbebebe)),
@@ -790,109 +794,122 @@ class _MerchantPageState extends State<MerchantPage> {
                               child: CircularProgressIndicator());
                         },
                       ),
-                    ),
-                  ),
-                ]),
-              )),
-          Visibility(
-            visible: showPull,
-            child: Column(
-              children: [
-                const Center(
-                    child: Text(
-                  'Detail Penarikan',
-                  style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 24,
-                      fontFamily: 'Euclid Circular B',
-                      color: Color(0xff172437)),
-                )),
-                const TextField(
-                  // onChanged: (value) => _runFilter(value),
-                  decoration: InputDecoration(
-                      labelText: 'Cari Transaksi',
-                      labelStyle: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w400,
-                          fontFamily: 'Euclid Circular B',
-                          color: Color(0xffbdbdbd)),
-                      prefixIcon: Icon(Icons.search)),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Container(
-                  height: 260,
-                  child: SingleChildScrollView(
-                    child: FutureBuilder(
-                      future: _penarikan,
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          return ListView.builder(
-                            scrollDirection: Axis.vertical,
-                            shrinkWrap: true,
-                            itemCount: snapshot.data!.length,
-                            itemBuilder: (ctx, i) {
-                              return Container(
-                                  height: 50,
-                                  margin: const EdgeInsets.only(bottom: 15),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          SizedBox(
-                                            height: 30,
-                                            width: 170,
-                                            child: Text(
-                                              snapshot.data![i].pengirim,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: const TextStyle(
-                                                  fontFamily:
-                                                      'Euclid Circular B',
-                                                  fontWeight: FontWeight.w600,
-                                                  fontSize: 20),
-                                            ),
-                                          ),
-                                          Text(
-                                            snapshot.data![i].created_at,
-                                            style: const TextStyle(
-                                                fontFamily: 'Euclid Circular B',
-                                                fontWeight: FontWeight.w400,
-                                                fontSize: 16,
-                                                color: Color(0xffbebebe)),
-                                          ),
-                                        ],
-                                      ),
-                                      Text(
-                                        '-Rp${snapshot.data![i].nominal.toString()}',
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.w400,
-                                            fontFamily: 'Euclid Circular B',
-                                            fontSize: 20,
-                                            color: Color(0xff222222)),
-                                      )
-                                    ],
-                                  ));
-                            },
-                          );
-                        } else if (snapshot.hasError) {
-                          return Text('${snapshot.error}');
-                        }
 
-                        return const Center(child: CircularProgressIndicator());
-                      },
-                    ),
-                  ),
-                )
-              ],
-            ),
-          )
-        ]);
-      },
-    ));
+
+                    )
+                  ])
+              )
+
+
+
+
+            ]);
+          },
+        ));
   }
+  Widget _pemasukanList(ScrollController pemasukan) {
+    return Visibility(
+        visible: showTopup,
+        child: Column(children: [
+          const Center(
+              child: Text(
+                'Detail Pemasukan',
+                style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 24,
+                    fontFamily: 'Euclid Circular B',
+                    color: Color(0xff172437)),
+              )),
+          const TextField(
+            // onChanged: (value) => _runFilter(value),
+            decoration: InputDecoration(
+                labelText: 'Cari Transaksi',
+                labelStyle: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w400,
+                    fontFamily: 'Euclid Circular B',
+                    color: Color(0xffbdbdbd)),
+                prefixIcon: Icon(Icons.search)),
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          Container(
+            height: 300,
+            child: FutureBuilder(
+              future: _pemasukan,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return ListView.builder(
+                    padding: EdgeInsets.zero,
+                    controller: pemasukan,
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    itemCount: snapshot.data!.length,
+                    itemBuilder: (ctx, i) {
+                      return Container(
+                          height: 50,
+                          margin: const EdgeInsets.only(bottom: 15),
+                          child: Row(
+                            mainAxisAlignment:
+                            MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                crossAxisAlignment:
+                                CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  SizedBox(
+                                    height: 30,
+                                    width: 170,
+                                    child: Text(
+                                      snapshot.data![i].pengirim,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                          fontFamily:
+                                          'Euclid Circular B',
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 20),
+                                    ),
+                                  ),
+                                  Text(
+                                    snapshot.data![i].created_at,
+                                    style: const TextStyle(
+                                        fontFamily:
+                                        'Euclid Circular B',
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 16,
+                                        color: Color(0xffbebebe)),
+                                  ),
+                                ],
+                              ),
+                              Text(
+                                '-Rp${snapshot.data![i].nominal.toString()}',
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.w400,
+                                    fontFamily: 'Euclid Circular B',
+                                    fontSize: 20,
+                                    color: Color(0xff222222)),
+                              )
+                            ],
+                          ));
+                    },
+                  );
+                } else if (snapshot.hasError) {
+                  return Text('${snapshot.error}');
+                }
+
+                return const Center(
+                    child: CircularProgressIndicator());
+              },
+            ),
+
+
+          ),
+
+
+        ])
+    );
+
+  }
+
 }

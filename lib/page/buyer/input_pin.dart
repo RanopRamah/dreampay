@@ -95,7 +95,7 @@ class _ArticleMainPageState extends State<ArticleMainPage> {
                           padding: const EdgeInsets.all(8.0),
                           child: Image.asset('assets/image/wrong-pin.png'),
                         ),
-                        Text(
+                        const Text(
                           'PIN Salah!',
                           style: TextStyle(
                             fontFamily: 'Euclid Circular B',
@@ -121,7 +121,7 @@ class _ArticleMainPageState extends State<ArticleMainPage> {
                     pinTheme: PinTheme(
                       fieldWidth: 55,
                       borderWidth: 4,
-                      inactiveColor: Color(0xffd9d9d9),
+                      inactiveColor: const Color(0xffd9d9d9),
                     ),
                     onChanged: (value) {},
                   ),
@@ -157,7 +157,7 @@ class _ArticleMainPageState extends State<ArticleMainPage> {
                       padding: const EdgeInsets.only(left: 50, right: 50),
                       decoration: BoxDecoration(
                           color: isSubmit
-                              ? Color.fromARGB(255, 156, 160, 252)
+                              ? const Color.fromARGB(255, 156, 160, 252)
                               : const Color(0xff5258D4),
                           borderRadius: BorderRadius.circular(10)),
                       child: TextButton(
@@ -174,7 +174,7 @@ class _ArticleMainPageState extends State<ArticleMainPage> {
                                   sendPay(
                                       _id, widget.seller_id, widget.nominal);
                                 } else {
-                                  Timer(Duration(seconds: 1), () {
+                                  Timer(const Duration(seconds: 1), () {
                                     setState(() {
                                       isErrorPin = true;
                                       isSubmit = false;
@@ -208,15 +208,15 @@ class _ArticleMainPageState extends State<ArticleMainPage> {
     );
   }
 
-  Future<void> sendPay(buyer_id, seller_no_hp, nominal) async {
+  Future<void> sendPay(buyerId, sellerNoHp, nominal) async {
     final response = await http.post(
       Uri.parse('${url}buyer/pay'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
       },
       body: jsonEncode(<String, String>{
-        'buyer_id': buyer_id,
-        'seller_no_hp': seller_no_hp,
+        'buyer_id': buyerId,
+        'seller_no_hp': sellerNoHp,
         'nominal': nominal,
       }),
     );
@@ -231,11 +231,17 @@ class _ArticleMainPageState extends State<ArticleMainPage> {
             (route) => false);
       } else {
         Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (ctx) => FailedResponsePage()),
+            MaterialPageRoute(builder: (ctx) => const FailedResponsePage()),
             (route) => false);
       }
     } else {
-      throw Exception('Failed to Send');
+      setState(() {
+        isSubmit = false;
+      });
+
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (ctx) => const FailedResponsePage()),
+          (route) => false);
     }
   }
 }
