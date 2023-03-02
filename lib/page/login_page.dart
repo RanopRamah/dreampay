@@ -158,7 +158,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> sendPhone(String no) async {
     final response = await http.post(
-      Uri.parse('${url}authenticate'),
+      Uri.parse('$url/authenticate'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
       },

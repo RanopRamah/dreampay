@@ -15,7 +15,7 @@ var url = dotenv.env['API_URL'];
 
 Future<List> fetchUsers() async {
   final response = await http.get(
-    Uri.parse('${url}cashier/3'),
+    Uri.parse('$url/cashier/3'),
   );
   if (response.statusCode == 200) {
     return jsonDecode(response.body)['list_buyer'];
@@ -26,7 +26,7 @@ Future<List> fetchUsers() async {
 
 Future<List<TopUp>> fetchTopUp() async {
   final response = await http.get(
-    Uri.parse('${url}cashier/3'),
+    Uri.parse('$url/cashier/3'),
   );
 
   if (response.statusCode == 200) {
@@ -603,7 +603,7 @@ class _CashierPageState extends State<CashierPage> {
 
   Future<void> createTopup() async {
     final response = await http.post(
-      Uri.parse('${url}cashier/topup'),
+      Uri.parse('$url/cashier/topup'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },

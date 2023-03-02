@@ -210,7 +210,7 @@ class _ArticleMainPageState extends State<ArticleMainPage> {
 
   Future<void> sendPay(buyerId, sellerNoHp, nominal) async {
     final response = await http.post(
-      Uri.parse('${url}buyer/pay'),
+      Uri.parse('$url/buyer/pay'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8'
       },
@@ -230,8 +230,10 @@ class _ArticleMainPageState extends State<ArticleMainPage> {
                     output['seller'], output['nota'], output['nominal'])),
             (route) => false);
       } else {
+        var error = jsonDecode(response.body);
         Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (ctx) => const FailedResponsePage()),
+            MaterialPageRoute(
+                builder: (ctx) => FailedResponsePage(error['message'])),
             (route) => false);
       }
     } else {
@@ -239,8 +241,10 @@ class _ArticleMainPageState extends State<ArticleMainPage> {
         isSubmit = false;
       });
 
+      var error = jsonDecode(response.body);
       Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (ctx) => const FailedResponsePage()),
+          MaterialPageRoute(
+              builder: (ctx) => FailedResponsePage(error['message'])),
           (route) => false);
     }
   }

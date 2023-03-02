@@ -45,7 +45,7 @@ class Admin {
 
 Future<List> fetchUsers() async {
   final response = await http.get(
-    Uri.parse('${url}admin/list-topup'),
+    Uri.parse('$url/admin/list-topup'),
   );
 
   if (response.statusCode == 200) {
@@ -58,7 +58,7 @@ Future<List> fetchUsers() async {
 
 Future<List<TopUp>> fetchTopUp() async {
   final response = await http.get(
-    Uri.parse('${url}admin/list-topup'),
+    Uri.parse('$url/admin/list-topup'),
   );
 
   if (response.statusCode == 200) {
@@ -979,7 +979,7 @@ searchStyle: TextStyle(
 
   Future<void> createTopup() async {
     final response = await http.post(
-      Uri.parse('${url}admin/add-topup'),
+      Uri.parse('$url/admin/add-topup'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },

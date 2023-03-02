@@ -53,6 +53,7 @@ dependencies:
   camera: ^0.10.3+2
   path_provider: ^2.0.13
   path: ^1.8.2
+  url_strategy: ^0.2.0
   
 dev_dependencies:
   flutter_test:
