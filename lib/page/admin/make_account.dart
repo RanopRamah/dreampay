@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:dreampay/page/admin/detail_account.dart';
 import 'package:dreampay/page/admin/topup.dart';
 import 'package:dreampay/page/admin/transaction.dart';
 import 'package:dreampay/page/admin/withdraw.dart';
@@ -16,14 +17,24 @@ class Users {
   final dynamic id;
   final dynamic nama;
   final dynamic no_hp;
+  final dynamic pin;
+  final dynamic tipe;
 
-  const Users({required this.id, required this.nama, required this.no_hp});
+  const Users({
+    required this.id,
+    required this.nama,
+    required this.no_hp,
+    required this.pin,
+    required this.tipe,
+  });
 
   factory Users.fromJson(Map<dynamic, dynamic> json) {
     return Users(
       id: json['id'],
       nama: json['nama'],
       no_hp: json['no_hp'],
+      pin: json['pin'],
+      tipe: json['tipe'],
     );
   }
 }
@@ -761,50 +772,62 @@ class _MakeAccountPageState extends State<MakeAccountPage> {
             child: ListView.builder(
               controller: sc,
               itemCount: snapshot.data!.length,
-              itemBuilder: (BuildContext context, i) => Container(
-                  padding: const EdgeInsets.only(
-                      top: 25, bottom: 25, left: 30, right: 20),
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(snapshot.data![i].nama,
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontFamily: 'Euclid Circular B',
-                                      fontSize: 20,
-                                      color: Color(0xff172437))),
-                              Text(snapshot.data![i].no_hp,
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.w400,
-                                      fontFamily: 'Euclid Circular B',
-                                      fontSize: 16,
-                                      color: Color(0xffbebebe))),
-                            ]),
-                        TextButton(
-                            onPressed: () {},
-                            child: Container(
-                                width: 101,
-                                height: 36,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(49),
-                                    border: Border.all(
-                                        width: 0.5,
-                                        color: const Color(0xffe6e6e6))),
-                                child: const Center(
-                                  child: Text(
-                                    'Detail',
-                                    style: TextStyle(
+              itemBuilder: (BuildContext context, i) {
+
+                return Container(
+                    padding: const EdgeInsets.only(
+                        top: 25, bottom: 25, left: 30, right: 20),
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(snapshot.data![i].nama,
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontFamily: 'Euclid Circular B',
+                                        fontSize: 20,
+                                        color: Color(0xff172437))),
+                                Text(snapshot.data![i].no_hp,
+                                    style: const TextStyle(
                                         fontWeight: FontWeight.w400,
                                         fontFamily: 'Euclid Circular B',
                                         fontSize: 16,
-                                        color: Color(0xff222222)),
-                                  ),
-                                )))
-                      ])),
-            ));
+                                        color: Color(0xffbebebe))),
+                              ]),
+                          TextButton(
+                              onPressed: () {
+                                Navigator.push(context, MaterialPageRoute(
+                                    builder: (ctx) =>
+                                        DetailAccount(snapshot.data![i].id,
+                                            snapshot.data![i].nama,
+                                            snapshot.data![i].no_hp,
+                                            snapshot.data![i].pin,
+                                            snapshot.data![i].tipe)));
+                              },
+                              child: Container(
+                                  width: 101,
+                                  height: 36,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(49),
+                                      border: Border.all(
+                                          width: 0.5,
+                                          color: const Color(0xffe6e6e6))),
+                                  child: const Center(
+                                    child: Text(
+                                      'Detail',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w400,
+                                          fontFamily: 'Euclid Circular B',
+                                          fontSize: 16,
+                                          color: Color(0xff222222)),
+                                    ),
+                                  )))
+                        ])
+                );
+              })
+        );
       },
     );
 
