@@ -9,17 +9,50 @@ import 'package:http/http.dart' as http;
 import 'package:searchfield/searchfield.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 var url = dotenv.env['API_URL'];
+
+Future<Admin> fetchAdmin(String id) async{
+  final response = await http.get(
+    Uri.parse('${url}admin'),
+  );
+
+  if (response.statusCode == 200) {
+    return Admin.fromJson(jsonDecode(response.body));
+  } else {
+    throw Exception(response.body);
+  }
+}
+class Admin {
+  final dynamic totalSaldo;
+  final dynamic totalSeller;
+  final dynamic totalWithdraw;
+
+  const Admin({
+    required this.totalSaldo,
+    required this.totalSeller,
+    required this.totalWithdraw,
+  });
+
+  factory Admin.fromJson(Map<dynamic, dynamic> json) {
+    return Admin(
+      totalSaldo: json['total_saldo'],
+      totalSeller: json['total_seller'],
+      totalWithdraw: json['total_withdraw'],
+    );
+  }
+}
+
 Future<List> fetchUsers() async {
   final response = await http.get(
     Uri.parse('${url}admin/list-topup'),
   );
 
   if (response.statusCode == 200) {
+    print(response.body);
     return jsonDecode(response.body)['list_buyer'];
   } else {
-    throw Exception('Failed to Load');
+    throw Exception(response.body);
   }
 }
 
@@ -45,19 +78,19 @@ class Users {
 
   Users.init()
       : id = 0,
-        nama = 'somebody',
-        noHp = '00000000000';
+        nama = '-',
+        noHp = '-';
 
   Users.fromMap(Map<dynamic, dynamic> map)
       : id = map['id'] as int,
         nama = map['nama'] as String,
-        noHp = map['noHp'] as String;
+        noHp = map['no_hp'] as String;
 
   factory Users.fromJson(Map<dynamic, dynamic> json) {
     return Users(
       id: json['id'],
       nama: json['nama'],
-      noHp: json['noHp'],
+      noHp: json['no_hp'],
     );
   }
 }
@@ -83,7 +116,7 @@ class TopUp {
       pengirim: json['pengirim'],
       penerima: json['penerima'],
       nominal: json['nominal'],
-      createdAt: json['createdAt'],
+      createdAt: json['created_at'],
     );
   }
 }
@@ -99,11 +132,13 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final searchController = TextEditingController();
 
-  TextEditingController _topupcontrol = TextEditingController();
+  final TextEditingController _topupcontrol = TextEditingController();
 
   List<Users> user = [];
   Users _selectedUsers = Users.init();
 
+  bool successTopup = false;
+  bool failedTopup = false;
   bool showPull = false;
   bool showTopup = true;
   bool visible = false;
@@ -111,11 +146,29 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
 
   final PanelController _controller = PanelController();
   late Future<List<TopUp>> topup;
+  String? phone;
+  String? name;
+  String? id;
+  late SharedPreferences prefs;
+
+  Future<void> setValue() async {
+    prefs = await SharedPreferences.getInstance();
+    phone = prefs.getString('phone_customer');
+    name = prefs.getString('name_customer');
+    id = prefs.getString('id_customer');
+
+
+      _admin = fetchAdmin(id.toString());
+
+  }
+
+  Future<Admin>? _admin;
 
   @override
   void initState() {
-    super.initState();
+    setValue();
     dvs();
+    super.initState();
     topup = fetchTopUp();
   }
 
@@ -131,10 +184,13 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
 
   void dvs() async {
     List<dynamic> data = await fetchUsers();
-    user = data.map((e) => Users.fromJson(e)).toList();
-    //
-    // var h = user.map((e) => e.nama);
-    // print(h);
+
+    setState(() {
+      user = data.map((e) => Users.fromMap(e)).toList();
+    });
+
+
+    print('ok');
   }
 
   bool containsUser(String text) {
@@ -314,165 +370,177 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
                   ),
                 ),
               ),
-              const SizedBox(
-                height: 15,
-              ),
-              Container(
-                padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
-                width: double.infinity,
-                height: 98,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: const Color(0xff292B5A)),
-                child: const Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      'Saldo A',
-                      style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontFamily: 'Euclid Circular B',
-                          fontSize: 14,
-                          color: Color(0xffbebebe)),
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Center(
-                        child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Padding(
-                          padding: EdgeInsets.only(bottom: 35),
-                          child: Text(
-                            'Rp',
-                            style: TextStyle(
-                                fontFamily: 'SF Pro Display',
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.white),
+              FutureBuilder(
+                future: _admin,
+                builder: (BuildContext context, snapshot) {
+                  if (snapshot.hasData){
+                    return Column(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
+                          width: double.infinity,
+                          height: 98,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: const Color(0xff292B5A)),
+                          child:  Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                'Saldo Buyer',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    fontFamily: 'Euclid Circular B',
+                                    fontSize: 14,
+                                    color: Color(0xffbebebe)),
+                              ),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              Center(
+                                  child: SingleChildScrollView(
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: <Widget>[
+                                          Padding(
+                                            padding: EdgeInsets.only(bottom: 35),
+                                            child: Text(
+                                              'Rp',
+                                              style: TextStyle(
+                                                  fontFamily: 'SF Pro Display',
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                          Text(
+                                            snapshot.data!.totalSaldo.toString(),
+                                            style: TextStyle(
+                                                fontFamily: 'SF Pro Display',
+                                                fontSize: 36,
+                                                fontWeight: FontWeight.w700,
+                                                color: Colors.white),
+                                          ),
+                                        ],
+                                      )))
+                            ],
                           ),
                         ),
-                        Text(
-                          '560,000',
-                          style: TextStyle(
-                              fontFamily: 'SF Pro Display',
-                              fontSize: 36,
-                              fontWeight: FontWeight.w700,
-                              color: Colors.white),
+                        const SizedBox(
+                          height: 15,
                         ),
-                      ],
-                    ))
-                  ],
-                ),
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              Container(
-                padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
-                width: double.infinity,
-                height: 98,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: const Color(0xff3A2C62)),
-                child: const Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      'Saldo A',
-                      style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontFamily: 'Euclid Circular B',
-                          fontSize: 14,
-                          color: Color(0xffbebebe)),
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Center(
-                        child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Padding(
-                          padding: EdgeInsets.only(bottom: 35),
-                          child: Text(
-                            'Rp',
-                            style: TextStyle(
-                                fontFamily: 'SF Pro Display',
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.white),
+                        Container(
+                          padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
+                          width: double.infinity,
+                          height: 98,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: const Color(0xff3A2C62)),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                'Saldo Seller',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    fontFamily: 'Euclid Circular B',
+                                    fontSize: 14,
+                                    color: Color(0xffbebebe)),
+                              ),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              Center(
+                                  child:SingleChildScrollView(
+                                      child:Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children:  <Widget>[
+                                          Padding(
+                                            padding: EdgeInsets.only(bottom: 35),
+                                            child: Text(
+                                              'Rp',
+                                              style: TextStyle(
+                                                  fontFamily: 'SF Pro Display',
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                          Text(
+                                            snapshot.data!.totalSeller.toString(),
+                                            style: TextStyle(
+                                                fontFamily: 'SF Pro Display',
+                                                fontSize: 36,
+                                                fontWeight: FontWeight.w700,
+                                                color: Colors.white),
+                                          ),
+                                        ],
+                                      )))
+                            ],
                           ),
                         ),
-                        Text(
-                          '560,000',
-                          style: TextStyle(
-                              fontFamily: 'SF Pro Display',
-                              fontSize: 36,
-                              fontWeight: FontWeight.w700,
-                              color: Colors.white),
+                        const SizedBox(
+                          height: 15,
                         ),
-                      ],
-                    ))
-                  ],
-                ),
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              Container(
-                padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
-                width: double.infinity,
-                height: 98,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: const Color(0xff2E3346)),
-                child: const Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      'Saldo A',
-                      style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontFamily: 'Euclid Circular B',
-                          fontSize: 14,
-                          color: Color(0xffbebebe)),
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Center(
-                        child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Padding(
-                          padding: EdgeInsets.only(bottom: 35),
-                          child: Text(
-                            'Rp',
-                            style: TextStyle(
-                                fontFamily: 'SF Pro Display',
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.white),
+                        Container(
+                          padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
+                          width: double.infinity,
+                          height: 98,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: const Color(0xff2E3346)),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              const Text(
+                                'Total Penarikan',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    fontFamily: 'Euclid Circular B',
+                                    fontSize: 14,
+                                    color: Color(0xffbebebe)),
+                              ),
+                              const SizedBox(
+                                height: 5,
+                              ),
+                              Center(
+                                  child: SingleChildScrollView(
+                                      scrollDirection: Axis.horizontal,
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children:  <Widget>[
+                                          Padding(
+                                            padding: EdgeInsets.only(bottom: 35),
+                                            child: Text(
+                                              'Rp',
+                                              style: TextStyle(
+                                                  fontFamily: 'SF Pro Display',
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                          Text(
+                                            snapshot.data!.totalWithdraw,
+                                            style: TextStyle(
+                                                fontFamily: 'SF Pro Display',
+                                                fontSize: 36,
+                                                fontWeight: FontWeight.w700,
+                                                color: Colors.white),
+                                          ),
+                                        ],
+                                      )))
+                            ],
                           ),
                         ),
-                        Text(
-                          '560,000',
-                          style: TextStyle(
-                              fontFamily: 'SF Pro Display',
-                              fontSize: 36,
-                              fontWeight: FontWeight.w700,
-                              color: Colors.white),
-                        ),
                       ],
-                    ))
-                  ],
-                ),
-              ),
-              const SizedBox(
-                height: 15,
-              ),
+                    );
+                  } else if (snapshot.hasError) {
+                    return Text('${snapshot.error}');
+                  }
+
+                  return const Center(child: CircularProgressIndicator());
+                },),
             ],
           ),
         ),
@@ -529,8 +597,13 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
                         width: 322,
                         height: 62,
                         margin: const EdgeInsets.only(top: 26.88),
-                        child: SearchField(
+                        child:  SearchField<dynamic>(
+searchStyle: TextStyle(
+  fontFamily: 'Euclid Circular B',
+  fontWeight: FontWeight.w600
+),
                           searchInputDecoration: InputDecoration(
+
                             enabledBorder: const UnderlineInputBorder(
                               borderSide: BorderSide(color: Color(0xFFF1F1F1)),
                             ),
@@ -554,12 +627,47 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
                             ),
                           ),
                           suggestions: user
-                              .map((e) => SearchFieldListItem(e.nama, item: e))
+                              .map(
+                                (e) => SearchFieldListItem(
+
+                                  
+                              e.nama,
+                              item: e,
+                              // Use child to show Custom Widgets in the
+
+                              child: Padding(
+
+                                padding: const EdgeInsets.only(top: 10,bottom: 10,left: 20),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.center  ,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                      children:[
+                                    Text(e.nama,style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      color: Color(0xff222222),
+                                      fontSize: 20,
+                                      fontFamily: 'Euclid Circular B'
+                                    ),),
+                                    Text(e.noHp,style: TextStyle(
+                                        fontWeight: FontWeight.w400,
+                                        color: Color(0xffbebebe),
+                                        fontSize: 15,
+                                        fontFamily: 'Euclid Circular B'
+                                    ),),
+                                  ])
+                                  ],
+                                ),
+                              ),
+                            ),
+                          )
                               .toList(),
-                          suggestionState: Suggestion.hidden,
+
                           controller: searchController,
                           inputType: TextInputType.text,
-                          itemHeight: 40,
+                          itemHeight: 80,
                           validator: (x) {
                             if (x!.isEmpty || !containsUser(x)) {
                               return 'Please enter valid name';
@@ -567,9 +675,9 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
                               return null;
                             }
                           },
-                          onSuggestionTap: (SearchFieldListItem<Users> x) {
+                          onSuggestionTap: (SearchFieldListItem v) {
                             setState(() {
-                              _selectedUsers = x.item!;
+                              _selectedUsers = v.item!;
                             });
                           },
                         ),
@@ -671,6 +779,8 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
                           onPressed: () {
                             setState(() {
                               createTopup();
+                              _topupcontrol.clear();
+
                             });
                           },
                           style: ButtonStyle(
@@ -694,19 +804,31 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
                           ),
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 15),
-                        child: Visibility(
-                          visible: visible,
-                          child: Image.asset(
-                            (isSuccessful)
-                                ? 'assets/image/success-topup.png'
-                                : 'assets/image/failed-topup.png',
-                            width: 153,
-                            height: 60,
-                          ),
-                        ),
+                      Visibility(
+                          visible: successTopup,
+                          child: Container(
+                              padding: EdgeInsets.only(left: 10),
+                              child: Row(children: [
+                                Image.asset('assets/image/greensmile.png',width: 20,height: 20,),
+                                SizedBox(width: 5,),
+                                Text('Top-up Berhasil!',style: TextStyle(
+                                    fontFamily: 'Euclid Circular B',fontSize: 16,fontWeight: FontWeight.w500,color: Color(0xff52D47E)
+                                ),)
+                              ],))),
+                      SizedBox(
+                        height: 10,
                       ),
+                      Visibility(
+                          visible: failedTopup,
+                          child: Container(
+                              padding: EdgeInsets.only(left: 7),
+                              child: Row(children: [
+                                Image.asset('assets/image/failed.png',width: 20,height: 20,),
+                                SizedBox(width: 5,),
+                                Text('Top-Up Gagal!',style: TextStyle(
+                                    fontFamily: 'Euclid Circular B',fontSize: 16,fontWeight: FontWeight.w500,color: Color(0xffEF3434)
+                                ),)
+                              ],)))
                     ],
                   ),
                 ),
@@ -748,7 +870,7 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
                 height: 30,
                 margin: const EdgeInsets.only(top: 29),
                 child: TextFormField(
-                  controller: _topupcontrol,
+
                   decoration: InputDecoration(
                     enabledBorder: const UnderlineInputBorder(
                       borderSide: BorderSide(color: Color(0xFFF1F1F1)),
@@ -801,8 +923,8 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(
-                          height: 20,
+                        Container(
+
                           width: 200,
                           child: Text(
                             snapshot.data![i].penerima.toString(),
@@ -815,8 +937,11 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
                             ),
                           ),
                         ),
+                        SizedBox(
+                          height: 5,
+                        ),
                         Text(
-                          snapshot.data![i].createdAt,
+                          snapshot.data![i].createdAt.toString(),
                           style: const TextStyle(
                             color: Color(0xFFBEBEBE),
                             fontFamily: 'Euclid Circular B',
@@ -865,10 +990,15 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
       }),
     );
     if (response.statusCode == 200) {
-      Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (ctx) => const AdminTopupPage()),
-          (route) => false);
+setState(() {
+  successTopup = true;
+  failedTopup = false;
+});
     } else {
+      setState(() {
+        failedTopup = true;
+        successTopup = false;
+      });
       throw Exception(response.body);
     }
   }

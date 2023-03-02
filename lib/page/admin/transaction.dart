@@ -11,6 +11,39 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 var url = dotenv.env['API_URL'];
 
+
+Future<Admin> fetchAdmin(String id) async{
+  final response = await http.get(
+    Uri.parse('${url}admin'),
+  );
+
+  if (response.statusCode == 200) {
+    return Admin.fromJson(jsonDecode(response.body));
+  } else {
+    throw Exception(response.body);
+  }
+}
+
+class Admin {
+  final dynamic totalSaldo;
+  final dynamic totalSeller;
+  final dynamic totalWithdraw;
+
+  const Admin({
+    required this.totalSaldo,
+    required this.totalSeller,
+    required this.totalWithdraw,
+  });
+
+  factory Admin.fromJson(Map<dynamic, dynamic> json) {
+    return Admin(
+      totalSaldo: json['total_saldo'],
+      totalSeller: json['total_seller'],
+      totalWithdraw: json['total_withdraw'],
+    );
+  }
+}
+
 Future<List<Transactions>> fetchTransactions() async {
   final response = await http.get(
     Uri.parse('${url}admin/list-transaction'),
@@ -70,13 +103,17 @@ class _AdminTransactionPageState extends State<AdminTransactionPage> {
   String? id;
   late SharedPreferences prefs;
 
+  Future<Admin>? _admin;
+
   Future<void> setValue() async {
-    _transactionsList = fetchTransactions();
+
 
     prefs = await SharedPreferences.getInstance();
     phone = prefs.getString('phone_customer');
     name = prefs.getString('name_customer');
     id = prefs.getString('id_customer');
+
+    _admin = fetchAdmin(id.toString());
   }
 
   @override
@@ -254,162 +291,177 @@ class _AdminTransactionPageState extends State<AdminTransactionPage> {
                 SizedBox(
                   height: 15,
                 ),
-                Container(
-                  padding: EdgeInsets.only(top: 10, left: 10, right: 10),
-                  width: double.infinity,
-                  height: 98,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Color(0xff292B5A)),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        'Saldo A',
-                        style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontFamily: 'Euclid Circular B',
-                            fontSize: 14,
-                            color: Color(0xffbebebe)),
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Center(
-                          child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Padding(
-                            padding: EdgeInsets.only(bottom: 35),
-                            child: Text(
-                              'Rp',
-                              style: TextStyle(
-                                  fontFamily: 'SF Pro Display',
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.white),
+                FutureBuilder(
+                  future: _admin,
+                  builder: (BuildContext context, snapshot) {
+                    if (snapshot.hasData){
+                      return Column(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
+                            width: double.infinity,
+                            height: 98,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: const Color(0xff292B5A)),
+                            child:  Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                  'Saldo Buyer',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      fontFamily: 'Euclid Circular B',
+                                      fontSize: 14,
+                                      color: Color(0xffbebebe)),
+                                ),
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                Center(
+                                    child: SingleChildScrollView(
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: <Widget>[
+                                            Padding(
+                                              padding: EdgeInsets.only(bottom: 35),
+                                              child: Text(
+                                                'Rp',
+                                                style: TextStyle(
+                                                    fontFamily: 'SF Pro Display',
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w500,
+                                                    color: Colors.white),
+                                              ),
+                                            ),
+                                            Text(
+                                              snapshot.data!.totalSaldo.toString(),
+                                              style: TextStyle(
+                                                  fontFamily: 'SF Pro Display',
+                                                  fontSize: 36,
+                                                  fontWeight: FontWeight.w700,
+                                                  color: Colors.white),
+                                            ),
+                                          ],
+                                        )))
+                              ],
                             ),
                           ),
-                          Text(
-                            '560,000',
-                            style: TextStyle(
-                                fontFamily: 'SF Pro Display',
-                                fontSize: 36,
-                                fontWeight: FontWeight.w700,
-                                color: Colors.white),
+                          const SizedBox(
+                            height: 15,
                           ),
-                        ],
-                      ))
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                Container(
-                  padding: EdgeInsets.only(top: 10, left: 10, right: 10),
-                  width: double.infinity,
-                  height: 98,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Color(0xff3A2C62)),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        'Saldo A',
-                        style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontFamily: 'Euclid Circular B',
-                            fontSize: 14,
-                            color: Color(0xffbebebe)),
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Center(
-                          child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Padding(
-                            padding: EdgeInsets.only(bottom: 35),
-                            child: Text(
-                              'Rp',
-                              style: TextStyle(
-                                  fontFamily: 'SF Pro Display',
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.white),
+                          Container(
+                            padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
+                            width: double.infinity,
+                            height: 98,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: const Color(0xff3A2C62)),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                  'Saldo Seller',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      fontFamily: 'Euclid Circular B',
+                                      fontSize: 14,
+                                      color: Color(0xffbebebe)),
+                                ),
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                Center(
+                                    child:SingleChildScrollView(
+                                        child:Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children:  <Widget>[
+                                            Padding(
+                                              padding: EdgeInsets.only(bottom: 35),
+                                              child: Text(
+                                                'Rp',
+                                                style: TextStyle(
+                                                    fontFamily: 'SF Pro Display',
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w500,
+                                                    color: Colors.white),
+                                              ),
+                                            ),
+                                            Text(
+                                              snapshot.data!.totalSeller.toString(),
+                                              style: TextStyle(
+                                                  fontFamily: 'SF Pro Display',
+                                                  fontSize: 36,
+                                                  fontWeight: FontWeight.w700,
+                                                  color: Colors.white),
+                                            ),
+                                          ],
+                                        )))
+                              ],
                             ),
                           ),
-                          Text(
-                            '560,000',
-                            style: TextStyle(
-                                fontFamily: 'SF Pro Display',
-                                fontSize: 36,
-                                fontWeight: FontWeight.w700,
-                                color: Colors.white),
+                          const SizedBox(
+                            height: 15,
                           ),
-                        ],
-                      ))
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                Container(
-                  padding: EdgeInsets.only(top: 10, left: 10, right: 10),
-                  width: double.infinity,
-                  height: 98,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Color(0xff2E3346)),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        'Saldo A',
-                        style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontFamily: 'Euclid Circular B',
-                            fontSize: 14,
-                            color: Color(0xffbebebe)),
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Center(
-                          child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Padding(
-                            padding: EdgeInsets.only(bottom: 35),
-                            child: Text(
-                              'Rp',
-                              style: TextStyle(
-                                  fontFamily: 'SF Pro Display',
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.white),
+                          Container(
+                            padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
+                            width: double.infinity,
+                            height: 98,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: const Color(0xff2E3346)),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                const Text(
+                                  'Total Penarikan',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      fontFamily: 'Euclid Circular B',
+                                      fontSize: 14,
+                                      color: Color(0xffbebebe)),
+                                ),
+                                const SizedBox(
+                                  height: 5,
+                                ),
+                                Center(
+                                    child: SingleChildScrollView(
+                                        scrollDirection: Axis.horizontal,
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children:  <Widget>[
+                                            Padding(
+                                              padding: EdgeInsets.only(bottom: 35),
+                                              child: Text(
+                                                'Rp',
+                                                style: TextStyle(
+                                                    fontFamily: 'SF Pro Display',
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w500,
+                                                    color: Colors.white),
+                                              ),
+                                            ),
+                                            Text(
+                                              snapshot.data!.totalWithdraw,
+                                              style: TextStyle(
+                                                  fontFamily: 'SF Pro Display',
+                                                  fontSize: 36,
+                                                  fontWeight: FontWeight.w700,
+                                                  color: Colors.white),
+                                            ),
+                                          ],
+                                        )))
+                              ],
                             ),
                           ),
-                          Text(
-                            '560,000',
-                            style: TextStyle(
-                                fontFamily: 'SF Pro Display',
-                                fontSize: 36,
-                                fontWeight: FontWeight.w700,
-                                color: Colors.white),
-                          ),
                         ],
-                      ))
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: 15,
-                ),
+                      );
+                    } else if (snapshot.hasError) {
+                      return Text('${snapshot.error}');
+                    }
+
+                    return const Center(child: CircularProgressIndicator());
+                  },),
               ],
             ),
           ),
@@ -526,7 +578,7 @@ class _AdminTransactionPageState extends State<AdminTransactionPage> {
                                                           .spaceBetween,
                                                   children: [
                                                     Container(
-                                                      width: 120,
+                                                      width: 110,
                                                       child: Text(
                                                         snapshot
                                                             .data![i].pengirim

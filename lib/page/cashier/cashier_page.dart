@@ -11,6 +11,8 @@ import '../login_page.dart';
 
 var url = dotenv.env['API_URL'];
 
+
+
 Future<List> fetchUsers() async {
   final response = await http.get(
     Uri.parse('${url}cashier/3'),
@@ -137,7 +139,6 @@ class _CashierPageState extends State<CashierPage> {
 
   void dvs() async {
     List<dynamic> data = await fetchUsers();
-
     setState(() {
       user = data.map((e) => Users.fromMap(e)).toList();
     });
@@ -280,13 +281,28 @@ class _CashierPageState extends State<CashierPage> {
                                   // Use child to show Custom Widgets in the suggestions
                                   // defaults to Text widget
                                   child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
+
+                                    padding: const EdgeInsets.only(top: 10,bottom: 10,left: 20),
                                     child: Row(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
                                       children: [
-                                        const SizedBox(
-                                          width: 10,
-                                        ),
-                                        Text(e.nama),
+                                        Column(
+                                            mainAxisAlignment: MainAxisAlignment.center  ,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children:  <Widget> [
+                                            Text(e.nama,style: const TextStyle(
+                                                  fontWeight: FontWeight.w600,
+                                                  color: Color(0xff222222),
+                                                  fontSize: 20,
+                                                  fontFamily: 'Euclid Circular B'
+                                              ),),
+                                              Text(e.no_hp,style: const TextStyle(
+                                                  fontWeight: FontWeight.w400,
+                                                  color: Color(0xffbebebe),
+                                                  fontSize: 15,
+                                                  fontFamily: 'Euclid Circular B'
+                                              ),),
+                                            ])
                                       ],
                                     ),
                                   ),
@@ -296,7 +312,7 @@ class _CashierPageState extends State<CashierPage> {
                           suggestionState: Suggestion.hidden,
                           controller: searchController,
                           inputType: TextInputType.text,
-                          itemHeight: 40,
+                          itemHeight: 80,
                           validator: (x) {
                             if (x!.isEmpty || !containsUser(x)) {
                               return 'Please enter valid name';
