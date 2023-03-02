@@ -96,7 +96,7 @@ class AdminTransactionPage extends StatefulWidget {
 class _AdminTransactionPageState extends State<AdminTransactionPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  Future<List<Transactions>>? _transactionsList;
+  late Future<List<Transactions>>? _transactionsList;
 
   String? phone;
   String? name;
@@ -106,8 +106,6 @@ class _AdminTransactionPageState extends State<AdminTransactionPage> {
   Future<Admin>? _admin;
 
   Future<void> setValue() async {
-
-
     prefs = await SharedPreferences.getInstance();
     phone = prefs.getString('phone_customer');
     name = prefs.getString('name_customer');
@@ -120,6 +118,7 @@ class _AdminTransactionPageState extends State<AdminTransactionPage> {
   initState() {
     setValue();
     super.initState();
+    _transactionsList = fetchTransactions();
   }
 
   @override
@@ -580,11 +579,8 @@ class _AdminTransactionPageState extends State<AdminTransactionPage> {
                                                     Container(
                                                       width: 110,
                                                       child: Text(
-                                                        snapshot
-                                                            .data![i].pengirim
-                                                            .toString(),
-                                                        overflow: TextOverflow
-                                                            .ellipsis,
+                                                        snapshot.data![i].pengirim.toString(),
+                                                        overflow: TextOverflow.ellipsis,
                                                         style: TextStyle(
                                                             fontFamily:
                                                                 'Euclid Circular B',

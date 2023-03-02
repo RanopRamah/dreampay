@@ -107,6 +107,9 @@ class _MerchantPageState extends State<MerchantPage> {
   bool showPull = false;
   bool showTopup = true;
 
+  List<dynamic> filteredPemasukan = [];
+  List<dynamic> filteredPenarikan = [];
+
   String? phone;
   String? name;
   String? id;
@@ -466,7 +469,9 @@ class _MerchantPageState extends State<MerchantPage> {
                                                 const SizedBox(
                                                   height: 5,
                                                 ),
-                                                Row(
+                                                SingleChildScrollView(
+                                                  scrollDirection: Axis.horizontal,
+                                               child: Row(
                                                   children: <Widget>[
                                                     const Padding(
                                                       padding: EdgeInsets.only(
@@ -497,7 +502,7 @@ class _MerchantPageState extends State<MerchantPage> {
                                                               0xff222222)),
                                                     ),
                                                   ],
-                                                ),
+                                                ),),
                                                 const SizedBox(
                                                   height: 5,
                                                 ),
@@ -708,10 +713,19 @@ class _MerchantPageState extends State<MerchantPage> {
                       fontFamily: 'Euclid Circular B',
                       color: Color(0xff172437)),
                 )),
-                const TextField(
-                  // onChanged: (value) => _runFilter(value),
+                TextField(
+                  onChanged: (value) async {
+                    final data = await fetchPenarikan(id.toString());
+                    setState(() {
+                      filteredPenarikan = data
+                          .where((item) => item.pengirim
+                          .toLowerCase()
+                          .contains(value.toLowerCase()))
+                          .toList();
+                    });
+                  },
                   decoration: InputDecoration(
-                      labelText: 'Cari Transaksi',
+                      labelText: 'Cari',
                       labelStyle: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w400,
@@ -733,7 +747,11 @@ class _MerchantPageState extends State<MerchantPage> {
                           controller: penarikan,
                           scrollDirection: Axis.vertical,
                           shrinkWrap: true,
-                          itemCount: snapshot.data!.length,
+                          itemCount: filteredPenarikan
+                              .isNotEmpty
+                              ? filteredPenarikan
+                              .length
+                              : snapshot.data!.length,
                           itemBuilder: (ctx, i) {
                             return Container(
                                 height: 50,
@@ -750,7 +768,9 @@ class _MerchantPageState extends State<MerchantPage> {
                                           height: 30,
                                           width: 170,
                                           child: Text(
-                                            snapshot.data![i].pengirim,
+                                            filteredPenarikan.isNotEmpty
+                                                ? filteredPenarikan[i].pengirim
+                                                : snapshot.data![i].pengirim,
                                             overflow: TextOverflow.ellipsis,
                                             style: const TextStyle(
                                                 fontFamily: 'Euclid Circular B',
@@ -759,7 +779,9 @@ class _MerchantPageState extends State<MerchantPage> {
                                           ),
                                         ),
                                         Text(
-                                          snapshot.data![i].created_at,
+                                          filteredPenarikan.isNotEmpty
+                                              ? filteredPenarikan[i].created_at
+                                              : snapshot.data![i].created_at,
                                           style: const TextStyle(
                                               fontFamily: 'Euclid Circular B',
                                               fontWeight: FontWeight.w400,
@@ -807,10 +829,19 @@ class _MerchantPageState extends State<MerchantPage> {
                 fontFamily: 'Euclid Circular B',
                 color: Color(0xff172437)),
           )),
-          const TextField(
-            // onChanged: (value) => _runFilter(value),
+           TextField(
+            onChanged: (value) async {
+              final data = await fetchPemasukan(id.toString());
+              setState(() {
+                filteredPemasukan = data
+                    .where((item) => item.pengirim
+                    .toLowerCase()
+                    .contains(value.toLowerCase()))
+                    .toList();
+              });
+            },
             decoration: InputDecoration(
-                labelText: 'Cari Transaksi',
+                labelText: 'Cari',
                 labelStyle: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w400,
@@ -832,7 +863,11 @@ class _MerchantPageState extends State<MerchantPage> {
                     controller: pemasukan,
                     scrollDirection: Axis.vertical,
                     shrinkWrap: true,
-                    itemCount: snapshot.data!.length,
+                    itemCount: filteredPemasukan
+                        .isNotEmpty
+                        ? filteredPemasukan
+                        .length
+                        : snapshot.data!.length,
                     itemBuilder: (ctx, i) {
                       return Container(
                           height: 50,
@@ -847,7 +882,9 @@ class _MerchantPageState extends State<MerchantPage> {
                                     height: 30,
                                     width: 170,
                                     child: Text(
-                                      snapshot.data![i].pengirim,
+                                      filteredPemasukan.isNotEmpty
+                                          ? filteredPemasukan[i].pengirim
+                                          : snapshot.data![i].pengirim,
                                       overflow: TextOverflow.ellipsis,
                                       style: const TextStyle(
                                           fontFamily: 'Euclid Circular B',
@@ -856,7 +893,9 @@ class _MerchantPageState extends State<MerchantPage> {
                                     ),
                                   ),
                                   Text(
-                                    snapshot.data![i].created_at,
+                                    filteredPenarikan.isNotEmpty
+                                        ? filteredPenarikan[i].created_at
+                                        : snapshot.data![i].created_at,
                                     style: const TextStyle(
                                         fontFamily: 'Euclid Circular B',
                                         fontWeight: FontWeight.w400,

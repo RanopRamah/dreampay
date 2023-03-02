@@ -8,6 +8,7 @@ import 'package:dreampay/page/merchant/merchant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 var url = dotenv.env['API_URL'];
@@ -128,9 +129,12 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 Visibility(
                   visible: isSubmit,
-                  child: const Padding(
+                  child:  Padding(
                     padding: EdgeInsets.only(top: 20),
-                    child: CircularProgressIndicator(),
+                    child: LoadingAnimationWidget.staggeredDotsWave(
+                      color: Colors.black,
+                      size: 40,
+                    ),
                   ),
                 ),
               ],
