@@ -122,6 +122,9 @@ class _QRPageState extends State<QRPage> {
   void isThisJson() {
     var output = result!.code;
     var response = jsonDecode(output!);
+
+    controller!.dispose();
+
     if (response['nama'] != null) {
       Navigator.of(context).push(MaterialPageRoute(
           builder: (ctx) => NominalPage(response['no_hp'], response['nama'])));
