@@ -1,7 +1,16 @@
 # This is a generated file; do not edit or check into version control.
+camera=/Users/ariefsonn_/.pub-cache/hosted/pub.dartlang.org/camera-0.10.3+2/
+camera_android=/Users/ariefsonn_/.pub-cache/hosted/pub.dartlang.org/camera_android-0.10.4+1/
+camera_avfoundation=/Users/ariefsonn_/.pub-cache/hosted/pub.dartlang.org/camera_avfoundation-0.9.12/
+camera_web=/Users/ariefsonn_/.pub-cache/hosted/pub.dartlang.org/camera_web-0.3.1+2/
+flutter_barcode_scanner=/Users/ariefsonn_/.pub-cache/hosted/pub.dartlang.org/flutter_barcode_scanner-2.0.0/
+flutter_plugin_android_lifecycle=/Users/ariefsonn_/.pub-cache/hosted/pub.dartlang.org/flutter_plugin_android_lifecycle-2.0.8/
+mobile_scanner=/Users/ariefsonn_/.pub-cache/hosted/pub.dartlang.org/mobile_scanner-3.0.0/
+path_provider=/Users/ariefsonn_/.pub-cache/hosted/pub.dartlang.org/path_provider-2.0.13/
+path_provider_android=/Users/ariefsonn_/.pub-cache/hosted/pub.dartlang.org/path_provider_android-2.0.23/
+path_provider_foundation=/Users/ariefsonn_/.pub-cache/hosted/pub.dartlang.org/path_provider_foundation-2.1.2/
 path_provider_linux=/Users/ariefsonn_/.pub-cache/hosted/pub.dartlang.org/path_provider_linux-2.1.9/
 path_provider_windows=/Users/ariefsonn_/.pub-cache/hosted/pub.dartlang.org/path_provider_windows-2.1.4/
-qr_code_scanner=/Users/ariefsonn_/.pub-cache/hosted/pub.dartlang.org/qr_code_scanner-1.0.1/
 shared_preferences=/Users/ariefsonn_/.pub-cache/hosted/pub.dartlang.org/shared_preferences-2.0.18/
 shared_preferences_android=/Users/ariefsonn_/.pub-cache/hosted/pub.dartlang.org/shared_preferences_android-2.0.16/
 shared_preferences_foundation=/Users/ariefsonn_/.pub-cache/hosted/pub.dartlang.org/shared_preferences_foundation-2.1.4/

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:bcrypt/bcrypt.dart';
+import 'package:dreampay/page/buyer/buyer_home.dart';
 import 'package:dreampay/page/buyer/closing/failed_response.dart';
 import 'package:dreampay/page/buyer/closing/success_pay.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +29,9 @@ class _ArticleMainPageState extends State<ArticleMainPage> {
   String? _pin;
   String? _id;
 
+  bool isErrorPin = false;
+  bool isSubmit = false;
+
   TextEditingController controller = TextEditingController();
   String hashPIN = "";
   int pinLength = 4;
@@ -38,7 +42,6 @@ class _ArticleMainPageState extends State<ArticleMainPage> {
     prefs = await SharedPreferences.getInstance();
     _pin = prefs.getString('pin_customer') ?? '111';
     _id = prefs.getString('id_customer') ?? 'id';
-    print(_pin);
   }
 
   @override
@@ -80,14 +83,35 @@ class _ArticleMainPageState extends State<ArticleMainPage> {
                       fontSize: 16,
                       fontFamily: 'Euclid Circular B',
                       fontWeight: FontWeight.w500,
-                      color: Color(0xffa6a6a6)
-                  ),
+                      color: Color(0xffa6a6a6)),
+                ),
+                const SizedBox(height: 20),
+                Visibility(
+                  visible: isErrorPin,
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Image.asset('assets/image/wrong-pin.png'),
+                        ),
+                        Text(
+                          'PIN Salah!',
+                          style: TextStyle(
+                            fontFamily: 'Euclid Circular B',
+                            fontWeight: FontWeight.w500,
+                            fontSize: 24,
+                            color: Color(0xffDD3960),
+                          ),
+                        ),
+                      ]),
                 ),
                 const SizedBox(height: 60),
                 SizedBox(
                   height: 50,
                   width: 300,
                   child: PinCodeTextField(
+                    autoFocus: true,
                     controller: controller,
                     appContext: context,
                     keyboardType: TextInputType.number,
@@ -99,8 +123,7 @@ class _ArticleMainPageState extends State<ArticleMainPage> {
                       borderWidth: 4,
                       inactiveColor: Color(0xffd9d9d9),
                     ),
-                    onChanged: (value){
-                    },
+                    onChanged: (value) {},
                   ),
                 ),
                 const SizedBox(height: 50),
@@ -109,20 +132,22 @@ class _ArticleMainPageState extends State<ArticleMainPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Container(
-                      padding: EdgeInsets.only(left: 10,right: 10),
+                      padding: const EdgeInsets.only(left: 10, right: 10),
                       decoration: BoxDecoration(
                           border: Border.all(width: 1, color: Colors.grey),
-                          borderRadius: BorderRadius.circular(10)
-                      ),
+                          borderRadius: BorderRadius.circular(10)),
                       child: TextButton(
-                        onPressed: (){},
+                        onPressed: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: ((context) => const BuyerHomePage())));
+                        },
                         child: const Text(
                           'Batalkan',
                           style: TextStyle(
                             fontWeight: FontWeight.w400,
                             fontFamily: 'Euclid Circular B',
                             fontSize: 20,
-                            color:  Color(0xffDD3960),
+                            color: Color(0xffDD3960),
                           ),
                         ),
                       ),
@@ -131,18 +156,32 @@ class _ArticleMainPageState extends State<ArticleMainPage> {
                     Container(
                       padding: const EdgeInsets.only(left: 50, right: 50),
                       decoration: BoxDecoration(
-                          color: const Color(0xff5258D4),
-                          borderRadius: BorderRadius.circular(10)
-                      ),
+                          color: isSubmit
+                              ? Color.fromARGB(255, 156, 160, 252)
+                              : const Color(0xff5258D4),
+                          borderRadius: BorderRadius.circular(10)),
                       child: TextButton(
-                        onPressed: () {
-                          setState(() {
-                            checkPIN = BCrypt.checkpw(controller.text, _pin.toString());
-                            if (checkPIN) {
-                              sendPay(_id, widget.seller_id, widget.nominal);
-                            }
-                          });
-                        },
+                        onPressed: isSubmit
+                            ? null
+                            : () {
+                                setState(() {
+                                  isSubmit = true;
+                                });
+
+                                checkPIN = BCrypt.checkpw(
+                                    controller.text, _pin.toString());
+                                if (checkPIN) {
+                                  sendPay(
+                                      _id, widget.seller_id, widget.nominal);
+                                } else {
+                                  Timer(Duration(seconds: 1), () {
+                                    setState(() {
+                                      isErrorPin = true;
+                                      isSubmit = false;
+                                    });
+                                  });
+                                }
+                              },
                         child: const Text(
                           'Lanjutkan',
                           style: TextStyle(
@@ -156,6 +195,11 @@ class _ArticleMainPageState extends State<ArticleMainPage> {
                     ),
                   ],
                 ),
+                const SizedBox(height: 35),
+                Visibility(
+                  visible: isSubmit,
+                  child: const CircularProgressIndicator(),
+                )
               ],
             ),
           ),
@@ -180,9 +224,15 @@ class _ArticleMainPageState extends State<ArticleMainPage> {
     if (response.statusCode == 200) {
       var output = jsonDecode(response.body);
       if (output['nota'] != null) {
-        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (ctx) => SuccessPayPage(output['seller'], output['nota'], output['nominal'])), (route) => false);
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(
+                builder: (ctx) => SuccessPayPage(
+                    output['seller'], output['nota'], output['nominal'])),
+            (route) => false);
       } else {
-        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (ctx) => FailedResponsePage()), (route) => false);
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (ctx) => FailedResponsePage()),
+            (route) => false);
       }
     } else {
       throw Exception('Failed to Send');

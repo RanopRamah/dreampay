@@ -1,8 +1,7 @@
-import 'dart:io';
-
 import 'package:dreampay/page/buyer/input_pin.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 
 class NominalPage extends StatefulWidget {
   const NominalPage(this.id_seller, this.name, {super.key}) : super();
@@ -27,103 +26,101 @@ class _NominalPageState extends State<NominalPage> {
         ),
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    decoration: const BoxDecoration(
-                        color: Color(0xFF6F75EA),
-                        borderRadius: BorderRadius.all(Radius.circular(21))
-                    ),
-                    padding: const EdgeInsets.only(left: 13),
-                    width: 342,
-                    height: 92,
-                    child: Row(
-                      children: [
-                        Image.asset('assets/image/store-icon.png', width: 61, height: 61),
-                        const SizedBox(width: 9),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 20.98),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                widget.name,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontFamily: 'Euclid Circular B',
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 20,
-                                ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  decoration: const BoxDecoration(
+                      color: Color(0xFF6F75EA),
+                      borderRadius: BorderRadius.all(Radius.circular(21))),
+                  padding: const EdgeInsets.only(left: 13),
+                  width: 342,
+                  height: 92,
+                  child: Row(
+                    children: [
+                      Image.asset('assets/image/store-icon.png',
+                          width: 61, height: 61),
+                      const SizedBox(width: 9),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 20.98),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              widget.name,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontFamily: 'Euclid Circular B',
+                                fontWeight: FontWeight.w600,
+                                fontSize: 20,
                               ),
-                              Text(
-                                'DPID: ${widget.id_seller}',
-                                style: const TextStyle(
-                                  color: Color(0xFFC5C7F1),
-                                  fontFamily: 'SF Pro Display',
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 14.7327,
-                                ),
+                            ),
+                            Text(
+                              'DPID: ${widget.id_seller}',
+                              style: const TextStyle(
+                                color: Color(0xFFC5C7F1),
+                                fontFamily: 'SF Pro Display',
+                                fontWeight: FontWeight.w500,
+                                fontSize: 14.7327,
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 33.01),
-                  const Text(
-                    'Nominal pembayaran',
-                    style: TextStyle(
-                      color: Color(0xFFACA9A9),
-                      fontFamily: 'Euclid Circular B',
-                      fontWeight: FontWeight.w500,
-                      fontSize: 21.2896,
-                    ),
+                ),
+                const SizedBox(height: 33.01),
+                const Text(
+                  'Nominal pembayaran',
+                  style: TextStyle(
+                    color: Color(0xFFACA9A9),
+                    fontFamily: 'Euclid Circular B',
+                    fontWeight: FontWeight.w500,
+                    fontSize: 21.2896,
                   ),
-                  const SizedBox(height: 6),
-                  SizedBox(
-                    width: 342,
-                    height: 86,
-                    child: TextField(
-                      controller: _controller,
-                      style: const TextStyle(
-                        color: Color(0xFF222222),
+                ),
+                const SizedBox(height: 6),
+                SizedBox(
+                  width: 342,
+                  height: 96,
+                  child: TextField(
+                    controller: _controller,
+                    style: const TextStyle(
+                      color: Color(0xFF222222),
+                      fontFamily: 'SF Pro Display',
+                      fontWeight: FontWeight.w600,
+                      fontSize: 72,
+                    ),
+                    decoration: const InputDecoration(
+                      enabled: false,
+                      hintText: 'Rp0',
+                      hintStyle: TextStyle(
+                        color: Color(0xFFACA9A9),
                         fontFamily: 'SF Pro Display',
                         fontWeight: FontWeight.w600,
                         fontSize: 72,
                       ),
-                      decoration: const InputDecoration(
-                        hintText: 'Rp0',
-                        hintStyle: TextStyle(
-                          color: Color(0xFFACA9A9),
-                          fontFamily: 'SF Pro Display',
-                          fontWeight: FontWeight.w600,
-                          fontSize: 72,
-                        ),
-                        prefixStyle: TextStyle(
-                          color: Color(0xFFACA9A9),
-                          fontFamily: 'SF Pro Display',
-                          fontWeight: FontWeight.w600,
-                          fontSize: 72,
-                        ),
-                        border: InputBorder.none,
+                      prefixStyle: TextStyle(
+                        color: Color(0xFFACA9A9),
+                        fontFamily: 'SF Pro Display',
+                        fontWeight: FontWeight.w600,
+                        fontSize: 72,
                       ),
-                      keyboardType: TextInputType.number,
-                      inputFormatters: [ThousandsSeparatorInputFormatter()],
-                      onChanged: (value) {
-                        _controller.value = TextEditingValue(
-                          text: value,
-                          selection: TextSelection.collapsed(offset: value.length),
-                        );
-                      },
+                      border: InputBorder.none,
                     ),
+                    keyboardType: TextInputType.number,
+                    onChanged: (value) {
+                      _controller.value = TextEditingValue(
+                        text: value,
+                        selection:
+                            TextSelection.collapsed(offset: value.length),
+                      );
+                    },
                   ),
-                  const SizedBox(height: 66.99),
-                ],
-              ),
+                ),
+                const SizedBox(height: 66.99),
+              ],
             ),
             Stack(
               children: [
@@ -131,7 +128,6 @@ class _NominalPageState extends State<NominalPage> {
                   alignment: Alignment.bottomCenter,
                   child: Expanded(
                     child: Container(
-                      padding: const EdgeInsets.only(top: 36),
                       decoration: const BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.only(
@@ -151,223 +147,65 @@ class _NominalPageState extends State<NominalPage> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Center(
-                            child: Padding(
-                              padding: const EdgeInsets.only(left: 46),
-                              child: Column(
-                                children: [
-                                  Row(
-                                    children: [
-                                      GestureDetector(
-                                        child: const Text(
-                                          '1',
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontFamily: 'SF Pro Display',
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 36,
+                            child: Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    buttonNominal('1'),
+                                    buttonNominal('2'),
+                                    buttonNominal('3'),
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    buttonNominal('4'),
+                                    buttonNominal('5'),
+                                    buttonNominal('6'),
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    buttonNominal('7'),
+                                    buttonNominal('8'),
+                                    buttonNominal('9'),
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    buttonNominal('0'),
+                                    buttonNominal('000'),
+                                    GestureDetector(
+                                      child: Center(
+                                        child: Container(
+                                          color: Colors.white,
+                                          width: 125,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(24),
+                                            child: Center(
+                                              child: Image.asset(
+                                                  'assets/image/backspace.png',
+                                                  width: 38,
+                                                  height: 32),
+                                            ),
                                           ),
                                         ),
-                                        onTap: () {
-                                          setState(() {
-                                            _controller.text += '1';
-                                          });
-                                        },
                                       ),
-                                      const SizedBox(width: 120),
-                                      GestureDetector(
-                                        child: const Text(
-                                          '2',
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontFamily: 'SF Pro Display',
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 36,
-                                          ),
-                                        ),
-                                        onTap: () {
-                                          setState(() {
-                                            _controller.text += '2';
-                                          });
-                                        },
-                                      ),
-                                      const SizedBox(width: 120),
-                                      GestureDetector(
-                                        child: const Text(
-                                          '3',
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontFamily: 'SF Pro Display',
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 36,
-                                          ),
-                                        ),
-                                        onTap: () {
-                                          setState(() {
-                                            _controller.text += '3';
-                                          });
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 36.11),
-                                  Row(
-                                    children: [
-                                      GestureDetector(
-                                        child: const Text(
-                                          '4',
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontFamily: 'SF Pro Display',
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 36,
-                                          ),
-                                        ),
-                                        onTap: () {
-                                          setState(() {
-                                            _controller.text += '4';
-                                          });
-                                        },
-                                      ),
-                                      const SizedBox(width: 120),
-                                      GestureDetector(
-                                        child: const Text(
-                                          '5',
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontFamily: 'SF Pro Display',
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 36,
-                                          ),
-                                        ),
-                                        onTap: () {
-                                          setState(() {
-                                            _controller.text += '5';
-                                          });
-                                        },
-                                      ),
-                                      const SizedBox(width: 120),
-                                      GestureDetector(
-                                        child: const Text(
-                                          '6',
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontFamily: 'SF Pro Display',
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 36,
-                                          ),
-                                        ),
-                                        onTap: () {
-                                          setState(() {
-                                            _controller.text += '6';
-                                          });
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 36.11),
-                                  Row(
-                                    children: [
-                                      GestureDetector(
-                                        child: const Text(
-                                          '7',
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontFamily: 'SF Pro Display',
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 36,
-                                          ),
-                                        ),
-                                        onTap: () {
-                                          setState(() {
-                                            _controller.text += '7';
-                                          });
-                                        },
-                                      ),
-                                      const SizedBox(width: 120),
-                                      GestureDetector(
-                                        child: const Text(
-                                          '8',
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontFamily: 'SF Pro Display',
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 36,
-                                          ),
-                                        ),
-                                        onTap: () {
-                                          setState(() {
-                                            _controller.text += '8';
-                                          });
-                                        },
-                                      ),
-                                      const SizedBox(width: 120),
-                                      GestureDetector(
-                                        child: const Text(
-                                          '9',
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontFamily: 'SF Pro Display',
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 36,
-                                          ),
-                                        ),
-                                        onTap: () {
-                                          setState(() {
-                                            _controller.text += '9';
-                                          });
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 36.11),
-                                  Row(
-                                    children: [
-                                      GestureDetector(
-                                        child: const Text(
-                                          '0',
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontFamily: 'SF Pro Display',
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 36,
-                                          ),
-                                        ),
-                                        onTap: () {
-                                          setState(() {
-                                            _controller.text += '0';
-                                          });
-                                        },
-                                      ),
-                                      const SizedBox(width: 100),
-                                      GestureDetector(
-                                        child: const Text(
-                                          '000',
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontFamily: 'SF Pro Display',
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 36,
-                                          ),
-                                        ),
-                                        onTap: () {
-                                          setState(() {
-                                            _controller.text += '000';
-                                          });
-                                        },
-                                      ),
-                                      const SizedBox(width: 85),
-                                      GestureDetector(
-                                        child: Image.asset('assets/image/backspace.png', width: 38, height: 32),
-                                        onTap: () {
-                                          setState(() {
-                                            _controller.text = "";
-                                          });
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
+                                      onTap: () => {
+                                        setState(() {
+                                          _controller.text = _controller.text
+                                              .substring(0,
+                                                  _controller.text.length - 1);
+                                          formatNominal('');
+                                        })
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
                           ),
                           const SizedBox(height: 48),
@@ -378,17 +216,25 @@ class _NominalPageState extends State<NominalPage> {
                               onPressed: () {
                                 setState(() {
                                   if (widget.id_seller != null) {
-                                    Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => ArticleMainPage(widget.id_seller, _controller.text)));
+                                    Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (ctx) => ArticleMainPage(
+                                                widget.id_seller,
+                                                _controller.text)));
                                   } else {
                                     null;
                                   }
                                 });
                               },
                               style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.all<Color>(const Color(0xFF5258D4)),
-                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                backgroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                        const Color(0xFF5258D4)),
+                                shape: MaterialStateProperty.all<
+                                    RoundedRectangleBorder>(
                                   const RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.all(Radius.circular(8)),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(8)),
                                   ),
                                 ),
                               ),
@@ -415,51 +261,49 @@ class _NominalPageState extends State<NominalPage> {
       ),
     );
   }
-}
 
-class ThousandsSeparatorInputFormatter extends TextInputFormatter {
-  static const separator = '.'; // Change this to '.' for other locales
+  GestureDetector buttonNominal(String nominal) {
+    return GestureDetector(
+      child: Center(
+        child: Container(
+          color: Colors.white,
+          width: 125,
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Center(
+              child: Text(
+                nominal,
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontFamily: 'SF Pro Display',
+                  fontWeight: FontWeight.w600,
+                  fontSize: 36,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+      onTap: () {
+        formatNominal(nominal);
+      },
+    );
+  }
 
-  @override
-  TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue, TextEditingValue newValue) {
-    // Short-circuit if the new value is empty
-    if (newValue.text.isEmpty) {
-      return newValue.copyWith(text: '');
-    }
-
-    // Handle "deletion" of separator character
-    String oldValueText = oldValue.text.replaceAll(separator, '');
-    String newValueText = newValue.text.replaceAll(separator, '');
-
-    if (oldValue.text.endsWith(separator) &&
-        oldValue.text.length == newValue.text.length + 1) {
-      newValueText = newValueText.substring(0, newValueText.length - 1);
-    }
-
-    // Only process if the old value and new value are different
-    if (oldValueText != newValueText) {
-      int selectionIndex =
-          newValue.text.length - newValue.selection.extentOffset;
-      final chars = newValueText.split('');
-
-      String newString = '';
-      for (int i = chars.length - 1; i >= 0; i--) {
-        if ((chars.length - 1 - i) % 3 == 0 && i != chars.length - 1) {
-          newString = separator + newString;
-        }
-        newString = chars[i] + newString;
+  void formatNominal(String nominal) {
+    return setState(() {
+      if (_controller.text.isNotEmpty) {
+        _controller.text = _controller.text.replaceAll('.', '');
       }
 
-      return TextEditingValue(
-        text: newString.toString(),
-        selection: TextSelection.collapsed(
-          offset: newString.length - selectionIndex,
-        ),
-      );
-    }
+      if (nominal.isNotEmpty) {
+        _controller.text += nominal;
+      }
 
-    // If the new value and old value are the same, just return as-is
-    return newValue;
+      var f = NumberFormat('#,###', 'id_ID');
+      var formatted = f.format(int.parse(_controller.text));
+
+      _controller.text = formatted;
+    });
   }
 }

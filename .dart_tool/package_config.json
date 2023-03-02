@@ -38,6 +38,36 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "camera",
+      "rootUri": "file:///Users/ariefsonn_/.pub-cache/hosted/pub.dartlang.org/camera-0.10.3+2",
+      "packageUri": "lib/",
+      "languageVersion": "2.14"
+    },
+    {
+      "name": "camera_android",
+      "rootUri": "file:///Users/ariefsonn_/.pub-cache/hosted/pub.dartlang.org/camera_android-0.10.4+1",
+      "packageUri": "lib/",
+      "languageVersion": "2.14"
+    },
+    {
+      "name": "camera_avfoundation",
+      "rootUri": "file:///Users/ariefsonn_/.pub-cache/hosted/pub.dartlang.org/camera_avfoundation-0.9.12",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
+      "name": "camera_platform_interface",
+      "rootUri": "file:///Users/ariefsonn_/.pub-cache/hosted/pub.dartlang.org/camera_platform_interface-2.4.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "camera_web",
+      "rootUri": "file:///Users/ariefsonn_/.pub-cache/hosted/pub.dartlang.org/camera_web-0.3.1+2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "characters",
       "rootUri": "file:///Users/ariefsonn_/.pub-cache/hosted/pub.dartlang.org/characters-1.2.1",
       "packageUri": "lib/",
@@ -72,6 +102,12 @@
       "rootUri": "file:///Users/ariefsonn_/.pub-cache/hosted/pub.dartlang.org/convert-3.1.1",
       "packageUri": "lib/",
       "languageVersion": "2.18"
+    },
+    {
+      "name": "cross_file",
+      "rootUri": "file:///Users/ariefsonn_/.pub-cache/hosted/pub.dartlang.org/cross_file-0.3.3+4",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
     },
     {
       "name": "crypto",
@@ -110,6 +146,12 @@
       "languageVersion": "2.17"
     },
     {
+      "name": "flutter_barcode_scanner",
+      "rootUri": "file:///Users/ariefsonn_/.pub-cache/hosted/pub.dartlang.org/flutter_barcode_scanner-2.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "flutter_dotenv",
       "rootUri": "file:///Users/ariefsonn_/.pub-cache/hosted/pub.dartlang.org/flutter_dotenv-5.0.2",
       "packageUri": "lib/",
@@ -126,6 +168,12 @@
       "rootUri": "file:///Users/ariefsonn_/.pub-cache/hosted/pub.dartlang.org/flutter_lints-2.0.1",
       "packageUri": "lib/",
       "languageVersion": "2.17"
+    },
+    {
+      "name": "flutter_plugin_android_lifecycle",
+      "rootUri": "file:///Users/ariefsonn_/.pub-cache/hosted/pub.dartlang.org/flutter_plugin_android_lifecycle-2.0.8",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
     },
     {
       "name": "flutter_svg",
@@ -164,6 +212,12 @@
       "languageVersion": "2.15"
     },
     {
+      "name": "intl",
+      "rootUri": "file:///Users/ariefsonn_/.pub-cache/hosted/pub.dartlang.org/intl-0.17.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "js",
       "rootUri": "file:///Users/ariefsonn_/.pub-cache/hosted/pub.dartlang.org/js-0.6.4",
       "packageUri": "lib/",
@@ -200,6 +254,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "mobile_scanner",
+      "rootUri": "file:///Users/ariefsonn_/.pub-cache/hosted/pub.dartlang.org/mobile_scanner-3.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
       "name": "path",
       "rootUri": "file:///Users/ariefsonn_/.pub-cache/hosted/pub.dartlang.org/path-1.8.2",
       "packageUri": "lib/",
@@ -214,6 +274,24 @@
     {
       "name": "path_parsing",
       "rootUri": "file:///Users/ariefsonn_/.pub-cache/hosted/pub.dartlang.org/path_parsing-1.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "path_provider",
+      "rootUri": "file:///Users/ariefsonn_/.pub-cache/hosted/pub.dartlang.org/path_provider-2.0.13",
+      "packageUri": "lib/",
+      "languageVersion": "2.14"
+    },
+    {
+      "name": "path_provider_android",
+      "rootUri": "file:///Users/ariefsonn_/.pub-cache/hosted/pub.dartlang.org/path_provider_android-2.0.23",
+      "packageUri": "lib/",
+      "languageVersion": "2.14"
+    },
+    {
+      "name": "path_provider_foundation",
+      "rootUri": "file:///Users/ariefsonn_/.pub-cache/hosted/pub.dartlang.org/path_provider_foundation-2.1.2",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -278,16 +356,16 @@
       "languageVersion": "2.12"
     },
     {
-      "name": "qr_code_scanner",
-      "rootUri": "file:///Users/ariefsonn_/.pub-cache/hosted/pub.dartlang.org/qr_code_scanner-1.0.1",
-      "packageUri": "lib/",
-      "languageVersion": "2.17"
-    },
-    {
       "name": "qr_flutter",
       "rootUri": "file:///Users/ariefsonn_/.pub-cache/hosted/pub.dartlang.org/qr_flutter-4.0.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
+    },
+    {
+      "name": "quiver",
+      "rootUri": "file:///Users/ariefsonn_/.pub-cache/hosted/pub.dartlang.org/quiver-3.2.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
     },
     {
       "name": "searchfield",
@@ -374,6 +452,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "stream_transform",
+      "rootUri": "file:///Users/ariefsonn_/.pub-cache/hosted/pub.dartlang.org/stream_transform-2.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.14"
+    },
+    {
       "name": "string_scanner",
       "rootUri": "file:///Users/ariefsonn_/.pub-cache/hosted/pub.dartlang.org/string_scanner-1.1.1",
       "packageUri": "lib/",
@@ -434,7 +518,7 @@
       "languageVersion": "2.18"
     }
   ],
-  "generated": "2023-02-28T19:00:17.040602Z",
+  "generated": "2023-03-02T02:24:25.097062Z",
   "generator": "pub",
   "generatorVersion": "2.19.0-146.2.beta"
 }

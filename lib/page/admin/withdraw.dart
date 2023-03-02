@@ -1,53 +1,47 @@
-import 'dart:ffi';
 import 'dart:convert';
 import 'dart:async';
 
 import 'package:dreampay/page/admin/make_account.dart';
 import 'package:dreampay/page/admin/topup.dart';
 import 'package:dreampay/page/admin/transaction.dart';
-import 'package:dreampay/page/admin/withdraw.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:searchfield/searchfield.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+var url = dotenv.env['API_URL'];
 Future<List> fetchUsers() async {
   final response = await http.get(
-    Uri.parse('http://server.sekolahimpian.com:3000/api/admin/list-withdraw'),
+    Uri.parse('${url}admin/list-withdraw'),
   );
 
   if (response.statusCode == 200) {
-    // final List<Map<dynamic, dynamic>> jsonResponse = jsonDecode(response.body)['list_buyer'];
-    print(jsonDecode(response.body)['list_buyer']);
     return jsonDecode(response.body)['list_buyer'];
   } else {
     throw Exception('Failed to Load');
   }
 }
+
 Future<List<Withdraw>> fetchWithdraw() async {
   final response = await http.get(
-    Uri.parse('http://server.sekolahimpian.com:3000/api/admin/list-withdraw/'),
+    Uri.parse('${url}admin/list-withdraw'),
   );
 
   if (response.statusCode == 200) {
     List jsonResponse = jsonDecode(response.body)['list_withdraw'];
-    print(jsonDecode(response.body)['list_withdraw']);
     return jsonResponse.map((e) => Withdraw.fromJson(e)).toList();
   } else {
     throw Exception('Failed to Load');
   }
 }
+
 class Users {
   final dynamic id;
   final dynamic nama;
   final dynamic no_hp;
 
-  const Users({
-    required this.id,
-    required this.nama,
-    required this.no_hp
-  });
+  const Users({required this.id, required this.nama, required this.no_hp});
 
   Users.init()
       : id = 0,
@@ -55,7 +49,7 @@ class Users {
         no_hp = '00000000000';
 
   Users.fromMap(Map<dynamic, dynamic> map)
-      : id = map['id'] as Int,
+      : id = map['id'] as int,
         nama = map['nama'] as String,
         no_hp = map['no_hp'] as String;
 
@@ -67,9 +61,9 @@ class Users {
     );
   }
 }
+
 class Withdraw {
   final dynamic id;
-  final dynamic nota;
   final dynamic pengirim;
   final dynamic penerima;
   final dynamic nominal;
@@ -77,7 +71,6 @@ class Withdraw {
 
   const Withdraw({
     required this.id,
-    required this.nota,
     required this.pengirim,
     required this.penerima,
     required this.nominal,
@@ -87,7 +80,6 @@ class Withdraw {
   factory Withdraw.fromJson(Map<dynamic, dynamic> json) {
     return Withdraw(
       id: json['id'],
-      nota: json['nota'],
       pengirim: json['pengirim'],
       penerima: json['penerima'],
       nominal: json['nominal'],
@@ -107,11 +99,11 @@ class _AdminWithdrawPageState extends State<AdminWithdrawPage> {
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final searchController = TextEditingController();
 
+  TextEditingController _withdrawcontrol = TextEditingController();
+
   List<Users> user = [];
   Users _selectedUsers = Users.init();
 
-  bool showPull = false;
-  bool showTopup = true;
   bool visible = false;
   bool isSuccessful = false;
 
@@ -133,25 +125,20 @@ class _AdminWithdrawPageState extends State<AdminWithdrawPage> {
 
   @override
   void togglePanel() {
-    _controller.isPanelOpen
-        ? _controller.close()
-        : _controller.open();
+    _controller.isPanelOpen ? _controller.close() : _controller.open();
   }
 
   void dvs() async {
     List<dynamic> data = await fetchUsers();
     user = data.map((e) => Users.fromJson(e)).toList();
-    //
-    // var h = user.map((e) => e.nama);
-    // print(h);
   }
 
   bool containsUser(String text) {
     final Users result = user.firstWhere(
-            (Users u) => u.nama.toLowerCase() == text.toLowerCase(),
+        (Users u) => u.nama.toLowerCase() == text.toLowerCase(),
         orElse: () => Users.init());
 
-    if (result!.nama.isEmpty) {
+    if (result.nama.isEmpty) {
       return false;
     }
     return true;
@@ -160,6 +147,7 @@ class _AdminWithdrawPageState extends State<AdminWithdrawPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       drawer: Drawer(
         child: Container(
           padding: EdgeInsets.all(20),
@@ -177,14 +165,13 @@ class _AdminWithdrawPageState extends State<AdminWithdrawPage> {
               Center(
                 child: ListTile(
                   onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (c) => MakeAccountPage()));
+                    Navigator.of(context).push(
+                        MaterialPageRoute(builder: (c) => MakeAccountPage()));
                   },
                   title: Container(
                     padding: EdgeInsets.only(right: 30, left: 40),
                     width: double.infinity,
                     height: 51,
-
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
@@ -259,7 +246,9 @@ class _AdminWithdrawPageState extends State<AdminWithdrawPage> {
                     padding: EdgeInsets.only(right: 45, left: 25),
                     width: 275,
                     height: 51,
-
+                    decoration: BoxDecoration(
+                        color: Color(0xff8A8EF9),
+                        borderRadius: BorderRadius.circular(13)),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
@@ -289,14 +278,14 @@ class _AdminWithdrawPageState extends State<AdminWithdrawPage> {
               ),
               Center(
                 child: ListTile(
-
+                  onTap: () {
+                    Navigator.of(context).push(
+                        MaterialPageRoute(builder: (c) => AdminWithdrawPage()));
+                  },
                   title: Container(
                     padding: EdgeInsets.only(right: 25, left: 27),
                     width: 275,
                     height: 51,
-                    decoration: BoxDecoration(
-                        color: Color(0xff8A8EF9),
-                        borderRadius: BorderRadius.circular(13)),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
@@ -321,56 +310,55 @@ class _AdminWithdrawPageState extends State<AdminWithdrawPage> {
                   ),
                 ),
               ),
-
               SizedBox(
                 height: 15,
               ),
               Container(
-                padding: EdgeInsets.only(top: 10,left: 10,right: 10),
+                padding: EdgeInsets.only(top: 10, left: 10, right: 10),
                 width: double.infinity,
                 height: 98,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
-                    color: Color(0xff292B5A)
-                ),
+                    color: Color(0xff292B5A)),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text('Saldo A',style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontFamily: 'Euclid Circular B',
-                        fontSize: 14,
-                        color: Color(0xffbebebe)
-                    ),),
+                    Text(
+                      'Saldo A',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontFamily: 'Euclid Circular B',
+                          fontSize: 14,
+                          color: Color(0xffbebebe)),
+                    ),
                     SizedBox(
                       height: 5,
                     ),
                     Center(
-                        child:Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Padding(
-                              padding: EdgeInsets.only(bottom: 35),
-                              child: Text(
-                                'Rp',
-                                style: TextStyle(
-                                    fontFamily: 'SF Pro Display',
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.white),
-                              ),
-                            ),
-                            Text(
-                              '560,000',
-                              style: TextStyle(
-                                  fontFamily: 'SF Pro Display',
-                                  fontSize: 36,
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.white),
-                            ),
-                          ],
-                        )
-                    )
+                        child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(bottom: 35),
+                          child: Text(
+                            'Rp',
+                            style: TextStyle(
+                                fontFamily: 'SF Pro Display',
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white),
+                          ),
+                        ),
+                        Text(
+                          '560,000',
+                          style: TextStyle(
+                              fontFamily: 'SF Pro Display',
+                              fontSize: 36,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white),
+                        ),
+                      ],
+                    ))
                   ],
                 ),
               ),
@@ -378,51 +366,51 @@ class _AdminWithdrawPageState extends State<AdminWithdrawPage> {
                 height: 15,
               ),
               Container(
-                padding: EdgeInsets.only(top: 10,left: 10,right: 10),
+                padding: EdgeInsets.only(top: 10, left: 10, right: 10),
                 width: double.infinity,
                 height: 98,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
-                    color: Color(0xff3A2C62)
-                ),
+                    color: Color(0xff3A2C62)),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text('Saldo A',style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontFamily: 'Euclid Circular B',
-                        fontSize: 14,
-                        color: Color(0xffbebebe)
-                    ),),
+                    Text(
+                      'Saldo A',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontFamily: 'Euclid Circular B',
+                          fontSize: 14,
+                          color: Color(0xffbebebe)),
+                    ),
                     SizedBox(
                       height: 5,
                     ),
                     Center(
-                        child:Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Padding(
-                              padding: EdgeInsets.only(bottom: 35),
-                              child: Text(
-                                'Rp',
-                                style: TextStyle(
-                                    fontFamily: 'SF Pro Display',
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.white),
-                              ),
-                            ),
-                            Text(
-                              '560,000',
-                              style: TextStyle(
-                                  fontFamily: 'SF Pro Display',
-                                  fontSize: 36,
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.white),
-                            ),
-                          ],
-                        )
-                    )
+                        child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(bottom: 35),
+                          child: Text(
+                            'Rp',
+                            style: TextStyle(
+                                fontFamily: 'SF Pro Display',
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white),
+                          ),
+                        ),
+                        Text(
+                          '560,000',
+                          style: TextStyle(
+                              fontFamily: 'SF Pro Display',
+                              fontSize: 36,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white),
+                        ),
+                      ],
+                    ))
                   ],
                 ),
               ),
@@ -430,58 +418,57 @@ class _AdminWithdrawPageState extends State<AdminWithdrawPage> {
                 height: 15,
               ),
               Container(
-                padding: EdgeInsets.only(top: 10,left: 10,right: 10),
+                padding: EdgeInsets.only(top: 10, left: 10, right: 10),
                 width: double.infinity,
                 height: 98,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
-                    color: Color(0xff2E3346)
-                ),
+                    color: Color(0xff2E3346)),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text('Saldo A',style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontFamily: 'Euclid Circular B',
-                        fontSize: 14,
-                        color: Color(0xffbebebe)
-                    ),),
+                    Text(
+                      'Saldo A',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontFamily: 'Euclid Circular B',
+                          fontSize: 14,
+                          color: Color(0xffbebebe)),
+                    ),
                     SizedBox(
                       height: 5,
                     ),
                     Center(
-                        child:Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Padding(
-                              padding: EdgeInsets.only(bottom: 35),
-                              child: Text(
-                                'Rp',
-                                style: TextStyle(
-                                    fontFamily: 'SF Pro Display',
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.white),
-                              ),
-                            ),
-                            Text(
-                              '560,000',
-                              style: TextStyle(
-                                  fontFamily: 'SF Pro Display',
-                                  fontSize: 36,
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.white),
-                            ),
-                          ],
-                        )
-                    )
+                        child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(bottom: 35),
+                          child: Text(
+                            'Rp',
+                            style: TextStyle(
+                                fontFamily: 'SF Pro Display',
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white),
+                          ),
+                        ),
+                        Text(
+                          '560,000',
+                          style: TextStyle(
+                              fontFamily: 'SF Pro Display',
+                              fontSize: 36,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white),
+                        ),
+                      ],
+                    ))
                   ],
                 ),
               ),
               SizedBox(
                 height: 15,
               ),
-
             ],
           ),
         ),
@@ -492,16 +479,16 @@ class _AdminWithdrawPageState extends State<AdminWithdrawPage> {
         maxHeight: 590,
         minHeight: 150,
         padding: const EdgeInsets.only(left: 30, right: 30),
-        borderRadius: const BorderRadius.only(topRight: Radius.circular(20), topLeft: Radius.circular(20)),
+        borderRadius: const BorderRadius.only(
+            topRight: Radius.circular(20), topLeft: Radius.circular(20)),
         body: Container(
           decoration: const BoxDecoration(
             color: Color(0xFFFDFDFD),
           ),
-          padding: const EdgeInsets.only(top: 60,left: 20,right: 20),
+          padding: const EdgeInsets.only(top: 60, left: 20, right: 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
@@ -515,7 +502,6 @@ class _AdminWithdrawPageState extends State<AdminWithdrawPage> {
                   ),
                 ],
               ),
-
               const SizedBox(height: 55),
               Center(
                 child: Container(
@@ -531,8 +517,7 @@ class _AdminWithdrawPageState extends State<AdminWithdrawPage> {
                           spreadRadius: 2.0,
                           offset: Offset(0.0, 0.0),
                         ),
-                      ]
-                  ),
+                      ]),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -564,8 +549,10 @@ class _AdminWithdrawPageState extends State<AdminWithdrawPage> {
                               child: Image.asset('assets/image/search-all.png'),
                             ),
                           ),
-                          suggestions: user.map((e) => SearchFieldListItem(e.nama, item: e)).toList(),
-                          // suggestionState: Suggestion.hidden,
+                          suggestions: user
+                              .map((e) => SearchFieldListItem(e.nama, item: e))
+                              .toList(),
+                          suggestionState: Suggestion.hidden,
                           controller: searchController,
                           inputType: TextInputType.text,
                           itemHeight: 40,
@@ -591,8 +578,8 @@ class _AdminWithdrawPageState extends State<AdminWithdrawPage> {
                         padding: const EdgeInsets.only(top: 18.58, left: 15.2),
                         decoration: const BoxDecoration(
                             color: Color(0xFF7C81DF),
-                            borderRadius: BorderRadius.all(Radius.circular(18.6053))
-                        ),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(18.6053))),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -623,32 +610,36 @@ class _AdminWithdrawPageState extends State<AdminWithdrawPage> {
                         height: 67.51,
                         margin: const EdgeInsets.only(top: 38.61),
                         child: TextField(
+                          controller: _withdrawcontrol,
                           style: TextStyle(
-                            fontFamily: 'SF Pro Display',
-                            fontWeight: FontWeight.w700,
-                            fontSize: 21
-                          ),
+                              fontSize: 23,
+                              fontWeight: FontWeight.w700,
+                              fontFamily: 'SF Pro Display',
+                              color: Color(0xff222222)),
                           decoration: const InputDecoration(
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
                                 width: 0.912281,
                                 color: Color(0xFFC8BDBD),
                               ),
-                              borderRadius: BorderRadius.all(Radius.circular(6.38596)),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(6.38596)),
                             ),
                             disabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
                                 width: 0.912281,
                                 color: Color(0xFFC8BDBD),
                               ),
-                              borderRadius: BorderRadius.all(Radius.circular(6.38596)),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(6.38596)),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderSide: BorderSide(
                                 width: 0.912281,
                                 color: Color(0xFFC8BDBD),
                               ),
-                              borderRadius: BorderRadius.all(Radius.circular(6.38596)),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(6.38596)),
                             ),
                             labelText: 'Nominal Top Up',
                             hintText: 'Rp0',
@@ -667,7 +658,6 @@ class _AdminWithdrawPageState extends State<AdminWithdrawPage> {
                             floatingLabelBehavior: FloatingLabelBehavior.always,
                           ),
                           keyboardType: TextInputType.number,
-                          inputFormatters: [ThousandsSeparatorInputFormatter()],
                         ),
                       ),
                       Container(
@@ -677,19 +667,21 @@ class _AdminWithdrawPageState extends State<AdminWithdrawPage> {
                         child: ElevatedButton(
                           onPressed: () {
                             setState(() {
-                              fetchTopUp();
+                              createWithdraw();
                             });
                           },
                           style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all<Color>(const Color(0xFF5258D4)),
-                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                                const Color(0xFF5258D4)),
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(
                               const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.all(Radius.circular(6.59649))
-                              ),
+                                  borderRadius: BorderRadius.all(
+                                      Radius.circular(6.59649))),
                             ),
                           ),
                           child: const Text(
-                            'Top-Up',
+                            'Withdraw',
                             style: TextStyle(
                               color: Color(0xFFFFFFFF),
                               fontFamily: 'Euclid Circular B',
@@ -707,8 +699,8 @@ class _AdminWithdrawPageState extends State<AdminWithdrawPage> {
                             (isSuccessful)
                                 ? 'assets/image/success-topup.png'
                                 : 'assets/image/failed-topup.png',
-                            width: 153,
-                            height: 60,
+                            width: 20,
+                            height: 20,
                           ),
                         ),
                       ),
@@ -739,7 +731,7 @@ class _AdminWithdrawPageState extends State<AdminWithdrawPage> {
               const SizedBox(height: 12),
               const Center(
                 child: Text(
-                  'Riwayat Top-Up',
+                  'Riwayat Penarikan',
                   style: TextStyle(
                     color: Color(0xFF172437),
                     fontSize: 24,
@@ -786,6 +778,7 @@ class _AdminWithdrawPageState extends State<AdminWithdrawPage> {
       ),
     );
   }
+
   Widget scrollingList(ScrollController sc) {
     return Container(
       height: 450,
@@ -808,7 +801,7 @@ class _AdminWithdrawPageState extends State<AdminWithdrawPage> {
                           height: 20,
                           width: 200,
                           child: Text(
-                            snapshot.data![i].penerima,
+                            snapshot.data![i].penerima.toString(),
                             overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
                               color: Color(0xFF172437),
@@ -819,7 +812,7 @@ class _AdminWithdrawPageState extends State<AdminWithdrawPage> {
                           ),
                         ),
                         Text(
-                          snapshot.data![i].created_at,
+                          snapshot.data![i].created_at.toString(),
                           style: const TextStyle(
                             color: Color(0xFFBEBEBE),
                             fontFamily: 'Euclid Circular B',
@@ -833,13 +826,12 @@ class _AdminWithdrawPageState extends State<AdminWithdrawPage> {
                     Padding(
                       padding: const EdgeInsets.only(bottom: 10),
                       child: Text(
-                        'Rp${snapshot.data![i].nominal.toString()}',
+                        '-Rp${snapshot.data![i].nominal.toString()}',
                         style: const TextStyle(
                             color: Color(0xFF222222),
                             fontWeight: FontWeight.w400,
                             fontSize: 20,
-                            fontFamily: 'SF Pro Display'
-                        ),
+                            fontFamily: 'SF Pro Display'),
                       ),
                     ),
                   ],
@@ -856,51 +848,26 @@ class _AdminWithdrawPageState extends State<AdminWithdrawPage> {
       ),
     );
   }
-}
 
-class ThousandsSeparatorInputFormatter extends TextInputFormatter {
-  static const separator = '.'; // Change this to '.' for other locales
-
-  @override
-  TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue, TextEditingValue newValue) {
-    // Short-circuit if the new value is empty
-    if (newValue.text.isEmpty) {
-      return newValue.copyWith(text: '');
+  Future<void> createWithdraw() async {
+    final response = await http.post(
+      Uri.parse('${url}admin/add-withdraw'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'admin_id': '1',
+        'seller_id': '${_selectedUsers.id}',
+        'nominal': _withdrawcontrol.text.toString(),
+      }),
+    );
+    if (response.statusCode == 200) {
+      // If the server did return a 201 CREATED response,
+      // then parse the JSON.
+      isSuccessful = true;
+      print(response.body);
+    } else {
+      isSuccessful = false;
     }
-
-    // Handle "deletion" of separator character
-    String oldValueText = oldValue.text.replaceAll(separator, '');
-    String newValueText = newValue.text.replaceAll(separator, '');
-
-    if (oldValue.text.endsWith(separator) &&
-        oldValue.text.length == newValue.text.length + 1) {
-      newValueText = newValueText.substring(0, newValueText.length - 1);
-    }
-
-    // Only process if the old value and new value are different
-    if (oldValueText != newValueText) {
-      int selectionIndex =
-          newValue.text.length - newValue.selection.extentOffset;
-      final chars = newValueText.split('');
-
-      String newString = '';
-      for (int i = chars.length - 1; i >= 0; i--) {
-        if ((chars.length - 1 - i) % 3 == 0 && i != chars.length - 1) {
-          newString = separator + newString;
-        }
-        newString = chars[i] + newString;
-      }
-
-      return TextEditingValue(
-        text: newString.toString(),
-        selection: TextSelection.collapsed(
-          offset: newString.length - selectionIndex,
-        ),
-      );
-    }
-
-    // If the new value and old value are the same, just return as-is
-    return newValue;
   }
 }

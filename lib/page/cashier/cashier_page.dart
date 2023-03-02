@@ -1,28 +1,24 @@
-import 'dart:ffi';
 import 'dart:convert';
 import 'dart:async';
-import 'seperator.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:searchfield/searchfield.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
-import '../admin/make_account.dart';
+import '../login_page.dart';
 
 var url = dotenv.env['API_URL'];
 
 Future<List> fetchUsers() async {
   final response = await http.get(
-    Uri.parse('${url}cashier/'),
+    Uri.parse('${url}cashier/3'),
   );
-
   if (response.statusCode == 200) {
     return jsonDecode(response.body)['list_buyer'];
   } else {
-    throw Exception('Failed to Load');
+    throw Exception(response.body);
   }
 }
 
@@ -35,7 +31,7 @@ Future<List<TopUp>> fetchTopUp() async {
     List jsonResponse = jsonDecode(response.body)['list_topup'];
     return jsonResponse.map((e) => TopUp.fromJson(e)).toList();
   } else {
-    throw Exception('Failed to Load');
+    throw Exception(response.body);
   }
 }
 
@@ -48,8 +44,8 @@ class Users {
 
   Users.init()
       : id = 0,
-        nama = 'somebody',
-        no_hp = '00000000000';
+        nama = '-',
+        no_hp = '-';
 
   Users.fromMap(Map<dynamic, dynamic> map)
       : id = map['id'],
@@ -96,7 +92,6 @@ class CashierPage extends StatefulWidget {
 }
 
 class _CashierPageState extends State<CashierPage> {
-
   final searchController = TextEditingController();
 
   List<Users> user = [];
@@ -110,19 +105,16 @@ class _CashierPageState extends State<CashierPage> {
   final PanelController _controller = PanelController();
   late Future<List<TopUp>> topup;
 
-  late String base;
   String? phone;
   String? name;
   String? id;
-
-
   late SharedPreferences prefs;
 
   Future<void> setValue() async {
     prefs = await SharedPreferences.getInstance();
-    phone = prefs.getString('phone_customer') ?? '111';
-    name = prefs.getString('name_customer') ?? 'id';
-    id = prefs.getString('id_customer') ?? '';
+    phone = prefs.getString('phone_customer');
+    name = prefs.getString('name_customer');
+    id = prefs.getString('id_customer');
   }
 
   @override
@@ -139,7 +131,6 @@ class _CashierPageState extends State<CashierPage> {
     super.dispose();
   }
 
-  @override
   void togglePanel() {
     _controller.isPanelOpen ? _controller.close() : _controller.open();
   }
@@ -154,16 +145,16 @@ class _CashierPageState extends State<CashierPage> {
 
   bool containsUser(String text) {
     final Users result = user.firstWhere(
-            (Users u) => u.nama.toLowerCase() == text.toLowerCase(),
+        (Users u) => u.nama.toLowerCase() == text.toLowerCase(),
         orElse: () => Users.init());
 
-    if (result!.nama.isEmpty) {
+    if (result.nama.isEmpty) {
       return false;
     }
     return true;
   }
 
-  TextEditingController _topupcontrol = TextEditingController();
+  final TextEditingController _topupcontrol = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -198,13 +189,27 @@ class _CashierPageState extends State<CashierPage> {
                             decoration: BoxDecoration(
                               color: const Color(0xFFFFFFFF),
                               borderRadius:
-                              const BorderRadius.all(Radius.circular(13)),
+                                  const BorderRadius.all(Radius.circular(13)),
                               border: Border.all(
                                   color: const Color(0xFFD2D2D2), width: 1),
                             ),
-                            child: Center(
+                            child: TextButton(
                               child: Image.asset('assets/image/logout.png',
                                   width: 27.03, height: 27.05),
+                              onPressed: () {
+                                setState(() {
+                                  prefs.remove('id_customer');
+                                  prefs.remove('phone_customer');
+                                  prefs.remove('name_customer');
+                                  prefs.remove('pin_customer');
+                                  prefs.remove('type_customer');
+                                  prefs.remove('is_login');
+                                  Navigator.of(context).pushAndRemoveUntil(
+                                      MaterialPageRoute(
+                                          builder: (ctx) => const LoginPage()),
+                                      (route) => false);
+                                });
+                              },
                             )),
                         const Text(
                           'Keluar',
@@ -269,8 +274,7 @@ class _CashierPageState extends State<CashierPage> {
                           ),
                           suggestions: user
                               .map(
-                                (e) =>
-                                SearchFieldListItem(
+                                (e) => SearchFieldListItem(
                                   e.nama,
                                   item: e,
                                   // Use child to show Custom Widgets in the suggestions
@@ -279,7 +283,7 @@ class _CashierPageState extends State<CashierPage> {
                                     padding: const EdgeInsets.all(8.0),
                                     child: Row(
                                       children: [
-                                        SizedBox(
+                                        const SizedBox(
                                           width: 10,
                                         ),
                                         Text(e.nama),
@@ -287,7 +291,7 @@ class _CashierPageState extends State<CashierPage> {
                                     ),
                                   ),
                                 ),
-                          )
+                              )
                               .toList(),
                           suggestionState: Suggestion.hidden,
                           controller: searchController,
@@ -315,7 +319,7 @@ class _CashierPageState extends State<CashierPage> {
                         decoration: const BoxDecoration(
                             color: Color(0xFF7C81DF),
                             borderRadius:
-                            BorderRadius.all(Radius.circular(18.6053))),
+                                BorderRadius.all(Radius.circular(18.6053))),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -330,7 +334,7 @@ class _CashierPageState extends State<CashierPage> {
                             ),
                             const SizedBox(height: 3.82),
                             Text(
-                              'DPID: ${_selectedUsers.no_hp ?? '000000000000'}',
+                              'DPID: ${_selectedUsers.no_hp ?? '-'}',
                               style: const TextStyle(
                                 color: Color(0xFFC5C7F1),
                                 fontSize: 13.0526,
@@ -356,7 +360,7 @@ class _CashierPageState extends State<CashierPage> {
                                 color: Color(0xFFC8BDBD),
                               ),
                               borderRadius:
-                              BorderRadius.all(Radius.circular(6.38596)),
+                                  BorderRadius.all(Radius.circular(6.38596)),
                             ),
                             disabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
@@ -364,7 +368,7 @@ class _CashierPageState extends State<CashierPage> {
                                 color: Color(0xFFC8BDBD),
                               ),
                               borderRadius:
-                              BorderRadius.all(Radius.circular(6.38596)),
+                                  BorderRadius.all(Radius.circular(6.38596)),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderSide: BorderSide(
@@ -372,7 +376,7 @@ class _CashierPageState extends State<CashierPage> {
                                 color: Color(0xFFC8BDBD),
                               ),
                               borderRadius:
-                              BorderRadius.all(Radius.circular(6.38596)),
+                                  BorderRadius.all(Radius.circular(6.38596)),
                             ),
                             labelText: 'Nominal Top Up',
                             hintText: 'Rp0',
@@ -391,7 +395,6 @@ class _CashierPageState extends State<CashierPage> {
                             floatingLabelBehavior: FloatingLabelBehavior.always,
                           ),
                           keyboardType: TextInputType.number,
-                          inputFormatters: [ThousandsSeparatorInputFormatter()],
                         ),
                       ),
                       Container(
@@ -584,34 +587,22 @@ class _CashierPageState extends State<CashierPage> {
 
   Future<void> createTopup() async {
     final response = await http.post(
-      Uri.parse('http://env-8409188.jh-beon.cloud/api/cashier/topup'),
+      Uri.parse('${url}cashier/topup'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(<String, String>{
-        'cashier_id': '3',
-        'buyer_id': '4',
+        'cashier_id': id.toString(),
+        'buyer_id': '${_selectedUsers.id}',
         'nominal': _topupcontrol.text.toString(),
-
-
-      }
-      ),
+      }),
     );
     if (response.statusCode == 200) {
-      // If the server did return a 201 CREATED response,
-      // then parse the JSON.
-      var output = jsonDecode(response.body);
-      print('success make');
-      print(response.body);
-
       Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (ctx) => MakeAccountPage()), (
-          route) => false);
+          MaterialPageRoute(builder: (ctx) => const CashierPage()),
+          (route) => false);
     } else {
       throw Exception(response.body);
     }
   }
-
-
 }
-
