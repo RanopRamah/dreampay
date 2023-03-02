@@ -84,7 +84,7 @@ class TopUp {
       pengirim: json['pengirim'],
       penerima: json['penerima'],
       nominal: json['nominal'],
-      createdAt: json['createdAt'],
+      createdAt: json['created_at'],
     );
   }
 }
@@ -115,8 +115,8 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
 
   @override
   void initState() {
-    super.initState();
     dvs();
+    super.initState();
     topup = fetchTopUp();
   }
 
@@ -132,7 +132,10 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
 
   void dvs() async {
     List<dynamic> data = await fetchUsers();
-    user = data.map((e) => Users.fromJson(e)).toList();
+
+    setState(() {
+      user = data.map((e) => Users.fromMap(e)).toList();
+    });
   }
 
   bool containsUser(String text) {
@@ -316,7 +319,7 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     color: const Color(0xff292B5A)),
-                child: const Column(
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
@@ -368,7 +371,7 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     color: const Color(0xff3A2C62)),
-                child: const Column(
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
@@ -420,7 +423,7 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     color: const Color(0xff2E3346)),
-                child: const Column(
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
@@ -521,7 +524,7 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
                         width: 322,
                         height: 62,
                         margin: const EdgeInsets.only(top: 26.88),
-                        child: SearchField(
+                        child: SearchField<dynamic>(
                           searchInputDecoration: InputDecoration(
                             enabledBorder: const UnderlineInputBorder(
                               borderSide: BorderSide(color: Color(0xFFF1F1F1)),
@@ -559,9 +562,9 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
                               return null;
                             }
                           },
-                          onSuggestionTap: (SearchFieldListItem<Users> x) {
+                          onSuggestionTap: (SearchFieldListItem v) {
                             setState(() {
-                              _selectedUsers = x.item!;
+                              _selectedUsers = v.item!;
                             });
                           },
                         ),
@@ -808,7 +811,7 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
                           ),
                         ),
                         Text(
-                          snapshot.data![i].createdAt,
+                          snapshot.data![i].createdAt.toString(),
                           style: const TextStyle(
                             color: Color(0xFFBEBEBE),
                             fontFamily: 'Euclid Circular B',

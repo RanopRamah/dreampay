@@ -60,7 +60,7 @@ class _QRPageState extends State<QRPage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Column(
+                Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Text(result != null ? '${result!.code}' : 'belum bisa'),

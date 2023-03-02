@@ -257,7 +257,7 @@ class _MakeAccountPageState extends State<MakeAccountPage> {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     color: const Color(0xff292B5A)),
-                child: const Column(
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
@@ -309,7 +309,7 @@ class _MakeAccountPageState extends State<MakeAccountPage> {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     color: const Color(0xff3A2C62)),
-                child: const Column(
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
@@ -361,7 +361,7 @@ class _MakeAccountPageState extends State<MakeAccountPage> {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     color: const Color(0xff2E3346)),
-                child: const Column(
+                child:  Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
@@ -531,7 +531,7 @@ class _MakeAccountPageState extends State<MakeAccountPage> {
                     const SizedBox(
                       height: 25,
                     ),
-                    const Row(
+                    Row(
                       children: <Widget>[
                         Text(
                           'Tipe',

@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:core';
 import 'package:dreampay/page/buyer/nominal_page.dart';
-import 'package:dreampay/page/login_page.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -12,9 +11,11 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
+import '../login_page.dart';
 
 var url = dotenv.env['API_URL'];
 
+// Fetch Saldo
 Future<Saldo> fetchSaldo(String id) async {
   final response = await http.get(
     Uri.parse('${url}buyer/$id'),
@@ -23,7 +24,7 @@ Future<Saldo> fetchSaldo(String id) async {
   if (response.statusCode == 200) {
     return Saldo.fromJson(jsonDecode(response.body));
   } else {
-    throw Exception('Failed to Load');
+    throw Exception(response.body);
   }
 }
 
@@ -47,67 +48,27 @@ class Saldo {
   }
 }
 
-Future<List<TopUp>> fetchTopUp(String id) async {
-  final response = await http.get(
-    Uri.parse('${url}buyer/$id'),
-  );
-
-  if (response.statusCode == 200) {
-    List jsonResponse = jsonDecode(response.body)['list_topup'];
-    return jsonResponse.map((e) => TopUp.fromJson(e)).toList();
-  } else {
-    throw Exception('Failed to Load');
-  }
-}
-
-class TopUp {
-  final dynamic id;
-  final dynamic nota;
-  final dynamic pengirim;
-  final dynamic penerima;
-  final dynamic nominal;
-  final dynamic created_at;
-
-  const TopUp({
-    required this.id,
-    required this.nota,
-    required this.pengirim,
-    required this.penerima,
-    required this.nominal,
-    required this.created_at,
-  });
-
-  factory TopUp.fromJson(Map<dynamic, dynamic> json) {
-    return TopUp(
-      id: json['id'],
-      nota: json['nota'],
-      pengirim: json['pengirim'],
-      penerima: json['penerima'],
-      nominal: json['nominal'],
-      created_at: json['created_at'],
-    );
-  }
-}
-
+// Fetch List Pengeluaran
 Future<List<Pengeluaran>> fetchPengeluaran(String id) async {
   final response = await http.get(
-    Uri.parse('${url}/buyer/$id'),
+    Uri.parse('${url}buyer/$id}'),
   );
 
   if (response.statusCode == 200) {
     List jsonResponse = jsonDecode(response.body)['list_pengeluaran'];
     return jsonResponse.map((e) => Pengeluaran.fromJson(e)).toList();
   } else {
-    throw Exception('Failed to Load');
+    throw Exception(response.body);
   }
 }
+
 class Pengeluaran {
   final dynamic id;
   final dynamic nota;
   final dynamic pengirim;
   final dynamic penerima;
   final dynamic nominal;
-  final dynamic created_at;
+  final dynamic createdAt;
 
   const Pengeluaran({
     required this.id,
@@ -115,7 +76,7 @@ class Pengeluaran {
     required this.pengirim,
     required this.penerima,
     required this.nominal,
-    required this.created_at,
+    required this.createdAt,
   });
 
   factory Pengeluaran.fromJson(Map<dynamic, dynamic> json) {
@@ -125,15 +86,57 @@ class Pengeluaran {
       pengirim: json['pengirim'],
       penerima: json['penerima'],
       nominal: json['nominal'],
-      created_at: json['created_at'],
+      createdAt: json['created_at'],
     );
-  }}
+  }
+}
 
+// Fetch List TopUp
+Future<List<TopUp>> fetchTopup(String id) async {
+  final response = await http.get(
+    Uri.parse('${url}buyer/$id}'),
+  );
 
+  if (response.statusCode == 200) {
+    List jsonResponse = jsonDecode(response.body)['list_topup'];
+    return jsonResponse.map((e) => TopUp.fromJson(e)).toList();
+  } else {
+    throw Exception(response.body);
+  }
+}
 
+class TopUp {
+  final dynamic id;
+  final dynamic nota;
+  final dynamic pengirim;
+  final dynamic penerima;
+  final dynamic nominal;
+  final dynamic createdAt;
+
+  const TopUp({
+    required this.id,
+    required this.nota,
+    required this.pengirim,
+    required this.penerima,
+    required this.nominal,
+    required this.createdAt,
+  });
+
+  factory TopUp.fromJson(Map<dynamic, dynamic> json) {
+    return TopUp(
+      id: json['id'],
+      nota: json['nota'],
+      pengirim: json['pengirim'],
+      penerima: json['penerima'],
+      nominal: json['nominal'],
+      createdAt: json['created_at'],
+    );
+  }
+}
+
+// WIDGET
 class BuyerHomePage extends StatefulWidget {
   const BuyerHomePage({Key? key}) : super(key: key);
-
 
   @override
   State<BuyerHomePage> createState() => _BuyerHomePageState();
@@ -151,11 +154,19 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
   @override
   initState() {
     setValue();
+
     super.initState();
   }
 
-  Future<void> initvalue() async {
+  late SharedPreferences prefs;
+  String? phone;
+  String? name;
+  String? id;
+
+  Future<void> setValue() async {
     prefs = await SharedPreferences.getInstance();
+    phone = prefs.getString('phone_customer');
+    name = prefs.getString('name_customer');
     id = prefs.getString('id_customer');
 
     setState(() {
@@ -163,9 +174,7 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
     });
   }
 
-  PanelController _panelController = PanelController();
-
-
+  final PanelController _panelController = PanelController();
 
   void togglePanel() => _panelController.isPanelOpen
       ? _panelController.close()
@@ -174,56 +183,59 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Stack(children: <Widget>[
-      SlidingUpPanel(
-        controller: _panelController,
-        maxHeight: 450,
-        minHeight: 200,
-        padding: EdgeInsets.only(left: 30, right: 30),
-        borderRadius: BorderRadius.only(
-            topRight: Radius.circular(30), topLeft: Radius.circular(30)),
-        body: FutureBuilder(
-          future: _saldo,
-          builder: (BuildContext context, snapshot) {
-            if (snapshot.hasData) {
-              return SingleChildScrollView(
-                child: Container(
-                  height: 800,
-                  decoration: const BoxDecoration(color: Color(0xFFFBFBFB)),
-                  padding: const EdgeInsets.only(
-                      right: 25, left: 25, top: 80, bottom: 74),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: Stack(
+        children: <Widget>[
+          SlidingUpPanel(
+            controller: _panelController,
+            maxHeight: 450,
+            minHeight: 200,
+            padding: const EdgeInsets.only(left: 30, right: 30),
+            borderRadius: const BorderRadius.only(
+                topRight: Radius.circular(30), topLeft: Radius.circular(30)),
+            body: FutureBuilder(
+              future: _saldo,
+              builder: (BuildContext context, snapshot) {
+                if (snapshot.hasData) {
+                  return SingleChildScrollView(
+                    child: Container(
+                      height: 800,
+                      decoration: const BoxDecoration(color: Color(0xFFFBFBFB)),
+                      padding: const EdgeInsets.only(
+                          right: 25, left: 25, top: 80, bottom: 74),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
-                              Text(
-                                'Assalamualaikum 👋',
-                                style: TextStyle(
-                                  fontFamily: 'Euclid Circular B',
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 16,
-                                  color: Color(0xff777777),
-                                ),
-                              ),
-                              SizedBox(
-                                height: 5,
-                              ),
-                              Container(
-                                width: 250,
-                                child:Text(
-                                  'Abi Ranop',
-                                  textAlign: TextAlign.left,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    fontFamily: 'Euclid Circular B',
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 30,
-                                    color: Color(0xff222222),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  const Text(
+                                    'Assalamualaikum 👋',
+                                    style: TextStyle(
+                                      fontFamily: 'Euclid Circular B',
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 16,
+                                      color: Color(0xff777777),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 5,
+                                  ),
+                                  SizedBox(
+                                    width: 250,
+                                    child: Text(
+                                      name.toString(),
+                                      textAlign: TextAlign.left,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                        fontFamily: 'Euclid Circular B',
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 30,
+                                        color: Color(0xff222222),
+                                      ),
+                                    ),
                                   ),
                                 ],
                               ),
@@ -252,9 +264,9 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                                           prefs.remove('is_login');
                                           Navigator.of(context)
                                               .pushAndRemoveUntil(
-                                              MaterialPageRoute(
-                                                  builder: (ctx) =>
-                                                  const LoginPage()),
+                                                  MaterialPageRoute(
+                                                      builder: (ctx) =>
+                                                          const LoginPage()),
                                                   (route) => false);
                                         });
                                       },
@@ -289,7 +301,7 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                               child: Column(children: <Widget>[
                                 Row(
                                   mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.spaceBetween,
                                   children: <Widget>[
                                     const Text(
                                       'Saldo Anda',
@@ -315,7 +327,7 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                                                 'assets/image/back_money.png'))),
                                     child: Column(
                                       crossAxisAlignment:
-                                      CrossAxisAlignment.center,
+                                          CrossAxisAlignment.center,
                                       children: <Widget>[
                                         Row(
                                           children: <Widget>[
@@ -326,7 +338,7 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                                                 'Rp',
                                                 style: TextStyle(
                                                     fontFamily:
-                                                    'SF Pro Display',
+                                                        'SF Pro Display',
                                                     fontSize: 20,
                                                     fontWeight: FontWeight.w400,
                                                     color: Colors.white),
@@ -336,19 +348,19 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                                               width: 180,
                                               child: SingleChildScrollView(
                                                 scrollDirection:
-                                                Axis.horizontal,
+                                                    Axis.horizontal,
                                                 child: Text(
                                                   snapshot.data!.saldo
                                                       .toString(),
                                                   // 'tes',
                                                   overflow:
-                                                  TextOverflow.ellipsis,
+                                                      TextOverflow.ellipsis,
                                                   style: const TextStyle(
                                                       fontFamily:
                                                           'SF Pro Display',
                                                       fontSize: 40,
                                                       fontWeight:
-                                                      FontWeight.w700,
+                                                          FontWeight.w700,
                                                       color: Colors.white),
                                                 ),
                                               ),
@@ -361,7 +373,7 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                           const SizedBox(
                             height: 20,
                           ),
-                          const Row(children: const [
+                          Row(children: [
                             Text(
                               'Riwayat',
                               style: TextStyle(
@@ -403,19 +415,19 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                                         children: <Widget>[
                                           Row(
                                             mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+                                                MainAxisAlignment.spaceBetween,
                                             children: <Widget>[
                                               Container(
                                                 decoration: BoxDecoration(
                                                     color:
-                                                    const Color(0xffF4F0F0),
+                                                        const Color(0xffF4F0F0),
                                                     borderRadius:
-                                                    BorderRadius.circular(
-                                                        12)),
+                                                        BorderRadius.circular(
+                                                            12)),
                                                 width: 33,
                                                 height: 35,
                                                 padding:
-                                                const EdgeInsets.all(5),
+                                                    const EdgeInsets.all(5),
                                                 child: Image.asset(
                                                     'assets/image/trans.png'),
                                               ),
@@ -423,7 +435,7 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                                                 'Pengeluaran',
                                                 style: TextStyle(
                                                     fontFamily:
-                                                    'Euclid Circular B',
+                                                        'Euclid Circular B',
                                                     fontWeight: FontWeight.w500,
                                                     fontSize: 16,
                                                     color: Color(0xff222222)),
@@ -443,10 +455,10 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                                                   'Rp',
                                                   style: TextStyle(
                                                       fontFamily:
-                                                      'SF Pro Display',
+                                                          'SF Pro Display',
                                                       fontSize: 13,
                                                       fontWeight:
-                                                      FontWeight.w400,
+                                                          FontWeight.w400,
                                                       color: Color(0xff606060)),
                                                 ),
                                               ),
@@ -454,7 +466,7 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                                                 width: 120,
                                                 child: SingleChildScrollView(
                                                   scrollDirection:
-                                                  Axis.horizontal,
+                                                      Axis.horizontal,
                                                   child: Text(
                                                     snapshot
                                                         .data!.totalPengeluaran
@@ -464,9 +476,9 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                                                             'SF Pro Display',
                                                         fontSize: 27,
                                                         fontWeight:
-                                                        FontWeight.w700,
+                                                            FontWeight.w700,
                                                         color:
-                                                        Color(0xff222222)),
+                                                            Color(0xff222222)),
                                                   ),
                                                 ),
                                               ),
@@ -484,14 +496,14 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                                               },
                                               child: Container(
                                                   padding:
-                                                  const EdgeInsets.only(
-                                                      left: 49, top: 5),
+                                                      const EdgeInsets.only(
+                                                          left: 49, top: 5),
                                                   width: double.infinity,
                                                   height: 30,
                                                   decoration: BoxDecoration(
                                                       borderRadius:
-                                                      BorderRadius.circular(
-                                                          27),
+                                                          BorderRadius.circular(
+                                                              27),
                                                       border: Border.all(
                                                           width: 1,
                                                           color: const Color(
@@ -500,12 +512,12 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                                                     'Detail',
                                                     style: TextStyle(
                                                         fontFamily:
-                                                        'Euclid Circular B',
+                                                            'Euclid Circular B',
                                                         fontSize: 16,
                                                         fontWeight:
-                                                        FontWeight.w400,
+                                                            FontWeight.w400,
                                                         color:
-                                                        Color(0xff606169)),
+                                                            Color(0xff606169)),
                                                   )))
                                         ],
                                       ),
@@ -526,19 +538,19 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                                         children: <Widget>[
                                           Row(
                                             mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+                                                MainAxisAlignment.spaceBetween,
                                             children: <Widget>[
                                               Container(
                                                 decoration: BoxDecoration(
                                                     color:
-                                                    const Color(0xffF4F0F0),
+                                                        const Color(0xffF4F0F0),
                                                     borderRadius:
-                                                    BorderRadius.circular(
-                                                        12)),
+                                                        BorderRadius.circular(
+                                                            12)),
                                                 width: 33,
                                                 height: 35,
                                                 padding:
-                                                const EdgeInsets.all(5),
+                                                    const EdgeInsets.all(5),
                                                 child: Image.asset(
                                                     'assets/image/trans.png'),
                                               ),
@@ -546,7 +558,7 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                                                 'Isi Ulang',
                                                 style: TextStyle(
                                                     fontFamily:
-                                                    'Euclid Circular B',
+                                                        'Euclid Circular B',
                                                     fontWeight: FontWeight.w500,
                                                     fontSize: 16,
                                                     color: Color(0xff222222)),
@@ -566,10 +578,10 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                                                   'Rp',
                                                   style: TextStyle(
                                                       fontFamily:
-                                                      'SF Pro Display',
+                                                          'SF Pro Display',
                                                       fontSize: 13,
                                                       fontWeight:
-                                                      FontWeight.w400,
+                                                          FontWeight.w400,
                                                       color: Color(0xff606060)),
                                                 ),
                                               ),
@@ -577,7 +589,7 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                                                 width: 110,
                                                 child: SingleChildScrollView(
                                                   scrollDirection:
-                                                  Axis.horizontal,
+                                                      Axis.horizontal,
                                                   child: Text(
                                                     snapshot.data!.totalTopup
                                                         .toString(),
@@ -586,9 +598,9 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                                                             'SF Pro Display',
                                                         fontSize: 28,
                                                         fontWeight:
-                                                        FontWeight.w700,
+                                                            FontWeight.w700,
                                                         color:
-                                                        Color(0xff222222)),
+                                                            Color(0xff222222)),
                                                   ),
                                                 ),
                                               ),
@@ -606,14 +618,14 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                                               },
                                               child: Container(
                                                   padding:
-                                                  const EdgeInsets.only(
-                                                      left: 49, top: 5),
+                                                      const EdgeInsets.only(
+                                                          left: 49, top: 5),
                                                   width: double.infinity,
                                                   height: 30,
                                                   decoration: BoxDecoration(
                                                       borderRadius:
-                                                      BorderRadius.circular(
-                                                          27),
+                                                          BorderRadius.circular(
+                                                              27),
                                                       border: Border.all(
                                                           width: 1,
                                                           color: const Color(
@@ -622,12 +634,12 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                                                     'Detail',
                                                     style: TextStyle(
                                                         fontFamily:
-                                                        'Euclid Circular B',
+                                                            'Euclid Circular B',
                                                         fontSize: 16,
                                                         fontWeight:
-                                                        FontWeight.w400,
+                                                            FontWeight.w400,
                                                         color:
-                                                        Color(0xff606169)),
+                                                            Color(0xff606169)),
                                                   )))
                                         ],
                                       ),
@@ -724,18 +736,18 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                                                           children: <Widget>[
                                                             Row(
                                                               mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .spaceBetween,
+                                                                  MainAxisAlignment
+                                                                      .spaceBetween,
                                                               children: [
                                                                 Column(
                                                                   crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
+                                                                      CrossAxisAlignment
+                                                                          .start,
                                                                   children: <
                                                                       Widget>[
                                                                     SizedBox(
                                                                       width:
-                                                                      200,
+                                                                          200,
                                                                       child:
                                                                           Text(
                                                                         _filteredPengeluaran.isNotEmpty
@@ -745,9 +757,9 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                                                                             overflow: TextOverflow
                                                                                 .ellipsis,
                                                                             fontFamily:
-                                                                            'Euclid Circular B',
+                                                                                'Euclid Circular B',
                                                                             fontWeight:
-                                                                            FontWeight.w600,
+                                                                                FontWeight.w600,
                                                                             fontSize: 20),
                                                                       ),
                                                                     ),
@@ -760,22 +772,22 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                                                                               .createdAt,
                                                                       style: const TextStyle(
                                                                           fontFamily:
-                                                                          'Euclid Circular B',
+                                                                              'Euclid Circular B',
                                                                           fontWeight: FontWeight
                                                                               .w400,
                                                                           fontSize:
-                                                                          16,
+                                                                              16,
                                                                           color:
-                                                                          Color(0xffbebebe)),
+                                                                              Color(0xffbebebe)),
                                                                     )
                                                                   ],
                                                                 ),
                                                                 SizedBox(
                                                                   width: 110,
                                                                   child:
-                                                                  SingleChildScrollView(
+                                                                      SingleChildScrollView(
                                                                     scrollDirection:
-                                                                    Axis.horizontal,
+                                                                        Axis.horizontal,
                                                                     child: Text(
                                                                       _filteredPengeluaran
                                                                               .isNotEmpty
@@ -786,11 +798,11 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                                                                           fontWeight: FontWeight
                                                                               .w400,
                                                                           fontFamily:
-                                                                          'Euclid Circular B',
+                                                                              'Euclid Circular B',
                                                                           fontSize:
-                                                                          20,
+                                                                              20,
                                                                           color:
-                                                                          Color(0xff222222)),
+                                                                              Color(0xff222222)),
                                                                     ),
                                                                   ),
                                                                 )
@@ -869,18 +881,18 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                                                           children: <Widget>[
                                                             Row(
                                                               mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .spaceBetween,
+                                                                  MainAxisAlignment
+                                                                      .spaceBetween,
                                                               children: [
                                                                 Column(
                                                                   crossAxisAlignment:
-                                                                  CrossAxisAlignment
-                                                                      .start,
+                                                                      CrossAxisAlignment
+                                                                          .start,
                                                                   children: <
                                                                       Widget>[
                                                                     SizedBox(
                                                                       width:
-                                                                      200,
+                                                                          200,
                                                                       child:
                                                                           Text(
                                                                         _filteredTopup.isNotEmpty
@@ -890,9 +902,9 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                                                                             overflow: TextOverflow
                                                                                 .ellipsis,
                                                                             fontFamily:
-                                                                            'Euclid Circular B',
+                                                                                'Euclid Circular B',
                                                                             fontWeight:
-                                                                            FontWeight.w600,
+                                                                                FontWeight.w600,
                                                                             fontSize: 20),
                                                                       ),
                                                                     ),
@@ -905,22 +917,22 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                                                                               .createdAt,
                                                                       style: const TextStyle(
                                                                           fontFamily:
-                                                                          'Euclid Circular B',
+                                                                              'Euclid Circular B',
                                                                           fontWeight: FontWeight
                                                                               .w400,
                                                                           fontSize:
-                                                                          16,
+                                                                              16,
                                                                           color:
-                                                                          Color(0xffbebebe)),
+                                                                              Color(0xffbebebe)),
                                                                     )
                                                                   ],
                                                                 ),
                                                                 SizedBox(
                                                                   width: 110,
                                                                   child:
-                                                                  SingleChildScrollView(
+                                                                      SingleChildScrollView(
                                                                     scrollDirection:
-                                                                    Axis.horizontal,
+                                                                        Axis.horizontal,
                                                                     child: Text(
                                                                       _filteredTopup
                                                                               .isNotEmpty
@@ -930,11 +942,11 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                                                                           fontWeight: FontWeight
                                                                               .w400,
                                                                           fontFamily:
-                                                                          'Euclid Circular B',
+                                                                              'Euclid Circular B',
                                                                           fontSize:
-                                                                          20,
+                                                                              20,
                                                                           color:
-                                                                          Color(0xff222222)),
+                                                                              Color(0xff222222)),
                                                                     ),
                                                                   ),
                                                                 )
@@ -1003,6 +1015,7 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
       ),
     );
   }
+
   Future<void> scanQRCode() async {
     try {
       final qrCode = await FlutterBarcodeScanner.scanBarcode(
