@@ -11,6 +11,7 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 var url = dotenv.env['API_URL'];
+
 Future<List> fetchUsers() async {
   final response = await http.get(
     Uri.parse('${url}admin/list-topup'),
@@ -32,7 +33,7 @@ Future<List<TopUp>> fetchTopUp() async {
     List jsonResponse = jsonDecode(response.body)['list_topup'];
     return jsonResponse.map((e) => TopUp.fromJson(e)).toList();
   } else {
-    throw Exception('Failed to Load');
+    throw Exception(response.body);
   }
 }
 
@@ -135,14 +136,11 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
     setState(() {
       user = data.map((e) => Users.fromMap(e)).toList();
     });
-
-    print(user);
-    print('ok');
   }
 
   bool containsUser(String text) {
     final Users result = user.firstWhere(
-            (Users u) => u.nama.toLowerCase() == text.toLowerCase(),
+        (Users u) => u.nama.toLowerCase() == text.toLowerCase(),
         orElse: () => Users.init());
 
     if (result.nama.isEmpty) {
@@ -172,8 +170,8 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
               Center(
                 child: ListTile(
                   onTap: () {
-                    Navigator.of(context).push(
-                        MaterialPageRoute(builder: (c) => MakeAccountPage()));
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (c) => const MakeAccountPage()));
                   },
                   title: Container(
                     padding: const EdgeInsets.only(right: 30, left: 40),
@@ -210,7 +208,7 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
                 child: ListTile(
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (c) => AdminTransactionPage()));
+                        builder: (c) => const AdminTransactionPage()));
                   },
                   title: Container(
                     padding: const EdgeInsets.only(right: 25, left: 25),
@@ -264,9 +262,6 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
                           width: 21,
                           height: 21,
                         ),
-                        // SizedBox(
-                        //   width: 13,
-                        // ),
                         const Text(
                           'Top-Up',
                           style: TextStyle(
@@ -301,9 +296,6 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
                           width: 21,
                           height: 21,
                         ),
-                        // SizedBox(
-                        //   width: 13,
-                        // ),
                         const Text(
                           'Withdraw',
                           style: TextStyle(
@@ -343,29 +335,29 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
                     ),
                     Center(
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Padding(
-                              padding: EdgeInsets.only(bottom: 35),
-                              child: Text(
-                                'Rp',
-                                style: TextStyle(
-                                    fontFamily: 'SF Pro Display',
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.white),
-                              ),
-                            ),
-                            Text(
-                              '560,000',
-                              style: TextStyle(
-                                  fontFamily: 'SF Pro Display',
-                                  fontSize: 36,
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.white),
-                            ),
-                          ],
-                        ))
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(bottom: 35),
+                          child: Text(
+                            'Rp',
+                            style: TextStyle(
+                                fontFamily: 'SF Pro Display',
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white),
+                          ),
+                        ),
+                        Text(
+                          '560,000',
+                          style: TextStyle(
+                              fontFamily: 'SF Pro Display',
+                              fontSize: 36,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white),
+                        ),
+                      ],
+                    ))
                   ],
                 ),
               ),
@@ -395,29 +387,29 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
                     ),
                     Center(
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Padding(
-                              padding: EdgeInsets.only(bottom: 35),
-                              child: Text(
-                                'Rp',
-                                style: TextStyle(
-                                    fontFamily: 'SF Pro Display',
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.white),
-                              ),
-                            ),
-                            Text(
-                              '560,000',
-                              style: TextStyle(
-                                  fontFamily: 'SF Pro Display',
-                                  fontSize: 36,
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.white),
-                            ),
-                          ],
-                        ))
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(bottom: 35),
+                          child: Text(
+                            'Rp',
+                            style: TextStyle(
+                                fontFamily: 'SF Pro Display',
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white),
+                          ),
+                        ),
+                        Text(
+                          '560,000',
+                          style: TextStyle(
+                              fontFamily: 'SF Pro Display',
+                              fontSize: 36,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white),
+                        ),
+                      ],
+                    ))
                   ],
                 ),
               ),
@@ -431,7 +423,7 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     color: const Color(0xff2E3346)),
-                child:  Column(
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
@@ -447,29 +439,29 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
                     ),
                     Center(
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Padding(
-                              padding: EdgeInsets.only(bottom: 35),
-                              child: Text(
-                                'Rp',
-                                style: TextStyle(
-                                    fontFamily: 'SF Pro Display',
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.white),
-                              ),
-                            ),
-                            Text(
-                              '560,000',
-                              style: TextStyle(
-                                  fontFamily: 'SF Pro Display',
-                                  fontSize: 36,
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.white),
-                            ),
-                          ],
-                        ))
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(bottom: 35),
+                          child: Text(
+                            'Rp',
+                            style: TextStyle(
+                                fontFamily: 'SF Pro Display',
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white),
+                          ),
+                        ),
+                        Text(
+                          '560,000',
+                          style: TextStyle(
+                              fontFamily: 'SF Pro Display',
+                              fontSize: 36,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white),
+                        ),
+                      ],
+                    ))
                   ],
                 ),
               ),
@@ -532,7 +524,7 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
                         width: 322,
                         height: 62,
                         margin: const EdgeInsets.only(top: 26.88),
-                        child:  SearchField<dynamic>(
+                        child: SearchField<dynamic>(
                           searchInputDecoration: InputDecoration(
                             enabledBorder: const UnderlineInputBorder(
                               borderSide: BorderSide(color: Color(0xFFF1F1F1)),
@@ -557,25 +549,7 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
                             ),
                           ),
                           suggestions: user
-                              .map(
-                                (e) => SearchFieldListItem(
-                              e.nama,
-                              item: e,
-                              // Use child to show Custom Widgets in the suggestions
-                              // defaults to Text widget
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Row(
-                                  children: [
-                                    const SizedBox(
-                                      width: 10,
-                                    ),
-                                    Text(e.nama),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          )
+                              .map((e) => SearchFieldListItem(e.nama, item: e))
                               .toList(),
                           suggestionState: Suggestion.hidden,
                           controller: searchController,
@@ -603,7 +577,7 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
                         decoration: const BoxDecoration(
                             color: Color(0xFF7C81DF),
                             borderRadius:
-                            BorderRadius.all(Radius.circular(18.6053))),
+                                BorderRadius.all(Radius.circular(18.6053))),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -618,7 +592,7 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
                             ),
                             const SizedBox(height: 3.82),
                             Text(
-                              'DPID: ${_selectedUsers.noHp ?? '000000000000'}',
+                              'DPID: ${_selectedUsers.noHp ?? '-'}',
                               style: const TextStyle(
                                 color: Color(0xFFC5C7F1),
                                 fontSize: 13.0526,
@@ -635,7 +609,7 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
                         margin: const EdgeInsets.only(top: 38.61),
                         child: TextField(
                           controller: _topupcontrol,
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontSize: 23,
                               fontWeight: FontWeight.w700,
                               fontFamily: 'SF Pro Display',
@@ -647,7 +621,7 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
                                 color: Color(0xFFC8BDBD),
                               ),
                               borderRadius:
-                              BorderRadius.all(Radius.circular(6.38596)),
+                                  BorderRadius.all(Radius.circular(6.38596)),
                             ),
                             disabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
@@ -655,7 +629,7 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
                                 color: Color(0xFFC8BDBD),
                               ),
                               borderRadius:
-                              BorderRadius.all(Radius.circular(6.38596)),
+                                  BorderRadius.all(Radius.circular(6.38596)),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderSide: BorderSide(
@@ -663,7 +637,7 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
                                 color: Color(0xFFC8BDBD),
                               ),
                               borderRadius:
-                              BorderRadius.all(Radius.circular(6.38596)),
+                                  BorderRadius.all(Radius.circular(6.38596)),
                             ),
                             labelText: 'Nominal Top Up',
                             hintText: 'Rp0',
@@ -888,7 +862,7 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
     if (response.statusCode == 200) {
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (ctx) => const AdminTopupPage()),
-              (route) => false);
+          (route) => false);
     } else {
       throw Exception(response.body);
     }
