@@ -260,7 +260,7 @@ class _AdminTransactionPageState extends State<AdminTransactionPage> {
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
                       color: const Color(0xff292B5A)),
-                  child: const Column(
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
@@ -312,7 +312,7 @@ class _AdminTransactionPageState extends State<AdminTransactionPage> {
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
                       color: const Color(0xff3A2C62)),
-                  child: const Column(
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
@@ -364,7 +364,7 @@ class _AdminTransactionPageState extends State<AdminTransactionPage> {
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
                       color: const Color(0xff2E3346)),
-                  child: const Column(
+                  child:  Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
@@ -489,7 +489,7 @@ class _AdminTransactionPageState extends State<AdminTransactionPage> {
                                                 right: 20),
                                             child: Column(
                                               children: <Widget>[
-                                                const Row(
+                                                Row(
                                                   mainAxisAlignment:
                                                       MainAxisAlignment
                                                           .spaceBetween,

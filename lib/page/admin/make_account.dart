@@ -58,6 +58,8 @@ class _MakeAccountPageState extends State<MakeAccountPage> {
   final TextEditingController _no_hp = TextEditingController();
   final TextEditingController _pin = TextEditingController();
 
+  List<dynamic> _filteredAkun = [];
+
   String? phone;
   String? name;
   String? id;
@@ -96,6 +98,7 @@ class _MakeAccountPageState extends State<MakeAccountPage> {
   void togglePanel() => _panelController.isPanelOpen
       ? _panelController.close()
       : _panelController.open();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -422,301 +425,319 @@ class _MakeAccountPageState extends State<MakeAccountPage> {
         ),
       ),
       key: _scaffoldKey,
-      body: SlidingUpPanel(
-        minHeight: 70,
-        borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(25), topRight: Radius.circular(25)),
-        body: Container(
-          padding: const EdgeInsets.only(top: 70, left: 30, right: 30),
-          decoration: const BoxDecoration(),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  GestureDetector(
-                    onTap: () => _scaffoldKey.currentState?.openDrawer(),
-                    child: Image.asset(
-                      'assets/image/hamburger.png',
-                      width: 35,
-                      height: 27,
-                    ),
+      body: RefreshIndicator(
+        onRefresh: fetchUsers,
+        child: ListView(
+          children: [
+            SizedBox(
+              height: MediaQuery.of(context).size.height,
+              child: SlidingUpPanel(
+                minHeight: 70,
+                borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(25), topRight: Radius.circular(25)),
+                body: Container(
+                  padding: const EdgeInsets.only(top: 70, left: 30, right: 30),
+                  decoration: const BoxDecoration(),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          GestureDetector(
+                            onTap: () => _scaffoldKey.currentState?.openDrawer(),
+                            child: Image.asset(
+                              'assets/image/hamburger.png',
+                              width: 35,
+                              height: 27,
+                            ),
+                          ),
+                          logoutButton(context),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Container(
+                        width: 345,
+                        height: 600,
+                        padding: const EdgeInsets.only(top: 30, left: 15, right: 15),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(24),
+                          boxShadow: [
+                            const BoxShadow(
+                              spreadRadius: 1,
+                              blurRadius: 3,
+                              color: Color.fromRGBO(0, 0, 0, 0.1),
+                              offset: Offset(0, 1),
+                              blurStyle: BlurStyle.normal,
+                            )
+                          ],
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            const Text(
+                              'Akun Baru',
+                              style: TextStyle(
+                                  fontSize: 32,
+                                  fontWeight: FontWeight.w600,
+                                  fontFamily: 'Euclid Circular B',
+                                  color: Color(0xff222222)),
+                            ),
+                            const SizedBox(
+                              height: 40,
+                            ),
+                            TextField(
+                              controller: _nama,
+                              style: const TextStyle(fontFamily: 'Euclid Circular B'),
+                              decoration: InputDecoration(
+                                labelText: 'Nama Akun',
+                                labelStyle:
+                                const TextStyle(fontFamily: 'Euclid Circular B'),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(6),
+                                    borderSide: const BorderSide(
+                                        width: 0.91,
+                                        color: Color(
+                                          0xffC8BDBD,
+                                        ))),
+                                floatingLabelBehavior: FloatingLabelBehavior.always,
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 40,
+                            ),
+                            TextField(
+                              controller: _no_hp,
+                              style: const TextStyle(fontFamily: 'Euclid Circular B'),
+                              keyboardType: TextInputType.number,
+                              decoration: InputDecoration(
+                                labelText: 'Nomor Akun',
+                                labelStyle:
+                                const TextStyle(fontFamily: 'Euclid Circular B'),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(6),
+                                    borderSide: const BorderSide(
+                                        width: 0.91,
+                                        color: Color(
+                                          0xffC8BDBD,
+                                        ))),
+                                floatingLabelBehavior: FloatingLabelBehavior.always,
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 50,
+                            ),
+                            TextField(
+                              controller: _pin,
+                              keyboardType: TextInputType.number,
+                              style: const TextStyle(fontFamily: 'Euclid Circular B'),
+                              decoration: InputDecoration(
+                                labelText: 'PIN Akun',
+                                labelStyle:
+                                const TextStyle(fontFamily: 'Euclid Circular B'),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(6),
+                                    borderSide: const BorderSide(
+                                        width: 0.91,
+                                        color: Color(
+                                          0xffC8BDBD,
+                                        ))),
+                                floatingLabelBehavior: FloatingLabelBehavior.always,
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 25,
+                            ),
+                            Row(
+                              children: <Widget>[
+                                Text(
+                                  'Tipe',
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      fontFamily: 'Euclid Circular B',
+                                      fontWeight: FontWeight.w600,
+                                      color: Color(0xff8D8989)),
+                                ),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                Text(
+                                  'Akun',
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      fontFamily: 'Euclid Circular B',
+                                      fontWeight: FontWeight.w400,
+                                      color: Color(0xff8D8989)),
+                                )
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Row(children: [
+                              Flexible(
+                                flex: 1,
+                                child: Row(
+                                  children: [
+                                    Radio(
+                                        value: "B",
+                                        groupValue: _selectedType,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            _selectedType = value!;
+                                          });
+                                        }),
+                                    const Expanded(
+                                        child: Text(
+                                          'User',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w400,
+                                              fontFamily: 'Euclid Circular B',
+                                              fontSize: 13,
+                                              color: Color(0xff8D8989)),
+                                        ))
+                                  ],
+                                ),
+                              ),
+                              Flexible(
+                                flex: 1,
+                                child: Row(
+                                  children: [
+                                    Radio(
+                                        value: "C",
+                                        groupValue: _selectedType,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            _selectedType = value!;
+                                          });
+                                        }),
+                                    const Text(
+                                      'Cashier',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w400,
+                                          fontFamily: 'Euclid Circular B',
+                                          fontSize: 13,
+                                          color: Color(0xff8D8989)),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              Flexible(
+                                flex: 1,
+                                child: Row(
+                                  children: [
+                                    Radio(
+                                        value: "S",
+                                        groupValue: _selectedType,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            _selectedType = value!;
+                                          });
+                                        }),
+                                    const Text(
+                                      'Seller',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w400,
+                                          fontFamily: 'Euclid Circular B',
+                                          fontSize: 13,
+                                          color: Color(0xff8D8989)),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ]),
+                            TextButton(
+                                onPressed: () {
+                                  setState(() {
+                                    createUsers();
+                                  });
+                                },
+                                child: Container(
+                                    width: double.infinity,
+                                    height: 60,
+                                    decoration: BoxDecoration(
+                                        color: const Color(0xff5258D4),
+                                        borderRadius: BorderRadius.circular(6)),
+                                    child: const Center(
+                                      child: Text(
+                                        'Buat Akun',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                            fontFamily: 'Euclid Circular B',
+                                            fontSize: 19,
+                                            color: Colors.white),
+                                      ),
+                                    )))
+                          ],
+                        ),
+                      )
+                    ],
                   ),
-                  logoutButton(context),
-                ],
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Container(
-                width: 345,
-                height: 600,
-                padding: const EdgeInsets.only(top: 30, left: 15, right: 15),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(24),
-                  boxShadow: [
-                    const BoxShadow(
-                      spreadRadius: 1,
-                      blurRadius: 3,
-                      color: Color.fromRGBO(0, 0, 0, 0.1),
-                      offset: Offset(0, 1),
-                      blurStyle: BlurStyle.normal,
-                    )
-                  ],
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    const Text(
-                      'Akun Baru',
-                      style: TextStyle(
-                          fontSize: 32,
-                          fontWeight: FontWeight.w600,
-                          fontFamily: 'Euclid Circular B',
-                          color: Color(0xff222222)),
-                    ),
-                    const SizedBox(
-                      height: 40,
-                    ),
-                    TextField(
-                      controller: _nama,
-                      style: const TextStyle(fontFamily: 'Euclid Circular B'),
-                      decoration: InputDecoration(
-                        labelText: 'Nama Akun',
-                        labelStyle:
-                            const TextStyle(fontFamily: 'Euclid Circular B'),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(6),
-                            borderSide: const BorderSide(
-                                width: 0.91,
-                                color: Color(
-                                  0xffC8BDBD,
-                                ))),
-                        floatingLabelBehavior: FloatingLabelBehavior.always,
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 40,
-                    ),
-                    TextField(
-                      controller: _no_hp,
-                      style: const TextStyle(fontFamily: 'Euclid Circular B'),
-                      keyboardType: TextInputType.number,
-                      decoration: InputDecoration(
-                        labelText: 'Nomor Akun',
-                        labelStyle:
-                            const TextStyle(fontFamily: 'Euclid Circular B'),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(6),
-                            borderSide: const BorderSide(
-                                width: 0.91,
-                                color: Color(
-                                  0xffC8BDBD,
-                                ))),
-                        floatingLabelBehavior: FloatingLabelBehavior.always,
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 50,
-                    ),
-                    TextField(
-                      controller: _pin,
-                      keyboardType: TextInputType.number,
-                      style: const TextStyle(fontFamily: 'Euclid Circular B'),
-                      decoration: InputDecoration(
-                        labelText: 'PIN Akun',
-                        labelStyle:
-                            const TextStyle(fontFamily: 'Euclid Circular B'),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(6),
-                            borderSide: const BorderSide(
-                                width: 0.91,
-                                color: Color(
-                                  0xffC8BDBD,
-                                ))),
-                        floatingLabelBehavior: FloatingLabelBehavior.always,
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 25,
-                    ),
-                    Row(
+                panelBuilder: (ScrollController sc) {
+                  return Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
-                        Text(
-                          'Tipe',
+                        GestureDetector(
+                          // onTap: togglePanel,
+                          child: Center(
+                            child: Container(
+                              margin: const EdgeInsets.only(top: 10),
+                              height: 5,
+                              width: 90,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(15),
+                                  color: Colors.grey.shade300),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 15,
+                        ),
+                        const Text(
+                          'Akun Terdaftar',
                           style: TextStyle(
-                              fontSize: 14,
+                              fontSize: 24,
                               fontFamily: 'Euclid Circular B',
                               fontWeight: FontWeight.w600,
-                              color: Color(0xff8D8989)),
+                              color: Color(0xff222222)),
                         ),
-                        SizedBox(
-                          width: 5,
+                        const SizedBox(
+                          height: 15,
                         ),
-                        Text(
-                          'Akun',
-                          style: TextStyle(
-                              fontSize: 14,
-                              fontFamily: 'Euclid Circular B',
-                              fontWeight: FontWeight.w400,
-                              color: Color(0xff8D8989)),
-                        )
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Row(children: [
-                      Flexible(
-                        flex: 1,
-                        child: Row(
-                          children: [
-                            Radio(
-                                value: "B",
-                                groupValue: _selectedType,
-                                onChanged: (value) {
-                                  setState(() {
-                                    _selectedType = value!;
-                                  });
-                                }),
-                            const Expanded(
-                                child: Text(
-                              'User',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  fontFamily: 'Euclid Circular B',
-                                  fontSize: 13,
-                                  color: Color(0xff8D8989)),
-                            ))
-                          ],
-                        ),
-                      ),
-                      Flexible(
-                        flex: 1,
-                        child: Row(
-                          children: [
-                            Radio(
-                                value: "C",
-                                groupValue: _selectedType,
-                                onChanged: (value) {
-                                  setState(() {
-                                    _selectedType = value!;
-                                  });
-                                }),
-                            const Text(
-                              'Cashier',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  fontFamily: 'Euclid Circular B',
-                                  fontSize: 13,
-                                  color: Color(0xff8D8989)),
-                            )
-                          ],
-                        ),
-                      ),
-                      Flexible(
-                        flex: 1,
-                        child: Row(
-                          children: [
-                            Radio(
-                                value: "S",
-                                groupValue: _selectedType,
-                                onChanged: (value) {
-                                  setState(() {
-                                    _selectedType = value!;
-                                  });
-                                }),
-                            const Text(
-                              'Seller',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  fontFamily: 'Euclid Circular B',
-                                  fontSize: 13,
-                                  color: Color(0xff8D8989)),
-                            )
-                          ],
-                        ),
-                      ),
-                    ]),
-                    TextButton(
-                        onPressed: () {
-                          setState(() {
-                            createUsers();
-                          });
-                        },
-                        child: Container(
-                            width: double.infinity,
-                            height: 60,
-                            decoration: BoxDecoration(
-                                color: const Color(0xff5258D4),
-                                borderRadius: BorderRadius.circular(6)),
-                            child: const Center(
-                              child: Text(
-                                'Buat Akun',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w600,
+                        Container(
+                          padding: const EdgeInsets.only(right: 20, left: 20),
+                          child: TextField(
+                            style: TextStyle(fontFamily: 'Euclid Circular B'),
+                            onChanged: (value) async {
+                              final data = await fetchUsers();
+                              setState(() {
+                                _filteredAkun = data
+                                    .where((item) => item.nama
+                                    .toString()
+                                    .toLowerCase().contains(value.toLowerCase())).toList();
+                              });
+                            },
+                            decoration: InputDecoration(
+                                labelText: 'Cari Transaksi',
+                                labelStyle: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w400,
                                     fontFamily: 'Euclid Circular B',
-                                    fontSize: 19,
-                                    color: Colors.white),
-                              ),
-                            )))
-                  ],
-                ),
-              )
-            ],
-          ),
+                                    color: Color(0xffbdbdbd)),
+                                prefixIcon: Icon(Icons.search)),
+                          ),
+                        ),
+                        _scrollingList(sc)
+                      ]);
+                },
+              ),
+            ),
+          ],
         ),
-        panelBuilder: (ScrollController sc) {
-          return Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                GestureDetector(
-                  // onTap: togglePanel,
-                  child: Center(
-                    child: Container(
-                      margin: const EdgeInsets.only(top: 10),
-                      height: 5,
-                      width: 90,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
-                          color: Colors.grey.shade300),
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 15,
-                ),
-                const Text(
-                  'Akun Terdaftar',
-                  style: TextStyle(
-                      fontSize: 24,
-                      fontFamily: 'Euclid Circular B',
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xff222222)),
-                ),
-                const SizedBox(
-                  height: 15,
-                ),
-                Container(
-                  padding: const EdgeInsets.only(right: 20, left: 20),
-                  child: const TextField(
-                    style: TextStyle(fontFamily: 'Euclid Circular B'),
-                    // onChanged: (value) => _runFilter(value),
-                    decoration: InputDecoration(
-                        labelText: 'Cari Transaksi',
-                        labelStyle: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w400,
-                            fontFamily: 'Euclid Circular B',
-                            color: Color(0xffbdbdbd)),
-                        prefixIcon: Icon(Icons.search)),
-                  ),
-                ),
-                _scrollingList(sc)
-              ]);
-        },
       ),
     );
   }
@@ -771,9 +792,10 @@ class _MakeAccountPageState extends State<MakeAccountPage> {
             height: 300,
             child: ListView.builder(
               controller: sc,
-              itemCount: snapshot.data!.length,
+              itemCount: _filteredAkun.isNotEmpty
+                  ? _filteredAkun.length
+                  : snapshot.data!.length,
               itemBuilder: (BuildContext context, i) {
-
                 return Container(
                     padding: const EdgeInsets.only(
                         top: 25, bottom: 25, left: 30, right: 20),
@@ -783,13 +805,13 @@ class _MakeAccountPageState extends State<MakeAccountPage> {
                           Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(snapshot.data![i].nama,
+                                Text(_filteredAkun.isNotEmpty ? _filteredAkun[i].nama : snapshot.data![i].nama,
                                     style: const TextStyle(
                                         fontWeight: FontWeight.w600,
                                         fontFamily: 'Euclid Circular B',
                                         fontSize: 20,
                                         color: Color(0xff172437))),
-                                Text(snapshot.data![i].no_hp,
+                                Text(_filteredAkun.isNotEmpty ? _filteredAkun[i].no_hp : snapshot.data![i].no_hp,
                                     style: const TextStyle(
                                         fontWeight: FontWeight.w400,
                                         fontFamily: 'Euclid Circular B',
