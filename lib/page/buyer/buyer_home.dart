@@ -6,14 +6,16 @@ import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
+
+import 'package:dreampay/page/buyer/qr_page.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
+import '../login_page.dart';
 
 var url = dotenv.env['API_URL'];
 
-// Fetch Saldo
 Future<Saldo> fetchSaldo(String id) async {
   final response = await http.get(
     Uri.parse('${url}buyer/$id'),
@@ -22,84 +24,40 @@ Future<Saldo> fetchSaldo(String id) async {
   if (response.statusCode == 200) {
     return Saldo.fromJson(jsonDecode(response.body));
   } else {
-    throw Exception(response.body);
+    throw Exception('Failed to Load');
   }
 }
 
 class Saldo {
   final dynamic saldo;
-  final dynamic totalTopup;
-  final dynamic totalPengeluaran;
+  final dynamic total_topup;
+  final dynamic total_pengeluaran;
 
   const Saldo({
     required this.saldo,
-    required this.totalTopup,
-    required this.totalPengeluaran,
+    required this.total_topup,
+    required this.total_pengeluaran,
   });
 
   factory Saldo.fromJson(Map<dynamic, dynamic> json) {
     return Saldo(
       saldo: json['saldo'],
-      totalTopup: json['total_topup'],
-      totalPengeluaran: json['total_pengeluaran'],
+      total_topup: json['total_topup'],
+      total_pengeluaran: json['total_pengeluaran'],
     );
   }
 }
 
-// Fetch List Pengeluaran
-Future<List<Pengeluaran>> fetchPengeluaran(String id) async {
+Future<List<TopUp>> fetchTopUp(String id) async {
   final response = await http.get(
-    Uri.parse('${url}buyer/$id}'),
-  );
-
-  if (response.statusCode == 200) {
-    List jsonResponse = jsonDecode(response.body)['list_pengeluaran'];
-    return jsonResponse.map((e) => Pengeluaran.fromJson(e)).toList();
-  } else {
-    throw Exception(response.body);
-  }
-}
-
-class Pengeluaran {
-  final dynamic id;
-  final dynamic nota;
-  final dynamic pengirim;
-  final dynamic penerima;
-  final dynamic nominal;
-  final dynamic createdAt;
-
-  const Pengeluaran({
-    required this.id,
-    required this.nota,
-    required this.pengirim,
-    required this.penerima,
-    required this.nominal,
-    required this.createdAt,
-  });
-
-  factory Pengeluaran.fromJson(Map<dynamic, dynamic> json) {
-    return Pengeluaran(
-      id: json['id'],
-      nota: json['nota'],
-      pengirim: json['pengirim'],
-      penerima: json['penerima'],
-      nominal: json['nominal'],
-      createdAt: json['created_at'],
-    );
-  }
-}
-
-// Fetch List TopUp
-Future<List<TopUp>> fetchTopup(String id) async {
-  final response = await http.get(
-    Uri.parse('${url}buyer/$id}'),
+    Uri.parse('${url}buyer/$id'),
   );
 
   if (response.statusCode == 200) {
     List jsonResponse = jsonDecode(response.body)['list_topup'];
     return jsonResponse.map((e) => TopUp.fromJson(e)).toList();
   } else {
-    throw Exception(response.body);
+    throw Exception('Failed to Load');
   }
 }
 
@@ -109,7 +67,7 @@ class TopUp {
   final dynamic pengirim;
   final dynamic penerima;
   final dynamic nominal;
-  final dynamic createdAt;
+  final dynamic created_at;
 
   const TopUp({
     required this.id,
@@ -117,7 +75,7 @@ class TopUp {
     required this.pengirim,
     required this.penerima,
     required this.nominal,
-    required this.createdAt,
+    required this.created_at,
   });
 
   factory TopUp.fromJson(Map<dynamic, dynamic> json) {
@@ -127,14 +85,56 @@ class TopUp {
       pengirim: json['pengirim'],
       penerima: json['penerima'],
       nominal: json['nominal'],
-      createdAt: json['created_at'],
+      created_at: json['created_at'],
     );
   }
 }
 
-// WIDGET
+Future<List<Pengeluaran>> fetchPengeluaran(String id) async {
+  final response = await http.get(
+    Uri.parse('${url}/buyer/$id'),
+  );
+
+  if (response.statusCode == 200) {
+    List jsonResponse = jsonDecode(response.body)['list_pengeluaran'];
+    return jsonResponse.map((e) => Pengeluaran.fromJson(e)).toList();
+  } else {
+    throw Exception('Failed to Load');
+  }
+}
+class Pengeluaran {
+  final dynamic id;
+  final dynamic nota;
+  final dynamic pengirim;
+  final dynamic penerima;
+  final dynamic nominal;
+  final dynamic created_at;
+
+  const Pengeluaran({
+    required this.id,
+    required this.nota,
+    required this.pengirim,
+    required this.penerima,
+    required this.nominal,
+    required this.created_at,
+  });
+
+  factory Pengeluaran.fromJson(Map<dynamic, dynamic> json) {
+    return Pengeluaran(
+      id: json['id'],
+      nota: json['nota'],
+      pengirim: json['pengirim'],
+      penerima: json['penerima'],
+      nominal: json['nominal'],
+      created_at: json['created_at'],
+    );
+  }}
+
+
+
 class BuyerHomePage extends StatefulWidget {
   const BuyerHomePage({Key? key}) : super(key: key);
+
 
   @override
   State<BuyerHomePage> createState() => _BuyerHomePageState();
@@ -143,10 +143,20 @@ class BuyerHomePage extends StatefulWidget {
 class _BuyerHomePageState extends State<BuyerHomePage> {
   bool showPull = false;
   bool showTopup = true;
+  late SharedPreferences prefs;
 
-  Future<Saldo>? _saldo;
-  Future<List<Pengeluaran>>? _listPengeluaran;
-  Future<List<TopUp>>? _listTopup;
+  final List<Map<String, dynamic>> _allUsers = [
+    {"id": 1, "name": "HEFTIVE"},
+    {"id": 2, "name": "PASTRIP"},
+    {"id": 3, "name": "DreamBoba"},
+    {"id": 4, "name": "Aksesoris STFQ"},
+  ];
+  List<Map<String, dynamic>> _foundUsers = [];
+   late Future<Saldo> _saldo;
+   late Future<List<Pengeluaran>> _pengeluaran;
+   late Future<List<TopUp>> _topup;
+
+   String? id;
 
   @override
   initState() {
@@ -154,86 +164,93 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
     super.initState();
   }
 
-  late SharedPreferences prefs;
-  String? phone;
-  String? name;
-  String? id;
-
-  Future<void> setValue() async {
+  Future<void> initvalue() async {
     prefs = await SharedPreferences.getInstance();
-    phone = prefs.getString('phone_customer');
-    name = prefs.getString('name_customer');
     id = prefs.getString('id_customer');
 
+    _saldo = fetchSaldo(id.toString());
+    _topup = fetchTopUp(id.toString());
+    _pengeluaran = fetchPengeluaran(id.toString());
+  }
+
+  void _runFilter(String enteredKeyword) {
+    List<Map<String, dynamic>> results = [];
+    if (enteredKeyword.isEmpty) {
+      // if the search field is empty or only contains white-space, we'll display all users
+      results = _allUsers;
+    } else {
+      results = _allUsers
+          .where((user) =>
+              user["name"].toLowerCase().contains(enteredKeyword.toLowerCase()))
+          .toList();
+      // we use the toLowerCase() method to make it case-insensitive
+    }
     setState(() {
-      _saldo = fetchSaldo(id.toString());
-      _listPengeluaran = fetchPengeluaran(id.toString());
-      _listTopup = fetchTopup(id.toString());
+      _foundUsers = results;
     });
   }
 
-  final PanelController _panelController = PanelController();
+  PanelController _panelController = PanelController();
 
+
+
+  @override
   void togglePanel() => _panelController.isPanelOpen
       ? _panelController.close()
       : _panelController.open();
 
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: <Widget>[
-          SlidingUpPanel(
-            controller: _panelController,
-            maxHeight: 450,
-            minHeight: 200,
-            padding: const EdgeInsets.only(left: 30, right: 30),
-            borderRadius: const BorderRadius.only(
-                topRight: Radius.circular(30), topLeft: Radius.circular(30)),
-            body: FutureBuilder(
-              future: _saldo,
-              builder: (BuildContext context, snapshot) {
-                if (snapshot.hasData) {
-                  return SingleChildScrollView(
-                    child: Container(
-                      height: 800,
-                      decoration: const BoxDecoration(color: Color(0xFFFBFBFB)),
-                      padding: const EdgeInsets.only(
-                          right: 25, left: 25, top: 80, bottom: 74),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+        body: Stack(children: <Widget>[
+      SlidingUpPanel(
+        controller: _panelController,
+        maxHeight: 450,
+        minHeight: 200,
+        padding: EdgeInsets.only(left: 30, right: 30),
+        borderRadius: BorderRadius.only(
+            topRight: Radius.circular(30), topLeft: Radius.circular(30)),
+        body: FutureBuilder(
+          future: _saldo,
+          builder: (BuildContext context, snapshot) {
+            if (snapshot.hasData) {
+              return SingleChildScrollView(
+                child: Container(
+                  height: 800,
+                  decoration: const BoxDecoration(color: Color(0xFFFBFBFB)),
+                  padding: const EdgeInsets.only(
+                      right: 25, left: 25, top: 80, bottom: 74),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  const Text(
-                                    'Assalamualaikum 👋',
-                                    style: TextStyle(
-                                      fontFamily: 'Euclid Circular B',
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 16,
-                                      color: Color(0xff777777),
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    height: 5,
-                                  ),
-                                  SizedBox(
-                                    width: 250,
-                                    child: Text(
-                                      name.toString(),
-                                      textAlign: TextAlign.left,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: const TextStyle(
-                                        fontFamily: 'Euclid Circular B',
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 30,
-                                        color: Color(0xff222222),
-                                      ),
-                                    ),
+                              Text(
+                                'Assalamualaikum 👋',
+                                style: TextStyle(
+                                  fontFamily: 'Euclid Circular B',
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 16,
+                                  color: Color(0xff777777),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              Container(
+                                width: 250,
+                                child:Text(
+                                  'Abi Ranop',
+                                  textAlign: TextAlign.left,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontFamily: 'Euclid Circular B',
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 30,
+                                    color: Color(0xff222222),
                                   ),
                                 ],
                               ),
@@ -371,7 +388,7 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                           const SizedBox(
                             height: 20,
                           ),
-                          Row(children: const [
+                          const Row(children: const [
                             Text(
                               'Riwayat',
                               style: TextStyle(

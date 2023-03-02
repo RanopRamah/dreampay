@@ -257,7 +257,7 @@ class _MakeAccountPageState extends State<MakeAccountPage> {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     color: const Color(0xff292B5A)),
-                child: Column(
+                child: const Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
@@ -309,7 +309,7 @@ class _MakeAccountPageState extends State<MakeAccountPage> {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     color: const Color(0xff3A2C62)),
-                child: Column(
+                child: const Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
@@ -361,7 +361,7 @@ class _MakeAccountPageState extends State<MakeAccountPage> {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     color: const Color(0xff2E3346)),
-                child: Column(
+                child: const Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
@@ -531,7 +531,7 @@ class _MakeAccountPageState extends State<MakeAccountPage> {
                     const SizedBox(
                       height: 25,
                     ),
-                    Row(
+                    const Row(
                       children: <Widget>[
                         Text(
                           'Tipe',
@@ -807,11 +807,11 @@ class _MakeAccountPageState extends State<MakeAccountPage> {
             ));
       },
     );
-  }
 
+
+  }
   Future<void> createUsers() async {
-    final response = await http.post(
-      Uri.parse('${url}admin/add-user'),
+    final response = await http.post(Uri.parse('http://env-8409188.jh-beon.cloud/api/admin/add-user'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },

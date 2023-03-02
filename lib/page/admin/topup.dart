@@ -51,7 +51,7 @@ class Users {
   Users.fromMap(Map<dynamic, dynamic> map)
       : id = map['id'] as int,
         nama = map['nama'] as String,
-        noHp = map['noHp'] as String;
+        no_hp = map['no_hp'] as String;
 
   factory Users.fromJson(Map<dynamic, dynamic> json) {
     return Users(
@@ -264,7 +264,7 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
                         // SizedBox(
                         //   width: 13,
                         // ),
-                        const Text(
+                        Text(
                           'Top-Up',
                           style: TextStyle(
                               color: Colors.white,
@@ -277,17 +277,17 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
                   ),
                 ),
               ),
-              const SizedBox(
+              SizedBox(
                 height: 20,
               ),
               Center(
                 child: ListTile(
                   onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (c) => const AdminWithdrawPage()));
+                    Navigator.of(context).push(
+                        MaterialPageRoute(builder: (c) => AdminWithdrawPage()));
                   },
                   title: Container(
-                    padding: const EdgeInsets.only(right: 25, left: 27),
+                    padding: EdgeInsets.only(right: 25, left: 27),
                     width: 275,
                     height: 51,
                     child: Row(
@@ -301,7 +301,7 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
                         // SizedBox(
                         //   width: 13,
                         // ),
-                        const Text(
+                        Text(
                           'Withdraw',
                           style: TextStyle(
                               color: Colors.white,
@@ -314,27 +314,26 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
                   ),
                 ),
               ),
-              const SizedBox(
+
+              SizedBox(
                 height: 15,
               ),
               Container(
-                padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
+                padding: EdgeInsets.only(top: 10,left: 10,right: 10),
                 width: double.infinity,
                 height: 98,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     color: const Color(0xff292B5A)),
-                child: Column(
+                child: const Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(
-                      'Saldo A',
-                      style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontFamily: 'Euclid Circular B',
-                          fontSize: 14,
-                          color: Color(0xffbebebe)),
-                    ),
+                    Text('Saldo A',style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontFamily: 'Euclid Circular B',
+                        fontSize: 14,
+                        color: Color(0xffbebebe)
+                    ),),
                     SizedBox(
                       height: 5,
                     ),
@@ -366,17 +365,17 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
                   ],
                 ),
               ),
-              const SizedBox(
+              SizedBox(
                 height: 15,
               ),
               Container(
-                padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
+                padding: EdgeInsets.only(top: 10,left: 10,right: 10),
                 width: double.infinity,
                 height: 98,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     color: const Color(0xff3A2C62)),
-                child: Column(
+                child: const Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
@@ -418,27 +417,25 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
                   ],
                 ),
               ),
-              const SizedBox(
+              SizedBox(
                 height: 15,
               ),
               Container(
-                padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
+                padding: EdgeInsets.only(top: 10,left: 10,right: 10),
                 width: double.infinity,
                 height: 98,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     color: const Color(0xff2E3346)),
-                child: Column(
+                child: const Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(
-                      'Saldo A',
-                      style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontFamily: 'Euclid Circular B',
-                          fontSize: 14,
-                          color: Color(0xffbebebe)),
-                    ),
+                    Text('Saldo A',style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontFamily: 'Euclid Circular B',
+                        fontSize: 14,
+                        color: Color(0xffbebebe)
+                    ),),
                     SizedBox(
                       height: 5,
                     ),
@@ -470,9 +467,10 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
                   ],
                 ),
               ),
-              const SizedBox(
+              SizedBox(
                 height: 15,
               ),
+
             ],
           ),
         ),
@@ -483,13 +481,12 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
         maxHeight: 590,
         minHeight: 150,
         padding: const EdgeInsets.only(left: 30, right: 30),
-        borderRadius: const BorderRadius.only(
-            topRight: Radius.circular(20), topLeft: Radius.circular(20)),
+        borderRadius: const BorderRadius.only(topRight: Radius.circular(20), topLeft: Radius.circular(20)),
         body: Container(
           decoration: const BoxDecoration(
             color: Color(0xFFFDFDFD),
           ),
-          padding: const EdgeInsets.only(top: 60, left: 20, right: 20),
+          padding: const EdgeInsets.only(top: 60,left: 20,right: 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -553,9 +550,7 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
                               child: Image.asset('assets/image/search-all.png'),
                             ),
                           ),
-                          suggestions: user
-                              .map((e) => SearchFieldListItem(e.nama, item: e))
-                              .toList(),
+                          suggestions: user.map((e) => SearchFieldListItem(e.nama, item: e)).toList(),
                           suggestionState: Suggestion.hidden,
                           controller: searchController,
                           inputType: TextInputType.text,
@@ -570,6 +565,7 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
                           onSuggestionTap: (SearchFieldListItem<Users> x) {
                             setState(() {
                               _selectedUsers = x.item!;
+                              print(_selectedUsers.nama);
                             });
                           },
                         ),
@@ -581,8 +577,8 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
                         padding: const EdgeInsets.only(top: 18.58, left: 15.2),
                         decoration: const BoxDecoration(
                             color: Color(0xFF7C81DF),
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(18.6053))),
+                            borderRadius: BorderRadius.all(Radius.circular(18.6053))
+                        ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -597,7 +593,7 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
                             ),
                             const SizedBox(height: 3.82),
                             Text(
-                              'DPID: ${_selectedUsers.noHp ?? '000000000000'}',
+                              'DPID: ${_selectedUsers.no_hp ?? '000000000000'}',
                               style: const TextStyle(
                                 color: Color(0xFFC5C7F1),
                                 fontSize: 13.0526,
@@ -625,24 +621,21 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
                                 width: 0.912281,
                                 color: Color(0xFFC8BDBD),
                               ),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(6.38596)),
+                              borderRadius: BorderRadius.all(Radius.circular(6.38596)),
                             ),
                             disabledBorder: OutlineInputBorder(
                               borderSide: BorderSide(
                                 width: 0.912281,
                                 color: Color(0xFFC8BDBD),
                               ),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(6.38596)),
+                              borderRadius: BorderRadius.all(Radius.circular(6.38596)),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderSide: BorderSide(
                                 width: 0.912281,
                                 color: Color(0xFFC8BDBD),
                               ),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(6.38596)),
+                              borderRadius: BorderRadius.all(Radius.circular(6.38596)),
                             ),
                             labelText: 'Nominal Top Up',
                             hintText: 'Rp0',
@@ -661,6 +654,7 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
                             floatingLabelBehavior: FloatingLabelBehavior.always,
                           ),
                           keyboardType: TextInputType.number,
+                          inputFormatters: [ThousandsSeparatorInputFormatter()],
                         ),
                       ),
                       Container(

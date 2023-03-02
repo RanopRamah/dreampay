@@ -1,18 +1,18 @@
 [
     {
-        "merged": "/Users/ariefsonn_/AndroidStudioProjects/dreampay/build/shared_preferences_android/intermediates/res/merged/debug/layout-v21/notification_template_icon_group.xml",
-        "source": "/Users/ariefsonn_/.gradle/caches/transforms-3/a98bef4ff4dcc0d951c040e4cf7a8a7d/transformed/core-1.6.0/res/layout-v21/notification_template_icon_group.xml"
+        "merged": "C:\\Project Bebas\\dreampay\\build\\shared_preferences_android\\intermediates\\res\\merged\\debug\\layout-v21\\notification_action.xml",
+        "source": "C:\\Users\\mukhs\\.gradle\\caches\\transforms-3\\a98bef4ff4dcc0d951c040e4cf7a8a7d\\transformed\\core-1.6.0\\res\\layout-v21\\notification_action.xml"
     },
     {
-        "merged": "/Users/ariefsonn_/AndroidStudioProjects/dreampay/build/shared_preferences_android/intermediates/res/merged/debug/layout-v21/notification_template_custom_big.xml",
-        "source": "/Users/ariefsonn_/.gradle/caches/transforms-3/a98bef4ff4dcc0d951c040e4cf7a8a7d/transformed/core-1.6.0/res/layout-v21/notification_template_custom_big.xml"
+        "merged": "C:\\Project Bebas\\dreampay\\build\\shared_preferences_android\\intermediates\\res\\merged\\debug\\layout-v21\\notification_template_icon_group.xml",
+        "source": "C:\\Users\\mukhs\\.gradle\\caches\\transforms-3\\a98bef4ff4dcc0d951c040e4cf7a8a7d\\transformed\\core-1.6.0\\res\\layout-v21\\notification_template_icon_group.xml"
     },
     {
-        "merged": "/Users/ariefsonn_/AndroidStudioProjects/dreampay/build/shared_preferences_android/intermediates/res/merged/debug/layout-v21/notification_action.xml",
-        "source": "/Users/ariefsonn_/.gradle/caches/transforms-3/a98bef4ff4dcc0d951c040e4cf7a8a7d/transformed/core-1.6.0/res/layout-v21/notification_action.xml"
+        "merged": "C:\\Project Bebas\\dreampay\\build\\shared_preferences_android\\intermediates\\res\\merged\\debug\\layout-v21\\notification_template_custom_big.xml",
+        "source": "C:\\Users\\mukhs\\.gradle\\caches\\transforms-3\\a98bef4ff4dcc0d951c040e4cf7a8a7d\\transformed\\core-1.6.0\\res\\layout-v21\\notification_template_custom_big.xml"
     },
     {
-        "merged": "/Users/ariefsonn_/AndroidStudioProjects/dreampay/build/shared_preferences_android/intermediates/res/merged/debug/layout-v21/notification_action_tombstone.xml",
-        "source": "/Users/ariefsonn_/.gradle/caches/transforms-3/a98bef4ff4dcc0d951c040e4cf7a8a7d/transformed/core-1.6.0/res/layout-v21/notification_action_tombstone.xml"
+        "merged": "C:\\Project Bebas\\dreampay\\build\\shared_preferences_android\\intermediates\\res\\merged\\debug\\layout-v21\\notification_action_tombstone.xml",
+        "source": "C:\\Users\\mukhs\\.gradle\\caches\\transforms-3\\a98bef4ff4dcc0d951c040e4cf7a8a7d\\transformed\\core-1.6.0\\res\\layout-v21\\notification_action_tombstone.xml"
     }
 ]
