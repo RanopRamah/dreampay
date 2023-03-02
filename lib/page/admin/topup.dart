@@ -100,7 +100,7 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final searchController = TextEditingController();
 
-  TextEditingController _topupcontrol = TextEditingController();
+  final TextEditingController _topupcontrol = TextEditingController();
 
   List<Users> user = [];
   Users _selectedUsers = Users.init();
@@ -133,9 +133,6 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
   void dvs() async {
     List<dynamic> data = await fetchUsers();
     user = data.map((e) => Users.fromJson(e)).toList();
-    //
-    // var h = user.map((e) => e.nama);
-    // print(h);
   }
 
   bool containsUser(String text) {
@@ -170,8 +167,8 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
               Center(
                 child: ListTile(
                   onTap: () {
-                    Navigator.of(context).push(
-                        MaterialPageRoute(builder: (c) => MakeAccountPage()));
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (c) => const MakeAccountPage()));
                   },
                   title: Container(
                     padding: const EdgeInsets.only(right: 30, left: 40),
@@ -208,7 +205,7 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
                 child: ListTile(
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (c) => AdminTransactionPage()));
+                        builder: (c) => const AdminTransactionPage()));
                   },
                   title: Container(
                     padding: const EdgeInsets.only(right: 25, left: 25),
@@ -262,9 +259,6 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
                           width: 21,
                           height: 21,
                         ),
-                        // SizedBox(
-                        //   width: 13,
-                        // ),
                         const Text(
                           'Top-Up',
                           style: TextStyle(
@@ -299,9 +293,6 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
                           width: 21,
                           height: 21,
                         ),
-                        // SizedBox(
-                        //   width: 13,
-                        // ),
                         const Text(
                           'Withdraw',
                           style: TextStyle(
@@ -615,7 +606,7 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
                         margin: const EdgeInsets.only(top: 38.61),
                         child: TextField(
                           controller: _topupcontrol,
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontSize: 23,
                               fontWeight: FontWeight.w700,
                               fontFamily: 'SF Pro Display',

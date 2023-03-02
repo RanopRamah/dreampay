@@ -1,51 +1,42 @@
 import 'package:dreampay/page/login_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 
 import 'package:badges/badges.dart' as badges;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
+import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:ui';
 import 'dart:async';
 import 'dart:convert';
 
 import 'package:signed_spacing_flex/signed_spacing_flex.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
-
 var url = dotenv.env['API_URL'];
 
-Future<Seller> fetchUser(String idSeller) async {
+Future<Seller> fetchSeller(String id_seller) async {
+  print(id_seller);
   final response = await http.get(
-    Uri.parse('${url}seller/$idSeller'),
+    Uri.parse('${url}seller/$id_seller'),
   );
 
   if (response.statusCode == 200) {
     return Seller.fromJson(jsonDecode(response.body));
   } else {
-    throw Exception(response.body);
+    throw Exception('Failed to Fetch');
   }
 }
-
-Future<List<Detail>> fetchPemasukan(String id) async {
+Future<List<Detail>> fetchDetail(String id) async {
   final response = await http.get(
     Uri.parse('${url}seller/$id'),
   );
 
   if (response.statusCode == 200) {
     List jsonResponse = jsonDecode(response.body)['list_pemasukan'];
-    return jsonResponse.map((e) => Detail.fromJson(e)).toList();
-  } else {
-    throw Exception(response.body);
-  }
-}
-
-Future<List<Detail>> fetchPenarikan(String id) async {
-  final response = await http.get(
-    Uri.parse('${url}seller/$id'),
-  );
-
-  if (response.statusCode == 200) {
-    List jsonResponse = jsonDecode(response.body)['list_penarikan'];
     return jsonResponse.map((e) => Detail.fromJson(e)).toList();
   } else {
     throw Exception('Failed to load');
@@ -70,11 +61,10 @@ class Seller {
       qrcode: json['qrcode'],
       saldo: json['saldo'],
       pemasukan: json['pemasukan'],
-      penarikan: json['penarikan'],
+      penarikan: json['pemasukan'],
     );
   }
 }
-
 class Detail {
   final dynamic pengirim;
   final dynamic created_at;
@@ -111,9 +101,8 @@ class _MerchantPageState extends State<MerchantPage> {
   String? name;
   String? id;
 
-  Future<Seller>? _seller;
-  Future<List<Detail>>? _pemasukan;
-  Future<List<Detail>>? _penarikan;
+  late Future<Seller> _seller;
+  late Future<List<Detail>> _detail;
   late SharedPreferences prefs;
 
   Future<void> setValue() async {
@@ -122,11 +111,8 @@ class _MerchantPageState extends State<MerchantPage> {
     name = prefs.getString('name_customer') ?? 'id';
     id = prefs.getString('id_customer') ?? '';
 
-    setState(() {
-      _seller = fetchUser(id.toString());
-      _pemasukan = fetchPemasukan(id.toString());
-      _penarikan = fetchPenarikan(id.toString());
-    });
+    _seller = fetchSeller(id.toString());
+    _detail = fetchDetail(id.toString());
   }
 
   @override
@@ -140,14 +126,6 @@ class _MerchantPageState extends State<MerchantPage> {
     super.dispose();
   }
 
-  setQr(user) {
-    var nama = user['nama'].toString();
-    var noHp = user['no_hp'].toString();
-    var data = {'nama': nama, 'no_hp': noHp};
-    final String jsonString = jsonEncode(data);
-    return jsonString;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -155,8 +133,8 @@ class _MerchantPageState extends State<MerchantPage> {
       controller: _panelController,
       maxHeight: 450,
       minHeight: 80,
-      padding: const EdgeInsets.only(left: 30, right: 30),
-      borderRadius: const BorderRadius.only(
+      padding: EdgeInsets.only(left: 30, right: 30),
+      borderRadius: BorderRadius.only(
           topRight: Radius.circular(30), topLeft: Radius.circular(30)),
       body: SingleChildScrollView(
         child: Container(
@@ -328,7 +306,7 @@ class _MerchantPageState extends State<MerchantPage> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: <Widget>[
-                                      const Row(
+                                      constRow(
                                         children: <Widget>[
                                           Text(
                                             'Saldo',
@@ -678,56 +656,55 @@ class _MerchantPageState extends State<MerchantPage> {
         ),
       ),
       panelBuilder: (controller) {
-        return Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
-            Widget>[
-          GestureDetector(
-            // onTap: togglePanel,
-            child: Center(
-              child: Container(
-                margin: const EdgeInsets.only(top: 10),
-                height: 5,
-                width: 90,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    color: Colors.grey.shade300),
+        return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              GestureDetector(
+                // onTap: togglePanel,
+                child: Center(
+                  child: Container(
+                    margin: EdgeInsets.only(top: 10),
+                    height: 5,
+                    width: 90,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        color: Colors.grey.shade300),
+                  ),
+                ),
               ),
-            ),
-          ),
-          const SizedBox(
-            height: 15,
-          ),
-          Visibility(
-              visible: showTopup,
-              child: Expanded(
-                child: Column(children: [
-                  const Center(
-                      child: Text(
-                    'Detail Pemasukan',
-                    style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 24,
-                        fontFamily: 'Euclid Circular B',
-                        color: Color(0xff172437)),
-                  )),
-                  const TextField(
-                    // onChanged: (value) => _runFilter(value),
-                    decoration: InputDecoration(
-                        labelText: 'Cari Transaksi',
-                        labelStyle: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w400,
-                            fontFamily: 'Euclid Circular B',
-                            color: Color(0xffbdbdbd)),
-                        prefixIcon: Icon(Icons.search)),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Container(
-                    height: 260,
-                    child: SingleChildScrollView(
-                      child: FutureBuilder(
-                        future: _pemasukan,
+              SizedBox(
+                height: 15,
+              ),
+              Visibility(
+                  visible: showTopup,
+                  child: Expanded(
+                    child: Column(
+                        children: [
+                      Center(
+                          child: Text(
+                            'Detail Pemasukan',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 24,
+                                fontFamily: 'Euclid Circular B',
+                                color: Color(0xff172437)),
+                          )),
+                      TextField(
+                        // onChanged: (value) => _runFilter(value),
+                        decoration: const InputDecoration(
+                            labelText: 'Cari Transaksi',
+                            labelStyle: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w400,
+                                fontFamily: 'Euclid Circular B',
+                                color: Color(0xffbdbdbd)),
+                            prefixIcon: Icon(Icons.search)),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      FutureBuilder(
+                        future: _detail,
                         builder: (context, snapshot) {
                           if (snapshot.hasData) {
                             return ListView.builder(
@@ -740,11 +717,11 @@ class _MerchantPageState extends State<MerchantPage> {
                                     margin: const EdgeInsets.only(bottom: 15),
                                     child: Row(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.spaceBetween,
                                       children: [
                                         Column(
                                           crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          CrossAxisAlignment.start,
                                           children: <Widget>[
                                             SizedBox(
                                               height: 30,
@@ -752,18 +729,16 @@ class _MerchantPageState extends State<MerchantPage> {
                                               child: Text(
                                                 snapshot.data![i].pengirim,
                                                 overflow: TextOverflow.ellipsis,
-                                                style: const TextStyle(
-                                                    fontFamily:
-                                                        'Euclid Circular B',
+                                                style: TextStyle(
+                                                    fontFamily: 'Euclid Circular B',
                                                     fontWeight: FontWeight.w600,
                                                     fontSize: 20),
                                               ),
                                             ),
                                             Text(
                                               snapshot.data![i].created_at,
-                                              style: const TextStyle(
-                                                  fontFamily:
-                                                      'Euclid Circular B',
+                                              style: TextStyle(
+                                                  fontFamily: 'Euclid Circular B',
                                                   fontWeight: FontWeight.w400,
                                                   fontSize: 16,
                                                   color: Color(0xffbebebe)),
@@ -772,7 +747,7 @@ class _MerchantPageState extends State<MerchantPage> {
                                         ),
                                         Text(
                                           '-Rp${snapshot.data![i].nominal.toString()}',
-                                          style: const TextStyle(
+                                          style: TextStyle(
                                               fontWeight: FontWeight.w400,
                                               fontFamily: 'Euclid Circular B',
                                               fontSize: 20,
@@ -786,112 +761,84 @@ class _MerchantPageState extends State<MerchantPage> {
                             return Text('${snapshot.error}');
                           }
 
-                          return const Center(
-                              child: CircularProgressIndicator());
+                          return const Center(child: CircularProgressIndicator());
                         },
                       ),
-                    ),
-                  ),
-                ]),
-              )),
-          Visibility(
-            visible: showPull,
-            child: Column(
-              children: [
-                const Center(
-                    child: Text(
-                  'Detail Penarikan',
-                  style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 24,
-                      fontFamily: 'Euclid Circular B',
-                      color: Color(0xff172437)),
-                )),
-                const TextField(
-                  // onChanged: (value) => _runFilter(value),
-                  decoration: InputDecoration(
-                      labelText: 'Cari Transaksi',
-                      labelStyle: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w400,
+                    ]),
+                  )),
+              Visibility(
+                  visible: showPull,
+                  child: Column(children: [
+                    Center(
+                        child: Text(
+                      'Detail Pengeluaran',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 24,
                           fontFamily: 'Euclid Circular B',
-                          color: Color(0xffbdbdbd)),
-                      prefixIcon: Icon(Icons.search)),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Container(
-                  height: 260,
-                  child: SingleChildScrollView(
-                    child: FutureBuilder(
-                      future: _penarikan,
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          return ListView.builder(
-                            scrollDirection: Axis.vertical,
-                            shrinkWrap: true,
-                            itemCount: snapshot.data!.length,
-                            itemBuilder: (ctx, i) {
-                              return Container(
-                                  height: 50,
-                                  margin: const EdgeInsets.only(bottom: 15),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          SizedBox(
-                                            height: 30,
-                                            width: 170,
-                                            child: Text(
-                                              snapshot.data![i].pengirim,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: const TextStyle(
+                          color: Color(0xff172437)),
+                    )),
+                    TextField(
+                      // onChanged: (value) => _runFilter(value),
+                      decoration: const InputDecoration(
+                          labelText: 'Cari Transaksi',
+                          labelStyle: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w400,
+                              fontFamily: 'Euclid Circular B',
+                              color: Color(0xffbdbdbd)),
+                          prefixIcon: Icon(Icons.search)),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Container(
+                        child: SingleChildScrollView(
+                            child: Container(
+                      height: 290,
+                      child: Column(children: [
+                        Container(
+                            height: 280,
+                            child: ListView(children: [
+                              Container(
+                                height: 100,
+                                child: Row(
+                                  children: [
+                                    Column(
+                                      children: [
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            Text(
+                                              'HEFTIVE',
+                                              style: TextStyle(
                                                   fontFamily:
                                                       'Euclid Circular B',
                                                   fontWeight: FontWeight.w600,
                                                   fontSize: 20),
                                             ),
-                                          ),
-                                          Text(
-                                            snapshot.data![i].created_at,
-                                            style: const TextStyle(
-                                                fontFamily: 'Euclid Circular B',
-                                                fontWeight: FontWeight.w400,
-                                                fontSize: 16,
-                                                color: Color(0xffbebebe)),
-                                          ),
-                                        ],
-                                      ),
-                                      Text(
-                                        '-Rp${snapshot.data![i].nominal.toString()}',
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.w400,
-                                            fontFamily: 'Euclid Circular B',
-                                            fontSize: 20,
-                                            color: Color(0xff222222)),
-                                      )
-                                    ],
-                                  ));
-                            },
-                          );
-                        } else if (snapshot.hasError) {
-                          return Text('${snapshot.error}');
-                        }
-
-                        return const Center(child: CircularProgressIndicator());
-                      },
-                    ),
-                  ),
-                )
-              ],
-            ),
-          )
-        ]);
+                                            Text(
+                                              'Produk',
+                                              style: TextStyle(
+                                                  fontFamily:
+                                                      'Euclid Circular B',
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 16,
+                                                  color: Color(0xffbebebe)),
+                                            )
+                                          ],
+                                        )
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ])),
+                      ]),
+                    )))
+                  ]))
+            ]);
       },
     ));
   }
