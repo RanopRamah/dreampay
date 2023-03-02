@@ -143,9 +143,10 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
   bool showPull = false;
   bool showTopup = true;
 
+  List<dynamic> _filteredPengeluaran = [];
+  List<dynamic> _filteredTopup = [];
+
   Future<Saldo>? _saldo;
-  Future<List<Pengeluaran>>? _listPengeluaran;
-  Future<List<TopUp>>? _listTopup;
 
   @override
   initState() {
@@ -167,8 +168,6 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
 
     setState(() {
       _saldo = fetchSaldo(id.toString());
-      _listPengeluaran = fetchPengeluaran(id.toString());
-      _listTopup = fetchTopup(id.toString());
     });
   }
 
@@ -343,7 +342,7 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                                               ),
                                             ),
                                             SizedBox(
-                                              width: 200,
+                                              width: 180,
                                               child: SingleChildScrollView(
                                                 scrollDirection:
                                                     Axis.horizontal,
@@ -356,7 +355,7 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                                                   style: const TextStyle(
                                                       fontFamily:
                                                           'SF Pro Display',
-                                                      fontSize: 44,
+                                                      fontSize: 40,
                                                       fontWeight:
                                                           FontWeight.w700,
                                                       color: Colors.white),
@@ -472,7 +471,7 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                                                     style: const TextStyle(
                                                         fontFamily:
                                                             'SF Pro Display',
-                                                        fontSize: 30,
+                                                        fontSize: 27,
                                                         fontWeight:
                                                             FontWeight.w700,
                                                         color:
@@ -594,7 +593,7 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                                                     style: const TextStyle(
                                                         fontFamily:
                                                             'SF Pro Display',
-                                                        fontSize: 30,
+                                                        fontSize: 28,
                                                         fontWeight:
                                                             FontWeight.w700,
                                                         color:
@@ -686,9 +685,19 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                               fontFamily: 'Euclid Circular B',
                               color: Color(0xff172437)),
                         )),
-                        const TextField(
-                          // onChanged: (value) => _runFilter(value),
-                          decoration: InputDecoration(
+                        TextField(
+                          onChanged: (value) async {
+                            // filter list berdasarkan input pengguna
+                            final data = await fetchPengeluaran(id.toString());
+                            setState(() {
+                              _filteredPengeluaran = data
+                                  .where((item) => item.penerima
+                                      .toLowerCase()
+                                      .contains(value.toLowerCase()))
+                                  .toList();
+                            });
+                          },
+                          decoration: const InputDecoration(
                               labelText: 'Cari Transaksi',
                               labelStyle: TextStyle(
                                   fontSize: 20,
@@ -707,12 +716,15 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                                   SizedBox(
                                       height: 280,
                                       child: FutureBuilder(
-                                        future: _listPengeluaran,
+                                        future: fetchPengeluaran(id.toString()),
                                         builder: (context, snapshot) {
                                           if (snapshot.hasData) {
                                             return ListView.builder(
-                                                itemCount:
-                                                    snapshot.data!.length,
+                                                itemCount: _filteredPengeluaran
+                                                        .isNotEmpty
+                                                    ? _filteredPengeluaran
+                                                        .length
+                                                    : snapshot.data!.length,
                                                 itemBuilder:
                                                     (BuildContext context, i) {
                                                   return SizedBox(
@@ -735,9 +747,9 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                                                                           200,
                                                                       child:
                                                                           Text(
-                                                                        snapshot
-                                                                            .data![i]
-                                                                            .penerima,
+                                                                        _filteredPengeluaran.isNotEmpty
+                                                                            ? _filteredPengeluaran[i].penerima
+                                                                            : snapshot.data![i].penerima,
                                                                         style: const TextStyle(
                                                                             overflow: TextOverflow
                                                                                 .ellipsis,
@@ -749,10 +761,12 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                                                                       ),
                                                                     ),
                                                                     Text(
-                                                                      snapshot
-                                                                          .data![
-                                                                              i]
-                                                                          .createdAt,
+                                                                      _filteredPengeluaran.isNotEmpty
+                                                                          ? _filteredPengeluaran[i]
+                                                                              .createdAt
+                                                                          : snapshot
+                                                                              .data![i]
+                                                                              .createdAt,
                                                                       style: const TextStyle(
                                                                           fontFamily:
                                                                               'Euclid Circular B',
@@ -772,7 +786,11 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                                                                     scrollDirection:
                                                                         Axis.horizontal,
                                                                     child: Text(
-                                                                      '-Rp ${snapshot.data![i].nominal}',
+                                                                      _filteredPengeluaran
+                                                                              .isNotEmpty
+                                                                          ? '- ${_filteredPengeluaran[i].nominal}'
+                                                                          : '- ${snapshot.data![i].nominal}',
+                                                                      // '-Rp ${snapshot.data![i].nominal}',
                                                                       style: const TextStyle(
                                                                           fontWeight: FontWeight
                                                                               .w400,
@@ -806,16 +824,26 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                       child: Column(children: [
                         const Center(
                             child: Text(
-                          'Detail TopUp',
+                          'Detail Topup',
                           style: TextStyle(
                               fontWeight: FontWeight.w600,
                               fontSize: 24,
                               fontFamily: 'Euclid Circular B',
                               color: Color(0xff172437)),
                         )),
-                        const TextField(
-                          // onChanged: (value) => _runFilter(value),
-                          decoration: InputDecoration(
+                        TextField(
+                          onChanged: (value) async {
+                            // filter list berdasarkan input pengguna
+                            final data = await fetchTopup(id.toString());
+                            setState(() {
+                              _filteredTopup = data
+                                  .where((item) => item.pengirim
+                                      .toLowerCase()
+                                      .contains(value.toLowerCase()))
+                                  .toList();
+                            });
+                          },
+                          decoration: const InputDecoration(
                               labelText: 'Cari Transaksi',
                               labelStyle: TextStyle(
                                   fontSize: 20,
@@ -834,12 +862,14 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                                   SizedBox(
                                       height: 280,
                                       child: FutureBuilder(
-                                        future: _listTopup,
+                                        future: fetchTopup(id.toString()),
                                         builder: (context, snapshot) {
                                           if (snapshot.hasData) {
                                             return ListView.builder(
                                                 itemCount:
-                                                    snapshot.data!.length,
+                                                    _filteredTopup.isNotEmpty
+                                                        ? _filteredTopup.length
+                                                        : snapshot.data!.length,
                                                 itemBuilder:
                                                     (BuildContext context, i) {
                                                   return SizedBox(
@@ -862,10 +892,9 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                                                                           200,
                                                                       child:
                                                                           Text(
-                                                                        snapshot
-                                                                            .data![i]
-                                                                            .pengirim
-                                                                            .toString(),
+                                                                        _filteredTopup.isNotEmpty
+                                                                            ? _filteredTopup[i].pengirim
+                                                                            : snapshot.data![i].pengirim,
                                                                         style: const TextStyle(
                                                                             overflow: TextOverflow
                                                                                 .ellipsis,
@@ -877,10 +906,12 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                                                                       ),
                                                                     ),
                                                                     Text(
-                                                                      snapshot
-                                                                          .data![
-                                                                              i]
-                                                                          .createdAt,
+                                                                      _filteredTopup.isNotEmpty
+                                                                          ? _filteredTopup[i]
+                                                                              .createdAt
+                                                                          : snapshot
+                                                                              .data![i]
+                                                                              .createdAt,
                                                                       style: const TextStyle(
                                                                           fontFamily:
                                                                               'Euclid Circular B',
@@ -900,7 +931,10 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                                                                     scrollDirection:
                                                                         Axis.horizontal,
                                                                     child: Text(
-                                                                      '-Rp ${snapshot.data![i].nominal}',
+                                                                      _filteredTopup
+                                                                              .isNotEmpty
+                                                                          ? '+ ${_filteredTopup[i].nominal}'
+                                                                          : '+ ${snapshot.data![i].nominal}',
                                                                       style: const TextStyle(
                                                                           fontWeight: FontWeight
                                                                               .w400,
@@ -921,7 +955,9 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                                             return Text('${snapshot.error}');
                                           }
 
-                                          return const CircularProgressIndicator(); // By default, show a loading spinner.
+                                          return const Center(
+                                            child: CircularProgressIndicator(),
+                                          ); // By default, show a loading spinner.
                                         },
                                       )),
                                 ])))

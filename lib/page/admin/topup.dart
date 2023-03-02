@@ -11,6 +11,7 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 var url = dotenv.env['API_URL'];
+
 Future<List> fetchUsers() async {
   final response = await http.get(
     Uri.parse('${url}admin/list-topup'),
@@ -19,7 +20,7 @@ Future<List> fetchUsers() async {
   if (response.statusCode == 200) {
     return jsonDecode(response.body)['list_buyer'];
   } else {
-    throw Exception('Failed to Load');
+    throw Exception(response.body);
   }
 }
 
@@ -32,7 +33,7 @@ Future<List<TopUp>> fetchTopUp() async {
     List jsonResponse = jsonDecode(response.body)['list_topup'];
     return jsonResponse.map((e) => TopUp.fromJson(e)).toList();
   } else {
-    throw Exception('Failed to Load');
+    throw Exception(response.body);
   }
 }
 
@@ -45,8 +46,8 @@ class Users {
 
   Users.init()
       : id = 0,
-        nama = 'somebody',
-        noHp = '00000000000';
+        nama = '-',
+        noHp = '-';
 
   Users.fromMap(Map<dynamic, dynamic> map)
       : id = map['id'] as int,
@@ -597,7 +598,7 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
                             ),
                             const SizedBox(height: 3.82),
                             Text(
-                              'DPID: ${_selectedUsers.noHp ?? '000000000000'}',
+                              'DPID: ${_selectedUsers.noHp ?? '-'}',
                               style: const TextStyle(
                                 color: Color(0xFFC5C7F1),
                                 fontSize: 13.0526,

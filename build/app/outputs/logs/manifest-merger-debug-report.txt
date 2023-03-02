@@ -1,6 +1,6 @@
 -- Merging decision tree log ---
 application
-INJECTED from C:\Project Bebas\dreampay\android\app\src\main\AndroidManifest.xml:8:4-38:19
+INJECTED from C:\Project Bebas\dreampay\android\app\src\main\AndroidManifest.xml:7:4-37:19
 MERGED from [androidx.window:window:1.0.0-beta04] C:\Users\mukhs\.gradle\caches\transforms-3\6f7c89a6486f98a33c9c8b8658688e40\transformed\jetified-window-1.0.0-beta04\AndroidManifest.xml:24:5-31:19
 MERGED from [androidx.window:window:1.0.0-beta04] C:\Users\mukhs\.gradle\caches\transforms-3\6f7c89a6486f98a33c9c8b8658688e40\transformed\jetified-window-1.0.0-beta04\AndroidManifest.xml:24:5-31:19
 MERGED from [androidx.emoji2:emoji2:1.0.0] C:\Users\mukhs\.gradle\caches\transforms-3\4fd8463187f10a49345a12e8e9c96bdc\transformed\jetified-emoji2-1.0.0\AndroidManifest.xml:25:5-35:19
@@ -20,11 +20,11 @@ MERGED from [com.journeyapps:zxing-android-embedded:4.3.0] C:\Users\mukhs\.gradl
 	android:name
 		INJECTED from C:\Project Bebas\dreampay\android\app\src\main\AndroidManifest.xml
 manifest
-ADDED from C:\Project Bebas\dreampay\android\app\src\main\AndroidManifest.xml:1:1-39:12
-INJECTED from C:\Project Bebas\dreampay\android\app\src\main\AndroidManifest.xml:1:1-39:12
-INJECTED from C:\Project Bebas\dreampay\android\app\src\main\AndroidManifest.xml:1:1-39:12
-INJECTED from C:\Project Bebas\dreampay\android\app\src\main\AndroidManifest.xml:1:1-39:12
-MERGED from C:\Project Bebas\dreampay\android\app\src\main\AndroidManifest.xml:1:1-39:12
+ADDED from C:\Project Bebas\dreampay\android\app\src\main\AndroidManifest.xml:1:1-38:12
+INJECTED from C:\Project Bebas\dreampay\android\app\src\main\AndroidManifest.xml:1:1-38:12
+INJECTED from C:\Project Bebas\dreampay\android\app\src\main\AndroidManifest.xml:1:1-38:12
+INJECTED from C:\Project Bebas\dreampay\android\app\src\main\AndroidManifest.xml:1:1-38:12
+MERGED from C:\Project Bebas\dreampay\android\app\src\main\AndroidManifest.xml:1:1-38:12
 MERGED from [:shared_preferences_android] C:\Project Bebas\dreampay\build\shared_preferences_android\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-7:12
 MERGED from [:camera_android] C:\Project Bebas\dreampay\build\camera_android\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-12:12
 MERGED from [:flutter_plugin_android_lifecycle] C:\Project Bebas\dreampay\build\flutter_plugin_android_lifecycle\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-7:12
@@ -69,11 +69,11 @@ INJECTED from C:\Project Bebas\dreampay\android\app\src\debug\AndroidManifest.xm
 		INJECTED from C:\Project Bebas\dreampay\android\app\src\debug\AndroidManifest.xml
 	android:versionName
 		INJECTED from C:\Project Bebas\dreampay\android\app\src\main\AndroidManifest.xml
-		ADDED from C:\Project Bebas\dreampay\android\app\src\main\AndroidManifest.xml:1:1-39:12
+		ADDED from C:\Project Bebas\dreampay\android\app\src\main\AndroidManifest.xml:1:1-38:12
 		INJECTED from C:\Project Bebas\dreampay\android\app\src\debug\AndroidManifest.xml
 	android:versionCode
 		INJECTED from C:\Project Bebas\dreampay\android\app\src\main\AndroidManifest.xml
-		ADDED from C:\Project Bebas\dreampay\android\app\src\main\AndroidManifest.xml:1:1-39:12
+		ADDED from C:\Project Bebas\dreampay\android\app\src\main\AndroidManifest.xml:1:1-38:12
 		INJECTED from C:\Project Bebas\dreampay\android\app\src\debug\AndroidManifest.xml
 	xmlns:android
 		ADDED from C:\Project Bebas\dreampay\android\app\src\main\AndroidManifest.xml:1:11-69
@@ -91,10 +91,6 @@ MERGED from [com.journeyapps:zxing-android-embedded:4.3.0] C:\Users\mukhs\.gradl
 MERGED from [com.journeyapps:zxing-android-embedded:4.3.0] C:\Users\mukhs\.gradle\caches\transforms-3\f5ef0ef595698713855effd17aaf556a\transformed\jetified-zxing-android-embedded-4.3.0\AndroidManifest.xml:22:5-65
 	android:name
 		ADDED from C:\Project Bebas\dreampay\android\app\src\main\AndroidManifest.xml:5:18-58
-uses-permission#android.permission.VIBRATE
-ADDED from C:\Project Bebas\dreampay\android\app\src\main\AndroidManifest.xml:6:1-62
-	android:name
-		ADDED from C:\Project Bebas\dreampay\android\app\src\main\AndroidManifest.xml:6:18-59
 uses-sdk
 INJECTED from C:\Project Bebas\dreampay\android\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from C:\Project Bebas\dreampay\android\app\src\main\AndroidManifest.xml
