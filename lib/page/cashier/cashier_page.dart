@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:searchfield/searchfield.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
@@ -595,7 +596,15 @@ class _CashierPageState extends State<CashierPage> {
             return Center(child: Text('${snapshot.error}'));
           }
 
-          return const Center(child: CircularProgressIndicator());
+          return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [ Center(
+                  child: LoadingAnimationWidget.staggeredDotsWave(
+                    color: Colors.black,
+                    size: 40,)
+              )
+              ]
+          );
         },
       ),
     );

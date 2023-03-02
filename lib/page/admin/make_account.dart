@@ -7,6 +7,7 @@ import 'package:dreampay/page/login_page.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
@@ -465,7 +466,15 @@ class _MakeAccountPageState extends State<MakeAccountPage> {
                     return Text('${snapshot.error}');
                   }
 
-                  return const Center(child: CircularProgressIndicator());
+                  return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [ Center(
+                          child: LoadingAnimationWidget.staggeredDotsWave(
+                            color: Colors.white,
+                            size: 40,)
+                      )
+                      ]
+                  );
                 },),
           ]
               )

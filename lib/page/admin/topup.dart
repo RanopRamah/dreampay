@@ -6,6 +6,7 @@ import 'package:dreampay/page/admin/transaction.dart';
 import 'package:dreampay/page/admin/withdraw.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:searchfield/searchfield.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -539,7 +540,15 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
                     return Text('${snapshot.error}');
                   }
 
-                  return const Center(child: CircularProgressIndicator());
+                  return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [ Center(
+                          child: LoadingAnimationWidget.staggeredDotsWave(
+                            color: Colors.white,
+                            size: 40,)
+                      )
+                      ]
+                  );
                 },),
             ],
           ),
@@ -971,7 +980,15 @@ searchStyle: TextStyle(
             return Center(child: Text('${snapshot.error}'));
           }
 
-          return const Center(child: CircularProgressIndicator());
+          return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [ Center(
+                  child: LoadingAnimationWidget.staggeredDotsWave(
+                    color: Colors.black,
+                    size: 40,)
+              )
+              ]
+          );
         },
       ),
     );

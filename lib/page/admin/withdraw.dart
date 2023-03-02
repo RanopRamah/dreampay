@@ -5,6 +5,7 @@ import 'package:dreampay/page/admin/make_account.dart';
 import 'package:dreampay/page/admin/topup.dart';
 import 'package:dreampay/page/admin/transaction.dart';
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:searchfield/searchfield.dart';
@@ -537,7 +538,16 @@ bool failedWithdraw = false;
                     return Text('${snapshot.error}');
                   }
 
-                  return const Center(child: CircularProgressIndicator());
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [ Center(
+                  child: LoadingAnimationWidget.staggeredDotsWave(
+                    color: Colors.white,
+                    size: 40,)
+                    )
+                 ]
+                  );
+
                 },),
             ],
           ),
@@ -964,7 +974,11 @@ bool failedWithdraw = false;
           }
 
           print(snapshot.data);
-          return const Center(child: CircularProgressIndicator());
+          return  Center(child:
+          LoadingAnimationWidget.staggeredDotsWave(
+            color: Colors.black,
+            size: 40,
+          ),);
         },
       ),
     );

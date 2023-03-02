@@ -5,6 +5,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
@@ -369,7 +370,7 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                           const SizedBox(
                             height: 20,
                           ),
-                          const Row(children: [
+                           Row(children: const <Widget>[
                             Text(
                               'Riwayat',
                               style: TextStyle(
@@ -649,7 +650,15 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                   return Text('${snapshot.error}');
                 }
 
-                return const Center(child: CircularProgressIndicator());
+                return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [ Center(
+                        child: LoadingAnimationWidget.staggeredDotsWave(
+                          color: Colors.black,
+                          size: 40,)
+                    )
+                    ]
+                );
               },
             ),
             panelBuilder: (controller) {
@@ -809,9 +818,15 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                                             return Text('${snapshot.error}');
                                           }
 
-                                          return const Center(
-                                            child: CircularProgressIndicator(),
-                                          ); // By default, show a loading spinner.
+                                          return Column(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: [ Center(
+                                                  child: LoadingAnimationWidget.staggeredDotsWave(
+                                                    color: Colors.black,
+                                                    size: 40,)
+                                              )
+                                              ]
+                                          );
                                         },
                                       )),
                                 ])))
@@ -953,9 +968,15 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                                             return Text('${snapshot.error}');
                                           }
 
-                                          return const Center(
-                                            child: CircularProgressIndicator(),
-                                          ); // By default, show a loading spinner.
+                                          return Column(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: [ Center(
+                                                  child: LoadingAnimationWidget.staggeredDotsWave(
+                                                    color: Colors.black,
+                                                    size: 40,)
+                                              )
+                                              ]
+                                          );
                                         },
                                       )),
                                 ])))
