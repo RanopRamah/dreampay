@@ -131,26 +131,13 @@ class _MerchantPageState extends State<MerchantPage> {
 
   @override
   void initState() {
-    super.initState();
     setValue();
+    super.initState();
   }
-
 
   @override
   void dispose() {
     super.dispose();
-  }
-
-  Future<void> _refreshUsers() async {
-    final seller = await fetchUser(id.toString());
-    final pemasukan = await fetchPemasukan(id.toString());
-    final penarikan = await fetchPenarikan(id.toString());
-
-    setState(() {
-      _seller = Future.value(seller);
-      _pemasukan = Future.value(pemasukan);
-      _penarikan = Future.value(penarikan);
-    });
   }
 
   setQr(user) {
@@ -480,7 +467,9 @@ class _MerchantPageState extends State<MerchantPage> {
                                                             const SizedBox(
                                                               height: 5,
                                                             ),
-                                                            Row(
+                                                           SingleChildScrollView(
+                                                  scrollDirection: Axis.horizontal,
+                                               child: Row(
                                                               children: <Widget>[
                                                                 const Padding(
                                                                   padding: EdgeInsets.only(
@@ -511,7 +500,7 @@ class _MerchantPageState extends State<MerchantPage> {
                                                                           0xff222222)),
                                                                 ),
                                                               ],
-                                                            ),
+                                                            ),),
                                                             const SizedBox(
                                                               height: 5,
                                                             ),
@@ -686,7 +675,14 @@ class _MerchantPageState extends State<MerchantPage> {
                                 } else if (snapshot.hasError) {
                                   return Text('${snapshot.error}');
                                 }
-                                return const Center(child: CircularProgressIndicator());
+                                return Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [ Center(
+                            child: LoadingAnimationWidget.staggeredDotsWave(
+                              color: Colors.black,
+                              size: 40,)
+                        )
+                        ]);
                               },
                             )
                           ])),
@@ -725,10 +721,19 @@ class _MerchantPageState extends State<MerchantPage> {
                                     fontFamily: 'Euclid Circular B',
                                     color: Color(0xff172437)),
                               )),
-                          const TextField(
-                            // onChanged: (value) => _runFilter(value),
+                           TextField(
+                            onChanged: (value) async {
+                    final data = await fetchPenarikan(id.toString());
+                    setState(() {
+                      filteredPenarikan = data
+                          .where((item) => item.pengirim
+                          .toLowerCase()
+                          .contains(value.toLowerCase()))
+                          .toList();
+                    });
+                  },
                             decoration: InputDecoration(
-                                labelText: 'Cari Transaksi',
+                                labelText: 'Cari ',
                                 labelStyle: TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.w400,
@@ -750,7 +755,11 @@ class _MerchantPageState extends State<MerchantPage> {
                                     controller: penarikan,
                                     scrollDirection: Axis.vertical,
                                     shrinkWrap: true,
-                                    itemCount: snapshot.data!.length,
+                                    itemCount: filteredPenarikan
+                              .isNotEmpty
+                              ? filteredPenarikan
+                              .length
+                              :snapshot.data!.length,
                                     itemBuilder: (ctx, i) {
                                       return Container(
                                           height: 50,
@@ -766,8 +775,9 @@ class _MerchantPageState extends State<MerchantPage> {
                                                   SizedBox(
                                                     height: 30,
                                                     width: 170,
-                                                    child: Text(
-                                                      snapshot.data![i].pengirim,
+                                                    child: Text(filteredPenarikan.isNotEmpty
+                                                ? filteredPenarikan[i].pengirim
+                                                      :snapshot.data![i].pengirim,
                                                       overflow: TextOverflow.ellipsis,
                                                       style: const TextStyle(
                                                           fontFamily:
@@ -777,7 +787,9 @@ class _MerchantPageState extends State<MerchantPage> {
                                                     ),
                                                   ),
                                                   Text(
-                                                    snapshot.data![i].created_at,
+                                                   filteredPenarikan.isNotEmpty
+                                              ? filteredPenarikan[i].created_at
+                                              : snapshot.data![i].created_at,
                                                     style: const TextStyle(
                                                         fontFamily:
                                                         'Euclid Circular B',
@@ -803,19 +815,19 @@ class _MerchantPageState extends State<MerchantPage> {
                                   return Text('${snapshot.error}');
                                 }
 
-                                return const Center(
-                                    child: CircularProgressIndicator());
-                              },
-                            ),
-
-
+                                return Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                              children: [ Center(
+                            child: LoadingAnimationWidget.staggeredDotsWave(
+                                color: Colors.black,
+                                size: 40,)
                           )
-                        ])
-                    )
-
-
-
-
+                        ]
+                    );
+                    },
+                  ),
+                )
+              ]))
                   ]);
                 },
               ),

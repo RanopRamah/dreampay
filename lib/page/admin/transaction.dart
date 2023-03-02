@@ -253,104 +253,112 @@ class _AdminTransactionPageState extends State<AdminTransactionPage> {
                 const SizedBox(
                   height: 15,
                 ),
-                Container(
-                  padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
-                  width: double.infinity,
-                  height: 98,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: const Color(0xff292B5A)),
-                  child: Column(
+                FutureBuilder(
+                  future: _admin,
+                  builder: (BuildContext context, snapshot) {
+                    if (snapshot.hasData){
+                      return Column(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
+                            width: double.infinity,
+                            height: 98,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: const Color(0xff292B5A)),
+                            child:  Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        'Saldo A',
-                        style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontFamily: 'Euclid Circular B',
-                            fontSize: 14,
-                            color: Color(0xffbebebe)),
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Center(
-                          child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Padding(
-                            padding: EdgeInsets.only(bottom: 35),
-                            child: Text(
-                              'Rp',
-                              style: TextStyle(
-                                  fontFamily: 'SF Pro Display',
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.white),
+                        'Saldo Buyer',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      fontFamily: 'Euclid Circular B',
+                                      fontSize: 14,
+                                      color: Color(0xffbebebe)),
+                                ),
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                Center(
+                                    child: SingleChildScrollView(
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: <Widget>[
+                                            Padding(
+                                              padding: EdgeInsets.only(bottom: 35),
+                                              child: Text(
+                                                'Rp',
+                                                style: TextStyle(
+                                                    fontFamily: 'SF Pro Display',
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w500,
+                                                    color: Colors.white),
+                                              ),
+                                            ),
+                                            Text(
+                                              snapshot.data!.totalSaldo.toString(),
+                                              style: TextStyle(
+                                                  fontFamily: 'SF Pro Display',
+                                                  fontSize: 36,
+                                                  fontWeight: FontWeight.w700,
+                                                  color: Colors.white),
+                                            ),
+                                          ],
+                                        )))
+                              ],
                             ),
                           ),
-                          Text(
-                            '560,000',
-                            style: TextStyle(
-                                fontFamily: 'SF Pro Display',
-                                fontSize: 36,
-                                fontWeight: FontWeight.w700,
-                                color: Colors.white),
+                          const SizedBox(
+                            height: 15,
                           ),
-                        ],
-                      ))
-                    ],
-                  ),
-                ),
-                const SizedBox(
-                  height: 15,
-                ),
-                Container(
-                  padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
-                  width: double.infinity,
-                  height: 98,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: const Color(0xff3A2C62)),
-                  child: Column(
+                          Container(
+                            padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
+                            width: double.infinity,
+                            height: 98,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: const Color(0xff3A2C62)),
+                            child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        'Saldo A',
-                        style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontFamily: 'Euclid Circular B',
-                            fontSize: 14,
-                            color: Color(0xffbebebe)),
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Center(
-                          child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Padding(
-                            padding: EdgeInsets.only(bottom: 35),
-                            child: Text(
-                              'Rp',
-                              style: TextStyle(
-                                  fontFamily: 'SF Pro Display',
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.white),
-                            ),
-                          ),
-                          Text(
-                            '560,000',
-                            style: TextStyle(
-                                fontFamily: 'SF Pro Display',
-                                fontSize: 36,
-                                fontWeight: FontWeight.w700,
-                                color: Colors.white),
-                          ),
-                        ],
-                      ))
+                        'Saldo Seller',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      fontFamily: 'Euclid Circular B',
+                                      fontSize: 14,
+                                      color: Color(0xffbebebe)),
+                                ),
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                Center(
+                                    child:SingleChildScrollView(
+                                        child:Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children:  <Widget>[
+                                            Padding(
+                                              padding: EdgeInsets.only(bottom: 35),
+                                              child: Text(
+                                                'Rp',
+                                                style: TextStyle(
+                                                    fontFamily: 'SF Pro Display',
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w500,
+                                                    color: Colors.white),
+                                              ),
+                                            ),
+                                            Text(
+                                              snapshot.data!.totalSeller.toString(),
+                                              style: TextStyle(
+                                                  fontFamily: 'SF Pro Display',
+                                                  fontSize: 36,
+                                                  fontWeight: FontWeight.w700,
+                                                  color: Colors.white),
+                                            ),
+                                          ],
+                                        )))
                     ],
                   ),
                 ),
@@ -367,48 +375,63 @@ class _AdminTransactionPageState extends State<AdminTransactionPage> {
                   child:  Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Text(
-                        'Saldo A',
-                        style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontFamily: 'Euclid Circular B',
-                            fontSize: 14,
-                            color: Color(0xffbebebe)),
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Center(
-                          child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Padding(
-                            padding: EdgeInsets.only(bottom: 35),
-                            child: Text(
-                              'Rp',
-                              style: TextStyle(
-                                  fontFamily: 'SF Pro Display',
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.white),
+                      const Text(
+                                  'Total Penarikan',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      fontFamily: 'Euclid Circular B',
+                                      fontSize: 14,
+                                      color: Color(0xffbebebe)),
+                                ),
+                                const SizedBox(
+                                  height: 5,
+                                ),
+                                Center(
+                                    child: SingleChildScrollView(
+                                        scrollDirection: Axis.horizontal,
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children:  <Widget>[
+                                            Padding(
+                                              padding: EdgeInsets.only(bottom: 35),
+                                              child: Text(
+                                                'Rp',
+                                                style: TextStyle(
+                                                    fontFamily: 'SF Pro Display',
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w500,
+                                                    color: Colors.white),
+                                              ),
+                                            ),
+                                            Text(
+                                              snapshot.data!.totalWithdraw,
+                                              style: TextStyle(
+                                                  fontFamily: 'SF Pro Display',
+                                                  fontSize: 36,
+                                                  fontWeight: FontWeight.w700,
+                                                  color: Colors.white),
+                                            ),
+                                          ],
+                                        )))
+                              ],
                             ),
                           ),
-                          Text(
-                            '560,000',
-                            style: TextStyle(
-                                fontFamily: 'SF Pro Display',
-                                fontSize: 36,
-                                fontWeight: FontWeight.w700,
-                                color: Colors.white),
-                          ),
                         ],
-                      ))
-                    ],
-                  ),
-                ),
-                const SizedBox(
-                  height: 15,
-                ),
+                      );
+                    } else if (snapshot.hasError) {
+                      return Text('${snapshot.error}');
+                    }
+
+                    return Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [ Center(
+                            child: LoadingAnimationWidget.staggeredDotsWave(
+                              color: Colors.black,
+                              size: 40,)
+                        )
+                        ]
+                    );
+                  },),
               ],
             ),
           ),
@@ -489,7 +512,7 @@ class _AdminTransactionPageState extends State<AdminTransactionPage> {
                                                 right: 20),
                                             child: Column(
                                               children: <Widget>[
-                                                Row(
+                                                const Row(
                                                   mainAxisAlignment:
                                                       MainAxisAlignment
                                                           .spaceBetween,

@@ -150,6 +150,7 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
   @override
   initState() {
     setValue();
+
     super.initState();
   }
 
@@ -169,14 +170,6 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
     });
   }
 
-  Future<void> _refreshUsers() async {
-    final saldo = await fetchSaldo(id.toString());
-
-    setState(() {
-      _saldo = Future.value(saldo);
-    });
-  }
-
   final PanelController _panelController = PanelController();
 
   void togglePanel() => _panelController.isPanelOpen
@@ -186,95 +179,89 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: RefreshIndicator(
-        onRefresh: _refreshUsers,
-        child: ListView(
-          children: [
-            SizedBox(
-              height: MediaQuery.of(context).size.height,
-              child: Stack(
-                children: <Widget>[
-                  SlidingUpPanel(
-                    controller: _panelController,
-                    maxHeight: 450,
-                    minHeight: 200,
-                    padding: const EdgeInsets.only(left: 30, right: 30),
-                    borderRadius: const BorderRadius.only(
-                        topRight: Radius.circular(30), topLeft: Radius.circular(30)),
-                    body: FutureBuilder(
-                      future: _saldo,
-                      builder: (BuildContext context, snapshot) {
-                        if (snapshot.hasData) {
-                          return SingleChildScrollView(
-                            child: Container(
-                              height: 800,
-                              decoration: const BoxDecoration(color: Color(0xFFFBFBFB)),
-                              padding: const EdgeInsets.only(
-                                  right: 25, left: 25, top: 80, bottom: 74),
-                              child: Column(
+      body: Stack(
+        children: <Widget>[
+          SlidingUpPanel(
+            controller: _panelController,
+            maxHeight: 450,
+            minHeight: 200,
+            padding: const EdgeInsets.only(left: 30, right: 30),
+            borderRadius: const BorderRadius.only(
+                topRight: Radius.circular(30), topLeft: Radius.circular(30)),
+            body: FutureBuilder(
+              future: _saldo,
+              builder: (BuildContext context, snapshot) {
+                if (snapshot.hasData) {
+                  return SingleChildScrollView(
+                    child: Container(
+                      height: 800,
+                      decoration: const BoxDecoration(color: Color(0xFFFBFBFB)),
+                      padding: const EdgeInsets.only(
+                          right: 25, left: 25, top: 80, bottom: 74),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          const Text(
-                                            'Assalamualaikum 👋',
-                                            style: TextStyle(
-                                              fontFamily: 'Euclid Circular B',
-                                              fontWeight: FontWeight.w500,
-                                              fontSize: 16,
-                                              color: Color(0xff777777),
-                                            ),
-                                          ),
-                                          const SizedBox(
-                                            height: 5,
-                                          ),
-                                          SizedBox(
-                                            width: 250,
-                                            child: Text(
-                                              name.toString(),
-                                              textAlign: TextAlign.left,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: const TextStyle(
-                                                fontFamily: 'Euclid Circular B',
-                                                fontWeight: FontWeight.w600,
-                                                fontSize: 30,
-                                                color: Color(0xff222222),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
+                                  const Text(
+                                    'Assalamualaikum 👋',
+                                    style: TextStyle(
+                                      fontFamily: 'Euclid Circular B',
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 16,
+                                      color: Color(0xff777777),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 5,
+                                  ),
+                                  SizedBox(
+                                    width: 250,
+                                    child: Text(
+                                      name.toString(),
+                                      textAlign: TextAlign.left,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                        fontFamily: 'Euclid Circular B',
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 30,
+                                        color: Color(0xff222222),
                                       ),
-                                      Column(children: <Widget>[
-                                        GestureDetector(
-                                          onTap: () {},
-                                          child: Container(
-                                            width: 52,
-                                            height: 54,
-                                            padding: const EdgeInsets.all(3),
-                                            decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.circular(13),
-                                                border: Border.all(
-                                                    width: 1,
-                                                    color: const Color(0xffD2D2D2))),
-                                            child: TextButton(
-                                              child: Image.asset(
-                                                  'assets/image/logout.png'),
-                                              onPressed: () {
-                                                setState(() {
-                                                  prefs.remove('id_customer');
-                                                  prefs.remove('phone_customer');
-                                                  prefs.remove('name_customer');
-                                                  prefs.remove('pin_customer');
-                                                  prefs.remove('type_customer');
-                                                  prefs.remove('is_login');
-                                                  Navigator.of(context)
-                                                      .pushAndRemoveUntil(
-                                                      MaterialPageRoute(
-                                                          builder: (ctx) =>
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Column(children: <Widget>[
+                                GestureDetector(
+                                  onTap: () {},
+                                  child: Container(
+                                    width: 52,
+                                    height: 54,
+                                    padding: const EdgeInsets.all(3),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(13),
+                                        border: Border.all(
+                                            width: 1,
+                                            color: const Color(0xffD2D2D2))),
+                                    child: TextButton(
+                                      child: Image.asset(
+                                          'assets/image/logout.png'),
+                                      onPressed: () {
+                                        setState(() {
+                                          prefs.remove('id_customer');
+                                          prefs.remove('phone_customer');
+                                          prefs.remove('name_customer');
+                                          prefs.remove('pin_customer');
+                                          prefs.remove('type_customer');
+                                          prefs.remove('is_login');
+                                          Navigator.of(context)
+                                              .pushAndRemoveUntil(
+                                                  MaterialPageRoute(
+                                                      builder: (ctx) =>
                                                           const LoginPage()),
                                                           (route) => false);
                                                 });
@@ -382,7 +369,7 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                                   const SizedBox(
                                     height: 20,
                                   ),
-                                  Row(children: [
+                                  Row(children: const <Widget>[
                                     Text(
                                       'Riwayat',
                                       style: TextStyle(
@@ -661,7 +648,15 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                           return Text('${snapshot.error}');
                         }
 
-                        return const Center(child: CircularProgressIndicator());
+                        return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [ Center(
+                        child: LoadingAnimationWidget.staggeredDotsWave(
+                          color: Colors.black,
+                          size: 40,)
+                    )
+                    ]
+                );
                       },
                     ),
                     panelBuilder: (controller) {
@@ -821,9 +816,14 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                                                     return Text('${snapshot.error}');
                                                   }
 
-                                                  return const Center(
-                                                    child: CircularProgressIndicator(),
-                                                  ); // By default, show a loading spinner.
+                                                  return Column(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: [ Center(
+                                                    child: LoadingAnimationWidget.staggeredDotsWave(
+                                                    color: Colors.black,
+                                                    size: 40,)
+                                                  )]
+                                          );
                                                 },
                                               )),
                                         ])))
@@ -965,9 +965,14 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                                                     return Text('${snapshot.error}');
                                                   }
 
-                                                  return const Center(
-                                                    child: CircularProgressIndicator(),
-                                                  ); // By default, show a loading spinner.
+                                                  return Column(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: [ Center(
+                                                    child: LoadingAnimationWidget.staggeredDotsWave(
+                                                    color: Colors.black,
+                                                    size: 40,)
+                                                  )]
+                                          );
                                                 },
                                               )),
                                         ])))

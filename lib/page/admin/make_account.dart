@@ -58,8 +58,6 @@ class _MakeAccountPageState extends State<MakeAccountPage> {
   final TextEditingController _no_hp = TextEditingController();
   final TextEditingController _pin = TextEditingController();
 
-  List<dynamic> _filteredAkun = [];
-
   String? phone;
   String? name;
   String? id;
@@ -98,7 +96,6 @@ class _MakeAccountPageState extends State<MakeAccountPage> {
   void togglePanel() => _panelController.isPanelOpen
       ? _panelController.close()
       : _panelController.open();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -795,23 +792,24 @@ class _MakeAccountPageState extends State<MakeAccountPage> {
               itemCount: _filteredAkun.isNotEmpty
                   ? _filteredAkun.length
                   : snapshot.data!.length,
-              itemBuilder: (BuildContext context, i) {
-                return Container(
-                    padding: const EdgeInsets.only(
-                        top: 25, bottom: 25, left: 30, right: 20),
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(_filteredAkun.isNotEmpty ? _filteredAkun[i].nama : snapshot.data![i].nama,
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontFamily: 'Euclid Circular B',
-                                        fontSize: 20,
-                                        color: Color(0xff172437))),
-                                Text(_filteredAkun.isNotEmpty ? _filteredAkun[i].no_hp : snapshot.data![i].no_hp,
+              itemBuilder: (BuildContext context, i) => Container(
+                  padding: const EdgeInsets.only(
+                      top: 25, left: 30, right: 20),
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                width: 200,
+                              child:Text(_filteredAkun.isNotEmpty ? _filteredAkun[i].nama : snapshot.data![i].nama,overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontFamily: 'Euclid Circular B',
+                                      fontSize: 20,
+                                      color: Color(0xff172437))),),
+                              Text(_filteredAkun.isNotEmpty ? _filteredAkun[i].no_hp : snapshot.data![i].no_hp,
                                     style: const TextStyle(
                                         fontWeight: FontWeight.w400,
                                         fontFamily: 'Euclid Circular B',
@@ -819,37 +817,27 @@ class _MakeAccountPageState extends State<MakeAccountPage> {
                                         color: Color(0xffbebebe))),
                               ]),
                           TextButton(
-                              onPressed: () {
-                                Navigator.push(context, MaterialPageRoute(
-                                    builder: (ctx) =>
-                                        DetailAccount(snapshot.data![i].id,
-                                            snapshot.data![i].nama,
-                                            snapshot.data![i].no_hp,
-                                            snapshot.data![i].pin,
-                                            snapshot.data![i].tipe)));
-                              },
-                              child: Container(
-                                  width: 101,
-                                  height: 36,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(49),
-                                      border: Border.all(
-                                          width: 0.5,
-                                          color: const Color(0xffe6e6e6))),
-                                  child: const Center(
-                                    child: Text(
-                                      'Detail',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w400,
-                                          fontFamily: 'Euclid Circular B',
-                                          fontSize: 16,
-                                          color: Color(0xff222222)),
-                                    ),
-                                  )))
-                        ])
-                );
-              })
-        );
+                              onPressed: () {},
+                            child: Container(
+                                width: 101,
+                                height: 36,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(49),
+                                    border: Border.all(
+                                        width: 0.5,
+                                        color: const Color(0xffe6e6e6))),
+                                child: const Center(
+                                  child: Text(
+                                    'Detail',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w400,
+                                        fontFamily: 'Euclid Circular B',
+                                        fontSize: 16,
+                                        color: Color(0xff222222)),
+                                  ),
+                                )))
+                      ])),
+            ));
       },
     );
 
