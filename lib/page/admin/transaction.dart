@@ -6,8 +6,6 @@ import 'package:dreampay/page/admin/withdraw.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 var url = dotenv.env['API_URL'];
@@ -31,7 +29,7 @@ class Transactions {
   final dynamic pengirim;
   final dynamic penerima;
   final dynamic nominal;
-  final dynamic created_at;
+  final dynamic createdAt;
 
   const Transactions({
     required this.id,
@@ -39,7 +37,7 @@ class Transactions {
     required this.pengirim,
     required this.penerima,
     required this.nominal,
-    required this.created_at,
+    required this.createdAt,
   });
 
   factory Transactions.fromJson(Map<dynamic, dynamic> json) {
@@ -49,7 +47,7 @@ class Transactions {
       pengirim: json['pengirim'],
       penerima: json['penerima'],
       nominal: json['nominal'],
-      created_at: json['created_at'],
+      createdAt: json['created_at'],
     );
   }
 }
@@ -92,26 +90,26 @@ class _AdminTransactionPageState extends State<AdminTransactionPage> {
         resizeToAvoidBottomInset: false,
         drawer: Drawer(
           child: Container(
-            padding: EdgeInsets.all(20),
-            color: Color(0xff45499D),
+            padding: const EdgeInsets.all(20),
+            color: const Color(0xff45499D),
             child: ListView(
               children: <Widget>[
-                Container(
+                SizedBox(
                   width: 170,
                   height: 42,
                   child: Image.asset('assets/image/logo.png'),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 50,
                 ),
                 Center(
                   child: ListTile(
                     onTap: () {
-                      Navigator.of(context).push(
-                          MaterialPageRoute(builder: (c) => MakeAccountPage()));
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (c) => const MakeAccountPage()));
                     },
                     title: Container(
-                      padding: EdgeInsets.only(right: 30, left: 40),
+                      padding: const EdgeInsets.only(right: 30, left: 40),
                       width: double.infinity,
                       height: 51,
                       child: Row(
@@ -122,10 +120,10 @@ class _AdminTransactionPageState extends State<AdminTransactionPage> {
                             width: 21,
                             height: 21,
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 10,
                           ),
-                          Text(
+                          const Text(
                             'Akun Baru',
                             style: TextStyle(
                                 color: Colors.white,
@@ -138,20 +136,20 @@ class _AdminTransactionPageState extends State<AdminTransactionPage> {
                     ),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 Center(
                   child: ListTile(
                     onTap: () {
                       Navigator.of(context).push(MaterialPageRoute(
-                          builder: (c) => AdminTransactionPage()));
+                          builder: (c) => const AdminTransactionPage()));
                     },
                     title: Container(
                       decoration: BoxDecoration(
-                          color: Color(0xff8A8EF9),
+                          color: const Color(0xff8A8EF9),
                           borderRadius: BorderRadius.circular(13)),
-                      padding: EdgeInsets.only(right: 25, left: 25),
+                      padding: const EdgeInsets.only(right: 25, left: 25),
                       width: 275,
                       height: 51,
                       child: Row(
@@ -165,7 +163,7 @@ class _AdminTransactionPageState extends State<AdminTransactionPage> {
                           // SizedBox(
                           //   width: 13,
                           // ),
-                          Text(
+                          const Text(
                             'Transaksi',
                             style: TextStyle(
                                 color: Colors.white,
@@ -178,17 +176,17 @@ class _AdminTransactionPageState extends State<AdminTransactionPage> {
                     ),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 Center(
                   child: ListTile(
                     onTap: () {
-                      Navigator.of(context).push(
-                          MaterialPageRoute(builder: (c) => AdminTopupPage()));
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (c) => const AdminTopupPage()));
                     },
                     title: Container(
-                      padding: EdgeInsets.only(right: 45, left: 25),
+                      padding: const EdgeInsets.only(right: 45, left: 25),
                       width: 275,
                       height: 51,
                       child: Row(
@@ -202,7 +200,7 @@ class _AdminTransactionPageState extends State<AdminTransactionPage> {
                           // SizedBox(
                           //   width: 13,
                           // ),
-                          Text(
+                          const Text(
                             'Top-Up',
                             style: TextStyle(
                                 color: Colors.white,
@@ -215,17 +213,17 @@ class _AdminTransactionPageState extends State<AdminTransactionPage> {
                     ),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 Center(
                   child: ListTile(
                     onTap: () {
                       Navigator.of(context).push(MaterialPageRoute(
-                          builder: (c) => AdminWithdrawPage()));
+                          builder: (c) => const AdminWithdrawPage()));
                     },
                     title: Container(
-                      padding: EdgeInsets.only(right: 25, left: 27),
+                      padding: const EdgeInsets.only(right: 25, left: 27),
                       width: 275,
                       height: 51,
                       child: Row(
@@ -239,7 +237,7 @@ class _AdminTransactionPageState extends State<AdminTransactionPage> {
                           // SizedBox(
                           //   width: 13,
                           // ),
-                          Text(
+                          const Text(
                             'Withdraw',
                             style: TextStyle(
                                 color: Colors.white,
@@ -252,17 +250,17 @@ class _AdminTransactionPageState extends State<AdminTransactionPage> {
                     ),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 15,
                 ),
                 Container(
-                  padding: EdgeInsets.only(top: 10, left: 10, right: 10),
+                  padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
                   width: double.infinity,
                   height: 98,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
-                      color: Color(0xff292B5A)),
-                  child: Column(
+                      color: const Color(0xff292B5A)),
+                  child: const Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
@@ -304,17 +302,17 @@ class _AdminTransactionPageState extends State<AdminTransactionPage> {
                     ],
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 15,
                 ),
                 Container(
-                  padding: EdgeInsets.only(top: 10, left: 10, right: 10),
+                  padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
                   width: double.infinity,
                   height: 98,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
-                      color: Color(0xff3A2C62)),
-                  child: Column(
+                      color: const Color(0xff3A2C62)),
+                  child: const Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
@@ -356,17 +354,17 @@ class _AdminTransactionPageState extends State<AdminTransactionPage> {
                     ],
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 15,
                 ),
                 Container(
-                  padding: EdgeInsets.only(top: 10, left: 10, right: 10),
+                  padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
                   width: double.infinity,
                   height: 98,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
-                      color: Color(0xff2E3346)),
-                  child: Column(
+                      color: const Color(0xff2E3346)),
+                  child: const Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
@@ -408,7 +406,7 @@ class _AdminTransactionPageState extends State<AdminTransactionPage> {
                     ],
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 15,
                 ),
               ],
@@ -432,14 +430,15 @@ class _AdminTransactionPageState extends State<AdminTransactionPage> {
                           height: 27,
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
                       Container(
-                        padding: EdgeInsets.only(top: 20, left: 15, right: 15),
+                        padding:
+                            const EdgeInsets.only(top: 20, left: 15, right: 15),
                         width: double.infinity,
                         height: 900,
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(24),
@@ -457,7 +456,7 @@ class _AdminTransactionPageState extends State<AdminTransactionPage> {
                         child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
+                              const Text(
                                 'Transaksi',
                                 style: TextStyle(
                                     fontSize: 32,
@@ -468,7 +467,7 @@ class _AdminTransactionPageState extends State<AdminTransactionPage> {
                               FutureBuilder(
                                   future: _transactionsList,
                                   builder: (context, snapshot) {
-                                    return Container(
+                                    return SizedBox(
                                         height: 650,
                                         child: ListView.builder(
                                           itemCount: snapshot.data!.length,
@@ -478,18 +477,19 @@ class _AdminTransactionPageState extends State<AdminTransactionPage> {
                                             height: 174,
                                             width: double.infinity,
                                             decoration: BoxDecoration(
-                                                color: Color(0xfff3f3f3),
+                                                color: const Color(0xfff3f3f3),
                                                 borderRadius:
                                                     BorderRadius.circular(18)),
-                                            margin: EdgeInsets.only(bottom: 15),
-                                            padding: EdgeInsets.only(
+                                            margin: const EdgeInsets.only(
+                                                bottom: 15),
+                                            padding: const EdgeInsets.only(
                                                 top: 25,
                                                 bottom: 10,
                                                 left: 30,
                                                 right: 20),
                                             child: Column(
                                               children: <Widget>[
-                                                Row(
+                                                const Row(
                                                   mainAxisAlignment:
                                                       MainAxisAlignment
                                                           .spaceBetween,
@@ -518,7 +518,7 @@ class _AdminTransactionPageState extends State<AdminTransactionPage> {
                                                     )
                                                   ],
                                                 ),
-                                                SizedBox(
+                                                const SizedBox(
                                                   height: 10,
                                                 ),
                                                 Row(
@@ -526,7 +526,7 @@ class _AdminTransactionPageState extends State<AdminTransactionPage> {
                                                       MainAxisAlignment
                                                           .spaceBetween,
                                                   children: [
-                                                    Container(
+                                                    SizedBox(
                                                       width: 120,
                                                       child: Text(
                                                         snapshot
@@ -534,7 +534,7 @@ class _AdminTransactionPageState extends State<AdminTransactionPage> {
                                                             .toString(),
                                                         overflow: TextOverflow
                                                             .ellipsis,
-                                                        style: TextStyle(
+                                                        style: const TextStyle(
                                                             fontFamily:
                                                                 'Euclid Circular B',
                                                             fontSize: 17,
@@ -549,7 +549,7 @@ class _AdminTransactionPageState extends State<AdminTransactionPage> {
                                                       width: 26,
                                                       height: 26,
                                                     ),
-                                                    Container(
+                                                    SizedBox(
                                                         width: 100,
                                                         child: Text(
                                                           snapshot
@@ -559,7 +559,7 @@ class _AdminTransactionPageState extends State<AdminTransactionPage> {
                                                               TextAlign.end,
                                                           overflow: TextOverflow
                                                               .ellipsis,
-                                                          style: TextStyle(
+                                                          style: const TextStyle(
                                                               fontFamily:
                                                                   'Euclid Circular B',
                                                               fontSize: 17,
@@ -571,7 +571,7 @@ class _AdminTransactionPageState extends State<AdminTransactionPage> {
                                                         ))
                                                   ],
                                                 ),
-                                                SizedBox(
+                                                const SizedBox(
                                                   height: 30,
                                                 ),
                                                 Row(
@@ -579,7 +579,7 @@ class _AdminTransactionPageState extends State<AdminTransactionPage> {
                                                       MainAxisAlignment
                                                           .spaceBetween,
                                                   children: [
-                                                    Text(
+                                                    const Text(
                                                       'Amount',
                                                       style: TextStyle(
                                                           fontFamily:
@@ -592,7 +592,7 @@ class _AdminTransactionPageState extends State<AdminTransactionPage> {
                                                     ),
                                                     Text(
                                                       'Rp${snapshot.data![i].nominal}',
-                                                      style: TextStyle(
+                                                      style: const TextStyle(
                                                           fontFamily:
                                                               'SF Pro Display',
                                                           fontSize: 16,
@@ -603,7 +603,7 @@ class _AdminTransactionPageState extends State<AdminTransactionPage> {
                                                     )
                                                   ],
                                                 ),
-                                                SizedBox(
+                                                const SizedBox(
                                                   height: 5,
                                                 ),
                                                 Row(
@@ -611,7 +611,7 @@ class _AdminTransactionPageState extends State<AdminTransactionPage> {
                                                       MainAxisAlignment
                                                           .spaceBetween,
                                                   children: [
-                                                    Text(
+                                                    const Text(
                                                       'Unique Code',
                                                       style: TextStyle(
                                                           fontFamily:
@@ -625,7 +625,7 @@ class _AdminTransactionPageState extends State<AdminTransactionPage> {
                                                     Text(
                                                       snapshot.data![i].nota
                                                           .toString(),
-                                                      style: TextStyle(
+                                                      style: const TextStyle(
                                                           fontFamily:
                                                               'SF Pro Display',
                                                           fontSize: 16,

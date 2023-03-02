@@ -1,12 +1,9 @@
 import 'dart:convert';
 import 'dart:core';
-import 'package:dreampay/page/buyer/nominal_page.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:dreampay/page/buyer/qr_page.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
-import 'package:dreampay/page/buyer/qr_page.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
@@ -58,7 +55,7 @@ Future<List<Pengeluaran>> fetchPengeluaran(String id) async {
     List jsonResponse = jsonDecode(response.body)['list_pengeluaran'];
     return jsonResponse.map((e) => Pengeluaran.fromJson(e)).toList();
   } else {
-    throw Exception(response.body);
+    return [];
   }
 }
 
@@ -96,12 +93,11 @@ Future<List<TopUp>> fetchTopup(String id) async {
   final response = await http.get(
     Uri.parse('${url}buyer/$id}'),
   );
-
   if (response.statusCode == 200) {
     List jsonResponse = jsonDecode(response.body)['list_topup'];
     return jsonResponse.map((e) => TopUp.fromJson(e)).toList();
   } else {
-    throw Exception(response.body);
+    return [];
   }
 }
 
@@ -373,7 +369,7 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                           const SizedBox(
                             height: 20,
                           ),
-                          Row(children: [
+                          const Row(children: [
                             Text(
                               'Riwayat',
                               style: TextStyle(
@@ -690,7 +686,6 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                         )),
                         TextField(
                           onChanged: (value) async {
-                            // filter list berdasarkan input pengguna
                             final data = await fetchPengeluaran(id.toString());
                             setState(() {
                               _filteredPengeluaran = data
@@ -973,7 +968,9 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
             alignment: Alignment.bottomCenter,
             child: GestureDetector(
               onTap: () {
-                scanQRCode();
+                Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(builder: (ctx) => const QRPage()),
+                    (route) => false);
               },
               child: Container(
                 margin: const EdgeInsets.only(bottom: 20),
@@ -1014,28 +1011,5 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
         ],
       ),
     );
-  }
-
-  Future<void> scanQRCode() async {
-    try {
-      final qrCode = await FlutterBarcodeScanner.scanBarcode(
-        '#ff6666',
-        'Cancel',
-        true,
-        ScanMode.QR,
-      );
-
-      if (!mounted) return;
-
-      setState(() {
-        var ecode = jsonDecode(qrCode);
-        if (ecode['nama'] != null) {
-          Navigator.of(context).push(MaterialPageRoute(
-              builder: (ctx) => NominalPage(ecode['no_hp'], ecode['nama'])));
-        }
-      });
-    } on PlatformException {
-      throw Exception('Failed to get platform version.');
-    }
   }
 }

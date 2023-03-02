@@ -146,12 +146,6 @@
       "languageVersion": "2.19"
     },
     {
-      "name": "flutter_barcode_scanner",
-      "rootUri": "file:///C:/Users/mukhs/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_barcode_scanner-2.0.0",
-      "packageUri": "lib/",
-      "languageVersion": "2.12"
-    },
-    {
       "name": "flutter_dotenv",
       "rootUri": "file:///C:/Users/mukhs/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_dotenv-5.0.2",
       "packageUri": "lib/",
@@ -309,9 +303,9 @@
     },
     {
       "name": "petitparser",
-      "rootUri": "file:///C:/Users/mukhs/AppData/Local/Pub/Cache/hosted/pub.dev/petitparser-5.1.0",
+      "rootUri": "file:///C:/Users/mukhs/AppData/Local/Pub/Cache/hosted/pub.dev/petitparser-5.2.0",
       "packageUri": "lib/",
-      "languageVersion": "2.18"
+      "languageVersion": "2.19"
     },
     {
       "name": "pin_code_fields",
@@ -501,9 +495,9 @@
     },
     {
       "name": "xml",
-      "rootUri": "file:///C:/Users/mukhs/AppData/Local/Pub/Cache/hosted/pub.dev/xml-6.1.0",
+      "rootUri": "file:///C:/Users/mukhs/AppData/Local/Pub/Cache/hosted/pub.dev/xml-6.2.2",
       "packageUri": "lib/",
-      "languageVersion": "2.17"
+      "languageVersion": "2.18"
     },
     {
       "name": "yaml",
@@ -518,7 +512,7 @@
       "languageVersion": "2.18"
     }
   ],
-  "generated": "2023-03-02T03:49:46.800014Z",
+  "generated": "2023-03-02T06:49:21.692846Z",
   "generator": "pub",
-  "generatorVersion": "3.0.0-277.0.dev"
+  "generatorVersion": "3.0.0-285.0.dev"
 }

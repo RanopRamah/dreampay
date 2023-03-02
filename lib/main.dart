@@ -1,7 +1,6 @@
-import 'package:dreampay/page/buyer/buyer_home.dart';
+import 'package:dreampay/page/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-
 
 Future main() async {
   await dotenv.load(fileName: '.env');
@@ -13,11 +12,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // ignore: prefer_const_constructors
-    return MaterialApp(
+    return const MaterialApp(
       title: 'DreamPay',
       debugShowCheckedModeBanner: false,
-      home: BuyerHomePage(),
+      home: LoginPage(),
     );
   }
 }
