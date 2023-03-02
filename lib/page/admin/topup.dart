@@ -807,7 +807,7 @@ searchStyle: TextStyle(
                       Visibility(
                           visible: successTopup,
                           child: Container(
-                              padding: EdgeInsets.only(left: 10),
+                              padding: EdgeInsets.only(left: 20,top: 20),
                               child: Row(children: [
                                 Image.asset('assets/image/greensmile.png',width: 20,height: 20,),
                                 SizedBox(width: 5,),
@@ -821,7 +821,7 @@ searchStyle: TextStyle(
                       Visibility(
                           visible: failedTopup,
                           child: Container(
-                              padding: EdgeInsets.only(left: 7),
+                              padding: EdgeInsets.only(left: 20,top: 20),
                               child: Row(children: [
                                 Image.asset('assets/image/failed.png',width: 20,height: 20,),
                                 SizedBox(width: 5,),

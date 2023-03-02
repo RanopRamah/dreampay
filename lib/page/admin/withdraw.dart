@@ -136,8 +136,8 @@ class _AdminWithdrawPageState extends State<AdminWithdrawPage> {
   List<Users> user = [];
   Users _selectedUsers = Users.init();
 
-  bool visible = false;
-  bool isSuccessful = false;
+bool successWithdraw = false;
+bool failedWithdraw = false;
 
   final PanelController _controller = PanelController();
   late Future<List<Withdraw>> withdraw;
@@ -596,6 +596,10 @@ class _AdminWithdrawPageState extends State<AdminWithdrawPage> {
                         height: 62,
                         margin: const EdgeInsets.only(top: 26.88),
                         child:   SearchField<dynamic>(
+                          searchStyle: TextStyle(
+                              fontFamily: 'Euclid Circular B',
+                              fontWeight: FontWeight.w600
+                          ),
                           searchInputDecoration: InputDecoration(
                             enabledBorder: const UnderlineInputBorder(
                               borderSide: BorderSide(color: Color(0xFFF1F1F1)),
@@ -771,6 +775,7 @@ class _AdminWithdrawPageState extends State<AdminWithdrawPage> {
                           onPressed: () {
                             setState(() {
                               createWithdraw();
+                              _withdrawcontrol.clear();
                             });
                           },
                           style: ButtonStyle(
@@ -794,19 +799,32 @@ class _AdminWithdrawPageState extends State<AdminWithdrawPage> {
                           ),
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 15),
-                        child: Visibility(
-                          visible: visible,
-                          child: Image.asset(
-                            (isSuccessful)
-                                ? 'assets/image/success-topup.png'
-                                : 'assets/image/failed-topup.png',
-                            width: 20,
-                            height: 20,
-                          ),
-                        ),
-                      ),
+                    Visibility(
+                        visible: successWithdraw,
+                        child: Container(
+                            padding: EdgeInsets.only(left: 20,top: 20),
+                            child: Row(children: [
+                              Image.asset('assets/image/greensmile.png',width: 20,height: 20,),
+                              SizedBox(width: 5,),
+                              Text('Withdraw Berhasil!',style: TextStyle(
+                                  fontFamily: 'Euclid Circular B',fontSize: 16,fontWeight: FontWeight.w500,color: Color(0xff52D47E)
+                              ),)
+                            ],))),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Visibility(
+                        visible: failedWithdraw,
+                        child: Container(
+                            padding: EdgeInsets.only(left: 20,top: 20),
+                            child: Row(children: [
+                              Image.asset('assets/image/failed.png',width: 20,height: 20,),
+                              SizedBox(width: 5,),
+                              Text('Withdraw Gagal!',style: TextStyle(
+                                  fontFamily: 'Euclid Circular B',fontSize: 16,fontWeight: FontWeight.w500,color: Color(0xffEF3434)
+                              ),)
+                            ],)))
+
                     ],
                   ),
                 ),
@@ -965,13 +983,16 @@ class _AdminWithdrawPageState extends State<AdminWithdrawPage> {
       }),
     );
     if (response.statusCode == 200) {
-      // If the server did return a 201 CREATED response,
-      // then parse the JSON.
+setState(() {
+  successWithdraw=true;
+  failedWithdraw=false;
+});
       var output = jsonDecode(response.body);
 
       print(response.body);
     } else {
-      isSuccessful = false;
+      successWithdraw=false;
+      failedWithdraw=true;
     }
   }
 }
