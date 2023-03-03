@@ -83,7 +83,7 @@ class _MerchantPageState extends State<MerchantPage> {
 
   Future<Seller> fetchUser(String idSeller) async {
     final response = await http.get(
-      Uri.parse('${url}seller/$idSeller'),
+      Uri.parse('$url/seller/$idSeller'),
     );
 
     if (response.statusCode == 200) {
@@ -95,7 +95,7 @@ class _MerchantPageState extends State<MerchantPage> {
 
   Future<List<Detail>> fetchPemasukan(String id) async {
     final response = await http.get(
-      Uri.parse('${url}seller/$id'),
+      Uri.parse('$url/seller/$id'),
     );
 
     if (response.statusCode == 200) {
@@ -108,7 +108,7 @@ class _MerchantPageState extends State<MerchantPage> {
 
   Future<List<Detail>> fetchPenarikan(String id) async {
     final response = await http.get(
-      Uri.parse('${url}seller/$id'),
+      Uri.parse('$url/seller/$id'),
     );
 
     if (response.statusCode == 200) {
@@ -153,13 +153,11 @@ class _MerchantPageState extends State<MerchantPage> {
     return jsonString;
   }
 
-  Future<void> fetchSeller() async {}
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: RefreshIndicator(
-        onRefresh: fetchSeller,
+        onRefresh: setValue,
         child: ListView(
           children: [
             SizedBox(

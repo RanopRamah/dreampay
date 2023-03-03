@@ -143,10 +143,6 @@ class _AdminTransactionPageState extends State<AdminTransactionPage> {
     id = prefs.getString('id_customer');
   }
 
-  Future<void> _refreshPage() async {
-    fetchTransactions();
-  }
-
   @override
   initState() {
     setValue();
@@ -160,7 +156,7 @@ class _AdminTransactionPageState extends State<AdminTransactionPage> {
       drawer: sideBar(context),
       key: _scaffoldKey,
       body: RefreshIndicator(
-        onRefresh: _refreshPage,
+        onRefresh: setValue,
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

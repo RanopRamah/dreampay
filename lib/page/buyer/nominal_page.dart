@@ -263,7 +263,7 @@ class _NominalPageState extends State<NominalPage> {
           color: Colors.white,
           width: 125,
           child: Padding(
-            padding: const EdgeInsets.all(24),
+            padding: const EdgeInsets.all(20),
             child: Center(
               child: Text(
                 nominal,
@@ -271,7 +271,7 @@ class _NominalPageState extends State<NominalPage> {
                   color: Colors.black,
                   fontFamily: 'SF Pro Display',
                   fontWeight: FontWeight.w600,
-                  fontSize: 36,
+                  fontSize: 30,
                 ),
               ),
             ),

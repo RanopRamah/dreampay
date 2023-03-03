@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:dreampay/page/admin/detail_account.dart';
 import 'package:dreampay/page/admin/topup.dart';
 import 'package:dreampay/page/admin/transaction.dart';
 import 'package:dreampay/page/admin/withdraw.dart';
@@ -122,11 +123,6 @@ class _MakeAccountPageState extends State<MakeAccountPage> {
   late Future<List<Users>> _listuser;
   Future<Uang>? _uang;
 
-  Future<void> _refreshPage() async {
-    fetchUsers();
-    fetchUang();
-  }
-
   @override
   initState() {
     setValue();
@@ -142,7 +138,7 @@ class _MakeAccountPageState extends State<MakeAccountPage> {
       drawer: sideBar(context),
       key: _scaffoldKey,
       body: RefreshIndicator(
-        onRefresh: _refreshPage,
+        onRefresh: setValue,
         child: ListView(
           children: [
             SizedBox(
@@ -948,7 +944,17 @@ class _MakeAccountPageState extends State<MakeAccountPage> {
                                     color: Color(0xffbebebe))),
                           ]),
                       TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.of(context).pushAndRemoveUntil(
+                              MaterialPageRoute(
+                                  builder: (ctx) => DetailAccount(
+                                      snapshot.data![i].id,
+                                      snapshot.data![i].nama,
+                                      snapshot.data![i].noHp,
+                                      snapshot.data![i].pin,
+                                      snapshot.data![i].tipe)),
+                              (route) => false);
+                        },
                         child: Container(
                           width: 101,
                           height: 36,

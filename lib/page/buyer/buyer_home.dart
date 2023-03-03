@@ -140,8 +140,8 @@ class BuyerHomePage extends StatefulWidget {
 }
 
 class _BuyerHomePageState extends State<BuyerHomePage> {
-  bool showPull = false;
-  bool showTopup = true;
+  bool showPull = true;
+  bool showTopup = false;
 
   List<dynamic> _filteredPengeluaran = [];
   List<dynamic> _filteredTopup = [];
@@ -181,7 +181,7 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: RefreshIndicator(
-      onRefresh: _refreshPage,
+      onRefresh: setValue,
       child: ListView(
         children: [
           SizedBox(
@@ -1047,9 +1047,5 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
         ],
       ),
     ));
-  }
-
-  Future<void> _refreshPage() async {
-    fetchSaldo(id.toString());
   }
 }
