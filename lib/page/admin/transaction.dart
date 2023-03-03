@@ -5,6 +5,7 @@ import 'package:dreampay/page/admin/topup.dart';
 import 'package:dreampay/page/admin/withdraw.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
@@ -253,185 +254,7 @@ class _AdminTransactionPageState extends State<AdminTransactionPage> {
                 const SizedBox(
                   height: 15,
                 ),
-                FutureBuilder(
-                  future: _admin,
-                  builder: (BuildContext context, snapshot) {
-                    if (snapshot.hasData){
-                      return Column(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
-                            width: double.infinity,
-                            height: 98,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: const Color(0xff292B5A)),
-                            child:  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        'Saldo Buyer',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontFamily: 'Euclid Circular B',
-                                      fontSize: 14,
-                                      color: Color(0xffbebebe)),
-                                ),
-                                SizedBox(
-                                  height: 5,
-                                ),
-                                Center(
-                                    child: SingleChildScrollView(
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: <Widget>[
-                                            Padding(
-                                              padding: EdgeInsets.only(bottom: 35),
-                                              child: Text(
-                                                'Rp',
-                                                style: TextStyle(
-                                                    fontFamily: 'SF Pro Display',
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.w500,
-                                                    color: Colors.white),
-                                              ),
-                                            ),
-                                            Text(
-                                              snapshot.data!.totalSaldo.toString(),
-                                              style: TextStyle(
-                                                  fontFamily: 'SF Pro Display',
-                                                  fontSize: 36,
-                                                  fontWeight: FontWeight.w700,
-                                                  color: Colors.white),
-                                            ),
-                                          ],
-                                        )))
-                              ],
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 15,
-                          ),
-                          Container(
-                            padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
-                            width: double.infinity,
-                            height: 98,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: const Color(0xff3A2C62)),
-                            child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        'Saldo Seller',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontFamily: 'Euclid Circular B',
-                                      fontSize: 14,
-                                      color: Color(0xffbebebe)),
-                                ),
-                                SizedBox(
-                                  height: 5,
-                                ),
-                                Center(
-                                    child:SingleChildScrollView(
-                                        child:Row(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children:  <Widget>[
-                                            Padding(
-                                              padding: EdgeInsets.only(bottom: 35),
-                                              child: Text(
-                                                'Rp',
-                                                style: TextStyle(
-                                                    fontFamily: 'SF Pro Display',
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.w500,
-                                                    color: Colors.white),
-                                              ),
-                                            ),
-                                            Text(
-                                              snapshot.data!.totalSeller.toString(),
-                                              style: TextStyle(
-                                                  fontFamily: 'SF Pro Display',
-                                                  fontSize: 36,
-                                                  fontWeight: FontWeight.w700,
-                                                  color: Colors.white),
-                                            ),
-                                          ],
-                                        )))
-                    ],
-                  ),
-                ),
-                const SizedBox(
-                  height: 15,
-                ),
-                Container(
-                  padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
-                  width: double.infinity,
-                  height: 98,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: const Color(0xff2E3346)),
-                  child:  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      const Text(
-                                  'Total Penarikan',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontFamily: 'Euclid Circular B',
-                                      fontSize: 14,
-                                      color: Color(0xffbebebe)),
-                                ),
-                                const SizedBox(
-                                  height: 5,
-                                ),
-                                Center(
-                                    child: SingleChildScrollView(
-                                        scrollDirection: Axis.horizontal,
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children:  <Widget>[
-                                            Padding(
-                                              padding: EdgeInsets.only(bottom: 35),
-                                              child: Text(
-                                                'Rp',
-                                                style: TextStyle(
-                                                    fontFamily: 'SF Pro Display',
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.w500,
-                                                    color: Colors.white),
-                                              ),
-                                            ),
-                                            Text(
-                                              snapshot.data!.totalWithdraw,
-                                              style: TextStyle(
-                                                  fontFamily: 'SF Pro Display',
-                                                  fontSize: 36,
-                                                  fontWeight: FontWeight.w700,
-                                                  color: Colors.white),
-                                            ),
-                                          ],
-                                        )))
-                              ],
-                            ),
-                          ),
-                        ],
-                      );
-                    } else if (snapshot.hasError) {
-                      return Text('${snapshot.error}');
-                    }
-
-                    return Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [ Center(
-                            child: LoadingAnimationWidget.staggeredDotsWave(
-                              color: Colors.black,
-                              size: 40,)
-                        )
-                        ]
-                    );
-                  },),
+                // Tes(),
               ],
             ),
           ),
@@ -668,4 +491,193 @@ class _AdminTransactionPageState extends State<AdminTransactionPage> {
                       )
                     ]))));
   }
+
+  // FutureBuilder<Object?> Tes() {
+  //   return FutureBuilder(
+  //               future: _admin,
+  //               builder: (BuildContext context, snapshot) {
+  //                 if (snapshot.hasData) {
+  //                   return Column(
+  //                     children: [
+  //                       Container(
+  //                         padding: const EdgeInsets.only(
+  //                             top: 10, left: 10, right: 10),
+  //                         width: double.infinity,
+  //                         height: 98,
+  //                         decoration: BoxDecoration(
+  //                             borderRadius: BorderRadius.circular(10),
+  //                             color: const Color(0xff292B5A)),
+  //                         child: Column(
+  //                           crossAxisAlignment: CrossAxisAlignment.start,
+  //                           children: <Widget>[
+  //                             Text(
+  //                               'Saldo Buyer',
+  //                               style: TextStyle(
+  //                                   fontWeight: FontWeight.w500,
+  //                                   fontFamily: 'Euclid Circular B',
+  //                                   fontSize: 14,
+  //                                   color: Color(0xffbebebe)),
+  //                             ),
+  //                             SizedBox(
+  //                               height: 5,
+  //                             ),
+  //                             Center(
+  //                                 child: SingleChildScrollView(
+  //                                     child: Row(
+  //                               mainAxisAlignment: MainAxisAlignment.center,
+  //                               children: <Widget>[
+  //                                 Padding(
+  //                                   padding: EdgeInsets.only(bottom: 35),
+  //                                   child: Text(
+  //                                     'Rp',
+  //                                     style: TextStyle(
+  //                                         fontFamily: 'SF Pro Display',
+  //                                         fontSize: 16,
+  //                                         fontWeight: FontWeight.w500,
+  //                                         color: Colors.white),
+  //                                   ),
+  //                                 ),
+  //                                 Text(
+  //                                   snapshot.data!.totalSaldo.toString(),
+  //                                   style: TextStyle(
+  //                                       fontFamily: 'SF Pro Display',
+  //                                       fontSize: 36,
+  //                                       fontWeight: FontWeight.w700,
+  //                                       color: Colors.white),
+  //                                 ),
+  //                               ],
+  //                             )))
+  //                           ],
+  //                         ),
+  //                       ),
+  //                       const SizedBox(
+  //                         height: 15,
+  //                       ),
+  //                       Container(
+  //                         padding: const EdgeInsets.only(
+  //                             top: 10, left: 10, right: 10),
+  //                         width: double.infinity,
+  //                         height: 98,
+  //                         decoration: BoxDecoration(
+  //                             borderRadius: BorderRadius.circular(10),
+  //                             color: const Color(0xff3A2C62)),
+  //                         child: Column(
+  //                           crossAxisAlignment: CrossAxisAlignment.start,
+  //                           children: <Widget>[
+  //                             Text(
+  //                               'Saldo Seller',
+  //                               style: TextStyle(
+  //                                   fontWeight: FontWeight.w500,
+  //                                   fontFamily: 'Euclid Circular B',
+  //                                   fontSize: 14,
+  //                                   color: Color(0xffbebebe)),
+  //                             ),
+  //                             SizedBox(
+  //                               height: 5,
+  //                             ),
+  //                             Center(
+  //                                 child: SingleChildScrollView(
+  //                                     child: Row(
+  //                               mainAxisAlignment: MainAxisAlignment.center,
+  //                               children: <Widget>[
+  //                                 Padding(
+  //                                   padding: EdgeInsets.only(bottom: 35),
+  //                                   child: Text(
+  //                                     'Rp',
+  //                                     style: TextStyle(
+  //                                         fontFamily: 'SF Pro Display',
+  //                                         fontSize: 16,
+  //                                         fontWeight: FontWeight.w500,
+  //                                         color: Colors.white),
+  //                                   ),
+  //                                 ),
+  //                                 Text(
+  //                                   snapshot.data!.totalSeller.toString(),
+  //                                   style: TextStyle(
+  //                                       fontFamily: 'SF Pro Display',
+  //                                       fontSize: 36,
+  //                                       fontWeight: FontWeight.w700,
+  //                                       color: Colors.white),
+  //                                 ),
+  //                               ],
+  //                             )))
+  //                           ],
+  //                         ),
+  //                       ),
+  //                       const SizedBox(
+  //                         height: 15,
+  //                       ),
+  //                       Container(
+  //                         padding: const EdgeInsets.only(
+  //                             top: 10, left: 10, right: 10),
+  //                         width: double.infinity,
+  //                         height: 98,
+  //                         decoration: BoxDecoration(
+  //                             borderRadius: BorderRadius.circular(10),
+  //                             color: const Color(0xff2E3346)),
+  //                         child: Column(
+  //                           crossAxisAlignment: CrossAxisAlignment.start,
+  //                           children: <Widget>[
+  //                             const Text(
+  //                               'Total Penarikan',
+  //                               style: TextStyle(
+  //                                   fontWeight: FontWeight.w500,
+  //                                   fontFamily: 'Euclid Circular B',
+  //                                   fontSize: 14,
+  //                                   color: Color(0xffbebebe)),
+  //                             ),
+  //                             const SizedBox(
+  //                               height: 5,
+  //                             ),
+  //                             Center(
+  //                                 child: SingleChildScrollView(
+  //                                     scrollDirection: Axis.horizontal,
+  //                                     child: Row(
+  //                                       mainAxisAlignment:
+  //                                           MainAxisAlignment.center,
+  //                                       children: <Widget>[
+  //                                         Padding(
+  //                                           padding:
+  //                                               EdgeInsets.only(bottom: 35),
+  //                                           child: Text(
+  //                                             'Rp',
+  //                                             style: TextStyle(
+  //                                                 fontFamily:
+  //                                                     'SF Pro Display',
+  //                                                 fontSize: 16,
+  //                                                 fontWeight: FontWeight.w500,
+  //                                                 color: Colors.white),
+  //                                           ),
+  //                                         ),
+  //                                         Text(
+  //                                           snapshot.data!.totalWithdraw,
+  //                                           style: TextStyle(
+  //                                               fontFamily: 'SF Pro Display',
+  //                                               fontSize: 36,
+  //                                               fontWeight: FontWeight.w700,
+  //                                               color: Colors.white),
+  //                                         ),
+  //                                       ],
+  //                                     )))
+  //                           ],
+  //                         ),
+  //                       ),
+  //                     ],
+  //                   );
+  //                 } else if (snapshot.hasError) {
+  //                   return Text('${snapshot.error}');
+  //                 }
+
+  //                 return Column(
+  //                     mainAxisAlignment: MainAxisAlignment.center,
+  //                     children: [
+  //                       Center(
+  //                           child: LoadingAnimationWidget.staggeredDotsWave(
+  //                         color: Colors.black,
+  //                         size: 40,
+  //                       ))
+  //                     ]);
+  //               },
+  //             );
+  // }
 }

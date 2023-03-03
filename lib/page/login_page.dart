@@ -129,8 +129,8 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 Visibility(
                   visible: isSubmit,
-                  child:  Padding(
-                    padding: EdgeInsets.only(top: 20),
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 20),
                     child: LoadingAnimationWidget.staggeredDotsWave(
                       color: Colors.black,
                       size: 40,

@@ -1,12 +1,11 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 
 class ThousandsSeparatorInputFormatter extends TextInputFormatter {
   static const separator = '.'; // Change this to '.' for other locales
 
   @override
-  TextEditingValue formatEditUpdate(TextEditingValue oldValue,
-      TextEditingValue newValue) {
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
     // Short-circuit if the new value is empty
     if (newValue.text.isEmpty) {
       return newValue.copyWith(text: '');
@@ -45,7 +44,5 @@ class ThousandsSeparatorInputFormatter extends TextInputFormatter {
 
     // If the new value and old value are the same, just return as-is
     return newValue;
-
   }
-
 }

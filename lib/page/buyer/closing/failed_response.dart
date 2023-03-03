@@ -54,8 +54,8 @@ class _FailedResponsePageState extends State<FailedResponsePage> {
                   ),
                 ),
                 onPressed: () {
-                  Navigator.of(context)
-                      .push(MaterialPageRoute(builder: (c) => BuyerHomePage()));
+                  Navigator.of(context).push(
+                      MaterialPageRoute(builder: (c) => const BuyerHomePage()));
                 },
                 child: const Text(
                   'Beranda',
