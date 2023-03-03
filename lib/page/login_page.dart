@@ -89,14 +89,6 @@ class _LoginPageState extends State<LoginPage> {
                 Visibility(
                   visible: isError,
                   child: Image.asset('assets/image/failed_login.png'),
-                  // child: const Text(
-                  //   'No HP tidak ditemukan',
-                  //   style: TextStyle(
-                  //       fontSize: 18,
-                  //       fontFamily: 'Euclid Circular B',
-                  //       color: Colors.redAccent,
-                  //       fontWeight: FontWeight.w600),
-                  // ),
                 ),
                 const SizedBox(height: 20),
                 SizedBox(

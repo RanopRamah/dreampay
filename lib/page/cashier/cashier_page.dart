@@ -12,9 +12,9 @@ import '../login_page.dart';
 
 var url = dotenv.env['API_URL'];
 
-Future<List> fetchUsers() async {
+Future<List> fetchUsers(idSeller) async {
   final response = await http.get(
-    Uri.parse('$url/cashier/3'),
+    Uri.parse('$url/cashier/$idSeller'),
   );
   if (response.statusCode == 200) {
     return jsonDecode(response.body)['list_buyer'];
@@ -23,9 +23,31 @@ Future<List> fetchUsers() async {
   }
 }
 
-Future<List<TopUp>> fetchTopUp() async {
+class TotalSaldo {
+  final String totalSaldo;
+
+  TotalSaldo({required this.totalSaldo});
+
+  factory TotalSaldo.fromJson(Map<String, dynamic> json) {
+    return TotalSaldo(
+      totalSaldo: json['total_masuk'],
+    );
+  }
+}
+
+Future<TotalSaldo> fetchTotalSaldo(idSeller) async {
+  final response = await http.get(Uri.parse('$url/cashier/total/$idSeller'));
+  if (response.statusCode == 200) {
+    final jsonResponse = json.decode(response.body);
+    return TotalSaldo.fromJson(jsonResponse);
+  } else {
+    throw Exception(response.body);
+  }
+}
+
+Future<List<TopUp>> fetchTopUp(idSeller) async {
   final response = await http.get(
-    Uri.parse('$url/cashier/3'),
+    Uri.parse('$url/cashier/$idSeller'),
   );
 
   if (response.statusCode == 200) {
@@ -66,13 +88,13 @@ class TopUp {
   final dynamic id;
   final dynamic penerima;
   final dynamic nominal;
-  final dynamic created_at;
+  final dynamic createdAt;
 
   const TopUp({
     required this.id,
     required this.penerima,
     required this.nominal,
-    required this.created_at,
+    required this.createdAt,
   });
 
   factory TopUp.fromJson(Map<dynamic, dynamic> json) {
@@ -80,7 +102,7 @@ class TopUp {
       id: json['id'],
       penerima: json['penerima'],
       nominal: json['nominal'],
-      created_at: json['created_at'],
+      createdAt: json['created_at'],
     );
   }
 }
@@ -100,11 +122,12 @@ class _CashierPageState extends State<CashierPage> {
 
   bool showPull = false;
   bool showTopup = true;
-  bool visible = false;
   bool isSuccessful = false;
+  bool isSubmit = false;
 
   final PanelController _controller = PanelController();
-  late Future<List<TopUp>> topup;
+  late Future<List<TopUp>> listTopup;
+  late TotalSaldo jumlahSaldo;
 
   String? phone;
   String? name;
@@ -116,14 +139,18 @@ class _CashierPageState extends State<CashierPage> {
     phone = prefs.getString('phone_customer');
     name = prefs.getString('name_customer');
     id = prefs.getString('id_customer');
+
+    setState(() {
+      dvs();
+      setSaldo();
+      listTopup = fetchTopUp(id);
+    });
   }
 
   @override
   void initState() {
     setValue();
     super.initState();
-    dvs();
-    topup = fetchTopUp();
   }
 
   @override
@@ -137,9 +164,16 @@ class _CashierPageState extends State<CashierPage> {
   }
 
   void dvs() async {
-    List<dynamic> data = await fetchUsers();
+    List<dynamic> data = await fetchUsers(id);
     setState(() {
       user = data.map((e) => Users.fromMap(e)).toList();
+    });
+  }
+
+  void setSaldo() async {
+    TotalSaldo data = await fetchTotalSaldo(id);
+    setState(() {
+      jumlahSaldo = data;
     });
   }
 
@@ -163,325 +197,337 @@ class _CashierPageState extends State<CashierPage> {
       body: RefreshIndicator(
         onRefresh: setValue,
         child: SlidingUpPanel(
-          controller: _controller,
           maxHeight: 590,
           minHeight: 150,
           padding: const EdgeInsets.only(left: 30, right: 30),
           borderRadius: const BorderRadius.only(
               topRight: Radius.circular(20), topLeft: Radius.circular(20)),
-          body: Container(
-            decoration: const BoxDecoration(
-              color: Color(0xFFFDFDFD),
-            ),
-            padding: const EdgeInsets.only(top: 60),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(right: 29),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Container(
-                              width: 52,
-                              height: 54,
-                              decoration: BoxDecoration(
-                                color: const Color(0xFFFFFFFF),
-                                borderRadius:
-                                    const BorderRadius.all(Radius.circular(13)),
-                                border: Border.all(
-                                    color: const Color(0xFFD2D2D2), width: 1),
-                              ),
-                              child: TextButton(
-                                child: Image.asset('assets/image/logout.png',
-                                    width: 27.03, height: 27.05),
-                                onPressed: () {
-                                  setState(() {
-                                    prefs.remove('id_customer');
-                                    prefs.remove('phone_customer');
-                                    prefs.remove('name_customer');
-                                    prefs.remove('pin_customer');
-                                    prefs.remove('type_customer');
-                                    prefs.remove('is_login');
-                                    Navigator.of(context).pushAndRemoveUntil(
-                                        MaterialPageRoute(
-                                            builder: (ctx) =>
-                                                const LoginPage()),
-                                        (route) => false);
-                                  });
-                                },
-                              )),
-                          const Text(
-                            'Keluar',
-                            style: TextStyle(
-                              color: Color(0xFFADADAD),
-                              fontFamily: 'Euclid Circular B',
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 55),
-                Center(
-                  child: Container(
-                    width: 345,
-                    height: 485,
-                    decoration: const BoxDecoration(
-                        color: Color(0xFFFFFFFF),
-                        borderRadius: BorderRadius.all(Radius.circular(24)),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Color.fromRGBO(0, 0, 0, 0.25),
-                            blurRadius: 6.0,
-                            spreadRadius: 2.0,
-                            offset: Offset(0.0, 0.0),
-                          ),
-                        ]),
-                    child: Column(
+          body: ListView(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(right: 29),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 30),
+                      child: Text(
+                        name.toString(),
+                        style: const TextStyle(
+                            fontSize: 32,
+                            fontWeight: FontWeight.w600,
+                            fontFamily: 'Euclid Circular B',
+                            color: Color(0xff222222)),
+                      ),
+                    ),
+                    Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Container(
-                          width: 322,
-                          height: 62,
-                          margin: const EdgeInsets.only(top: 26.88),
-                          child: SearchField<dynamic>(
-                            searchInputDecoration: InputDecoration(
-                              enabledBorder: const UnderlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Color(0xFFF1F1F1)),
-                              ),
-                              focusedBorder: const UnderlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Color(0xFFF1F1F1)),
-                              ),
-                              border: const UnderlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Color(0xFFF1F1F1)),
-                              ),
-                              hintText: 'Cari Pengguna',
-                              hintStyle: const TextStyle(
-                                color: Color(0xFFBDBDBD),
-                                fontFamily: 'Euclid Circular B',
-                                fontWeight: FontWeight.w400,
-                                fontSize: 18.8304,
-                              ),
-                              prefixIcon: Container(
-                                padding: const EdgeInsets.all(0.01),
-                                margin: const EdgeInsets.only(bottom: 15.0),
-                                child:
-                                    Image.asset('assets/image/search-all.png'),
-                              ),
-                            ),
-                            suggestions: user
-                                .map(
-                                  (e) => SearchFieldListItem(
-                                    e.nama,
-                                    item: e,
-                                    // Use child to show Custom Widgets in the suggestions
-                                    // defaults to Text widget
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(
-                                          top: 10, bottom: 10, left: 20),
-                                      child: Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: <Widget>[
-                                                Text(
-                                                  e.nama,
-                                                  style: const TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w600,
-                                                      color: Color(0xff222222),
-                                                      fontSize: 20,
-                                                      fontFamily:
-                                                          'Euclid Circular B'),
-                                                ),
-                                                Text(
-                                                  e.no_hp,
-                                                  style: const TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      color: Color(0xffbebebe),
-                                                      fontSize: 15,
-                                                      fontFamily:
-                                                          'Euclid Circular B'),
-                                                ),
-                                              ])
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                )
-                                .toList(),
-                            suggestionState: Suggestion.hidden,
-                            controller: searchController,
-                            inputType: TextInputType.text,
-                            itemHeight: 80,
-                            validator: (v) {
-                              if (v!.isEmpty || !containsUser(v)) {
-                                return 'Please enter valid name';
-                              } else {
-                                return null;
-                              }
-                            },
-                            onSuggestionTap: (SearchFieldListItem v) {
-                              setState(() {
-                                _selectedUsers = v.item!;
-                              });
-                            },
-                          ),
-                        ),
-                        Container(
-                          width: 325,
-                          height: 81.51,
-                          margin: const EdgeInsets.only(top: 24),
-                          padding:
-                              const EdgeInsets.only(top: 18.58, left: 15.2),
-                          decoration: const BoxDecoration(
-                              color: Color(0xFF7C81DF),
+                            width: 52,
+                            height: 54,
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFFFFFFF),
                               borderRadius:
-                                  BorderRadius.all(Radius.circular(18.6053))),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                _selectedUsers.nama ?? 'Nama',
-                                style: const TextStyle(
-                                  color: Color(0xFFFFFFFF),
-                                  fontSize: 17.7193,
-                                  fontFamily: 'Euclid Circular B',
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              const SizedBox(height: 3.82),
-                              Text(
-                                'DPID: ${_selectedUsers.no_hp ?? '-'}',
-                                style: const TextStyle(
-                                  color: Color(0xFFC5C7F1),
-                                  fontSize: 13.0526,
-                                  fontFamily: 'SF Pro Display',
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          width: 312,
-                          height: 67.51,
-                          margin: const EdgeInsets.only(top: 38.61),
-                          child: TextField(
-                            controller: _topupcontrol,
-                            style: const TextStyle(
-                                fontSize: 23, color: Colors.black),
-                            decoration: const InputDecoration(
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  width: 0.912281,
-                                  color: Color(0xFFC8BDBD),
-                                ),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(6.38596)),
-                              ),
-                              disabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  width: 0.912281,
-                                  color: Color(0xFFC8BDBD),
-                                ),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(6.38596)),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  width: 0.912281,
-                                  color: Color(0xFFC8BDBD),
-                                ),
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(6.38596)),
-                              ),
-                              labelText: 'Nominal Top Up',
-                              hintText: 'Rp0',
-                              hintStyle: TextStyle(
-                                color: Color(0xFFCAC5C5),
-                                fontWeight: FontWeight.w600,
-                                fontFamily: 'SF Pro Display',
-                                fontSize: 21.8947,
-                              ),
-                              labelStyle: TextStyle(
-                                color: Color(0xFF8D8989),
-                                fontWeight: FontWeight.w400,
-                                fontFamily: 'Euclid Circular B',
-                                fontSize: 17,
-                              ),
-                              floatingLabelBehavior:
-                                  FloatingLabelBehavior.always,
+                                  const BorderRadius.all(Radius.circular(13)),
+                              border: Border.all(
+                                  color: const Color(0xFFD2D2D2), width: 1),
                             ),
-                            keyboardType: TextInputType.number,
-                          ),
-                        ),
-                        Container(
-                          width: 310,
-                          height: 60,
-                          margin: const EdgeInsets.only(top: 48),
-                          child: ElevatedButton(
-                            onPressed: () {
-                              setState(() {
-                                createTopup();
-                              });
-                            },
-                            style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all<Color>(
-                                  const Color(0xFF5258D4)),
-                              shape: MaterialStateProperty.all<
-                                  RoundedRectangleBorder>(
-                                const RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.all(
-                                        Radius.circular(6.59649))),
-                              ),
-                            ),
-                            child: const Text(
-                              'Top-Up',
-                              style: TextStyle(
-                                color: Color(0xFFFFFFFF),
-                                fontFamily: 'Euclid Circular B',
-                                fontSize: 19.7895,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 15),
-                          child: Visibility(
-                            visible: visible,
-                            child: Image.asset(
-                              (isSuccessful)
-                                  ? 'assets/image/success-topup.png'
-                                  : 'assets/image/failed-topup.png',
-                              width: 153,
-                              height: 60,
-                            ),
+                            child: TextButton(
+                              child: Image.asset('assets/image/logout.png',
+                                  width: 27.03, height: 27.05),
+                              onPressed: () {
+                                setState(() {
+                                  prefs.remove('id_customer');
+                                  prefs.remove('phone_customer');
+                                  prefs.remove('name_customer');
+                                  prefs.remove('pin_customer');
+                                  prefs.remove('type_customer');
+                                  prefs.remove('is_login');
+                                  Navigator.of(context).pushAndRemoveUntil(
+                                      MaterialPageRoute(
+                                          builder: (ctx) => const LoginPage()),
+                                      (route) => false);
+                                });
+                              },
+                            )),
+                        const Text(
+                          'Keluar',
+                          style: TextStyle(
+                            color: Color(0xFFADADAD),
+                            fontFamily: 'Euclid Circular B',
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
                       ],
                     ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 55),
+              Center(
+                child: Container(
+                  width: 345,
+                  height: 485,
+                  decoration: const BoxDecoration(
+                      color: Color(0xFFFFFFFF),
+                      borderRadius: BorderRadius.all(Radius.circular(24)),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Color.fromRGBO(0, 0, 0, 0.25),
+                          blurRadius: 6.0,
+                          spreadRadius: 2.0,
+                          offset: Offset(0.0, 0.0),
+                        ),
+                      ]),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: 322,
+                        height: 62,
+                        margin: const EdgeInsets.only(top: 26.88),
+                        child: SearchField<dynamic>(
+                          searchInputDecoration: InputDecoration(
+                            enabledBorder: const UnderlineInputBorder(
+                              borderSide: BorderSide(color: Color(0xFFF1F1F1)),
+                            ),
+                            focusedBorder: const UnderlineInputBorder(
+                              borderSide: BorderSide(color: Color(0xFFF1F1F1)),
+                            ),
+                            border: const UnderlineInputBorder(
+                              borderSide: BorderSide(color: Color(0xFFF1F1F1)),
+                            ),
+                            hintText: 'Cari Pengguna',
+                            hintStyle: const TextStyle(
+                              color: Color(0xFFBDBDBD),
+                              fontFamily: 'Euclid Circular B',
+                              fontWeight: FontWeight.w400,
+                              fontSize: 18.8304,
+                            ),
+                            prefixIcon: Container(
+                              padding: const EdgeInsets.all(0.01),
+                              margin: const EdgeInsets.only(bottom: 15.0),
+                              child: Image.asset('assets/image/search-all.png'),
+                            ),
+                          ),
+                          suggestions: user
+                              .map(
+                                (e) => SearchFieldListItem(
+                                  e.nama,
+                                  item: e,
+                                  // Use child to show Custom Widgets in the suggestions
+                                  // defaults to Text widget
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 10, bottom: 10, left: 20),
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: <Widget>[
+                                              Text(
+                                                e.nama,
+                                                style: const TextStyle(
+                                                    fontWeight: FontWeight.w600,
+                                                    color: Color(0xff222222),
+                                                    fontSize: 20,
+                                                    fontFamily:
+                                                        'Euclid Circular B'),
+                                              ),
+                                              Text(
+                                                e.no_hp,
+                                                style: const TextStyle(
+                                                    fontWeight: FontWeight.w400,
+                                                    color: Color(0xffbebebe),
+                                                    fontSize: 15,
+                                                    fontFamily:
+                                                        'Euclid Circular B'),
+                                              ),
+                                            ])
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              )
+                              .toList(),
+                          suggestionState: Suggestion.hidden,
+                          controller: searchController,
+                          inputType: TextInputType.text,
+                          itemHeight: 80,
+                          validator: (v) {
+                            if (v!.isEmpty || !containsUser(v)) {
+                              return 'Please enter valid name';
+                            } else {
+                              return null;
+                            }
+                          },
+                          onSuggestionTap: (SearchFieldListItem v) {
+                            setState(() {
+                              _selectedUsers = v.item!;
+                            });
+                          },
+                        ),
+                      ),
+                      Container(
+                        width: 325,
+                        height: 81.51,
+                        margin: const EdgeInsets.only(top: 24),
+                        padding: const EdgeInsets.only(top: 18.58, left: 15.2),
+                        decoration: const BoxDecoration(
+                            color: Color(0xFF7C81DF),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(18.6053))),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              _selectedUsers.nama ?? 'Nama',
+                              style: const TextStyle(
+                                color: Color(0xFFFFFFFF),
+                                fontSize: 17.7193,
+                                fontFamily: 'Euclid Circular B',
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            const SizedBox(height: 3.82),
+                            Text(
+                              'DPID: ${_selectedUsers.no_hp ?? '-'}',
+                              style: const TextStyle(
+                                color: Color(0xFFC5C7F1),
+                                fontSize: 13.0526,
+                                fontFamily: 'SF Pro Display',
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        width: 312,
+                        height: 67.51,
+                        margin: const EdgeInsets.only(top: 38.61),
+                        child: TextField(
+                          controller: _topupcontrol,
+                          style: const TextStyle(
+                              fontSize: 23, color: Colors.black),
+                          decoration: const InputDecoration(
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                width: 0.912281,
+                                color: Color(0xFFC8BDBD),
+                              ),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(6.38596)),
+                            ),
+                            disabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                width: 0.912281,
+                                color: Color(0xFFC8BDBD),
+                              ),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(6.38596)),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                width: 0.912281,
+                                color: Color(0xFFC8BDBD),
+                              ),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(6.38596)),
+                            ),
+                            labelText: 'Nominal Top Up',
+                            hintText: 'Rp0',
+                            hintStyle: TextStyle(
+                              color: Color(0xFFCAC5C5),
+                              fontWeight: FontWeight.w600,
+                              fontFamily: 'SF Pro Display',
+                              fontSize: 21.8947,
+                            ),
+                            labelStyle: TextStyle(
+                              color: Color(0xFF8D8989),
+                              fontWeight: FontWeight.w400,
+                              fontFamily: 'Euclid Circular B',
+                              fontSize: 17,
+                            ),
+                            floatingLabelBehavior: FloatingLabelBehavior.always,
+                          ),
+                          keyboardType: TextInputType.number,
+                        ),
+                      ),
+                      Container(
+                        width: 310,
+                        height: 60,
+                        margin: const EdgeInsets.only(top: 48),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              createTopup();
+                            });
+                          },
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                                const Color(0xFF5258D4)),
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(
+                              const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.all(
+                                      Radius.circular(6.59649))),
+                            ),
+                          ),
+                          child: const Text(
+                            'Top-Up',
+                            style: TextStyle(
+                              color: Color(0xFFFFFFFF),
+                              fontFamily: 'Euclid Circular B',
+                              fontSize: 19.7895,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Visibility(
+                        visible: isSuccessful,
+                        child: Image.asset(
+                          'assets/image/success-topup.png',
+                          width: 153,
+                          height: 60,
+                        ),
+                      ),
+                      Visibility(
+                        visible: isSubmit,
+                        child: Visibility(
+                          visible: !isSuccessful,
+                          child: Image.asset(
+                            'assets/image/failed-topup.png',
+                            width: 153,
+                            height: 60,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 30),
+                        child: Text(
+                          'Uang Diterima: ${jumlahSaldo.totalSaldo}',
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontFamily: 'Euclid Circular B',
+                            fontSize: 17,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
           panelBuilder: (controller) {
             return Column(
@@ -557,7 +603,7 @@ class _CashierPageState extends State<CashierPage> {
       height: 450,
       margin: const EdgeInsets.only(top: 1),
       child: FutureBuilder(
-        future: topup,
+        future: listTopup,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return ListView.builder(
@@ -585,7 +631,7 @@ class _CashierPageState extends State<CashierPage> {
                           ),
                         ),
                         Text(
-                          snapshot.data![i].created_at,
+                          snapshot.data![i].createdAt,
                           style: const TextStyle(
                             color: Color(0xFFBEBEBE),
                             fontFamily: 'Euclid Circular B',
@@ -639,12 +685,28 @@ class _CashierPageState extends State<CashierPage> {
         'nominal': _topupcontrol.text.toString(),
       }),
     );
+
+    setState(() {
+      isSubmit = true;
+    });
+
     if (response.statusCode == 200) {
-      Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (ctx) => const CashierPage()),
-          (route) => false);
+      setState(() {
+        isSuccessful = true;
+        _topupcontrol.clear();
+      });
+
+      Timer(const Duration(seconds: 1), () {
+        setState(() {
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (ctx) => const CashierPage()),
+              (route) => false);
+        });
+      });
     } else {
-      throw Exception(response.body);
+      setState(() {
+        isSuccessful = false;
+      });
     }
   }
 }

@@ -489,30 +489,31 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
                           ),
                         ),
                         Visibility(
-                            visible: successTopup,
-                            child: Container(
-                                padding:
-                                    const EdgeInsets.only(left: 20, top: 20),
-                                child: Row(
-                                  children: [
-                                    Image.asset(
-                                      'assets/image/greensmile.png',
-                                      width: 20,
-                                      height: 20,
-                                    ),
-                                    const SizedBox(
-                                      width: 5,
-                                    ),
-                                    const Text(
-                                      'Top-up Berhasil!',
-                                      style: TextStyle(
-                                          fontFamily: 'Euclid Circular B',
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w500,
-                                          color: Color(0xff52D47E)),
-                                    )
-                                  ],
-                                ))),
+                          visible: successTopup,
+                          child: Container(
+                            padding: const EdgeInsets.only(left: 20, top: 20),
+                            child: Row(
+                              children: [
+                                Image.asset(
+                                  'assets/image/greensmile.png',
+                                  width: 20,
+                                  height: 20,
+                                ),
+                                const SizedBox(
+                                  width: 5,
+                                ),
+                                const Text(
+                                  'Top-up Berhasil!',
+                                  style: TextStyle(
+                                      fontFamily: 'Euclid Circular B',
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                      color: Color(0xff52D47E)),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
                         const SizedBox(
                           height: 10,
                         ),
