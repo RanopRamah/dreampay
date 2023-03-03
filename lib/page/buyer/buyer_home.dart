@@ -819,8 +819,8 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                                                                           child:
                                                                               Text(
                                                                             _filteredPengeluaran.isNotEmpty
-                                                                                ? '- ${_filteredPengeluaran[i].nominal}'
-                                                                                : '- ${snapshot.data![i].nominal}',
+                                                                                ? '-Rp ${_filteredPengeluaran[i].nominal}'
+                                                                                : '-Rp ${snapshot.data![i].nominal}',
                                                                             // '-Rp ${snapshot.data![i].nominal}',
                                                                             style: const TextStyle(
                                                                                 fontWeight: FontWeight.w400,
@@ -958,8 +958,8 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                                                                           child:
                                                                               Text(
                                                                             _filteredTopup.isNotEmpty
-                                                                                ? '+ ${_filteredTopup[i].nominal}'
-                                                                                : '+ ${snapshot.data![i].nominal}',
+                                                                                ? '+Rp ${_filteredTopup[i].nominal}'
+                                                                                : '+RP ${snapshot.data![i].nominal}',
                                                                             style: const TextStyle(
                                                                                 fontWeight: FontWeight.w400,
                                                                                 fontFamily: 'Euclid Circular B',

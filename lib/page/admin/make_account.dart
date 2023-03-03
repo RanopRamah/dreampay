@@ -139,81 +139,80 @@ class _MakeAccountPageState extends State<MakeAccountPage> {
       key: _scaffoldKey,
       body: RefreshIndicator(
         onRefresh: setValue,
-        child: ListView(
-          children: [
-            SizedBox(
-              height: MediaQuery.of(context).size.height,
-              child: SlidingUpPanel(
-                maxHeight: 590,
-                minHeight: 120,
-                borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(25),
-                    topRight: Radius.circular(25)),
-                body: Column(
-                  children: [topBar(context), form()],
-                ),
-                panelBuilder: (ScrollController sc) {
-                  return Column(
-                    children: <Widget>[
-                      GestureDetector(
-                        child: Center(
-                          child: Container(
-                            margin: const EdgeInsets.only(top: 10),
-                            height: 5,
-                            width: 90,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15),
-                                color: Colors.grey.shade300),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      const Text(
-                        'Akun Terdaftar',
-                        style: TextStyle(
-                            fontSize: 24,
-                            fontFamily: 'Euclid Circular B',
-                            fontWeight: FontWeight.w600,
-                            color: Color(0xff222222)),
-                      ),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      Container(
-                        padding: const EdgeInsets.only(right: 20, left: 20),
-                        child: TextField(
-                          style:
-                              const TextStyle(fontFamily: 'Euclid Circular B'),
-                          onChanged: (value) async {
-                            final data = await fetchUsers();
-                            setState(() {
-                              _filteredAkun = data
-                                  .where((item) => item.nama
-                                      .toString()
-                                      .toLowerCase()
-                                      .contains(value.toLowerCase()))
-                                  .toList();
-                            });
-                          },
-                          decoration: const InputDecoration(
-                              labelText: 'Cari Akun',
-                              labelStyle: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w400,
-                                  fontFamily: 'Euclid Circular B',
-                                  color: Color(0xffbdbdbd)),
-                              prefixIcon: Icon(Icons.search)),
-                        ),
-                      ),
-                      _scrollingList(sc)
-                    ],
-                  );
-                },
+        child: SlidingUpPanel(
+          maxHeight: 590,
+          minHeight: 120,
+          borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(25), topRight: Radius.circular(25)),
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 20),
+              child: Column(
+                children: [
+                  topBar(context),
+                  form(),
+                ],
               ),
             ),
-          ],
+          ),
+          panelBuilder: (ScrollController sc) {
+            return Column(
+              children: <Widget>[
+                GestureDetector(
+                  child: Center(
+                    child: Container(
+                      margin: const EdgeInsets.only(top: 10),
+                      height: 5,
+                      width: 90,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                          color: Colors.grey.shade300),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                const Text(
+                  'Akun Terdaftar',
+                  style: TextStyle(
+                      fontSize: 24,
+                      fontFamily: 'Euclid Circular B',
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xff222222)),
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                Container(
+                  padding: const EdgeInsets.only(right: 20, left: 20),
+                  child: TextField(
+                    style: const TextStyle(fontFamily: 'Euclid Circular B'),
+                    onChanged: (value) async {
+                      final data = await fetchUsers();
+                      setState(() {
+                        _filteredAkun = data
+                            .where((item) => item.nama
+                                .toString()
+                                .toLowerCase()
+                                .contains(value.toLowerCase()))
+                            .toList();
+                      });
+                    },
+                    decoration: const InputDecoration(
+                        labelText: 'Cari Akun',
+                        labelStyle: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w400,
+                            fontFamily: 'Euclid Circular B',
+                            color: Color(0xffbdbdbd)),
+                        prefixIcon: Icon(Icons.search)),
+                  ),
+                ),
+                _scrollingList(sc)
+              ],
+            );
+          },
         ),
       ),
     );
@@ -221,7 +220,7 @@ class _MakeAccountPageState extends State<MakeAccountPage> {
 
   Padding topBar(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 30,right: 30,bottom: 10),
+      padding: const EdgeInsets.only(left: 30, right: 30, bottom: 10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -281,7 +280,7 @@ class _MakeAccountPageState extends State<MakeAccountPage> {
   Container form() {
     return Container(
       width: 345,
-      height: 600,
+      height: MediaQuery.of(context).size.height,
       padding: const EdgeInsets.only(top: 30, left: 15, right: 15),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -372,7 +371,7 @@ class _MakeAccountPageState extends State<MakeAccountPage> {
           const SizedBox(
             height: 25,
           ),
-           Row(
+          Row(
             children: const <Widget>[
               Text(
                 'Tipe',
@@ -470,6 +469,7 @@ class _MakeAccountPageState extends State<MakeAccountPage> {
               ),
             ),
           ]),
+          const SizedBox(height: 20),
           TextButton(
               onPressed: () {
                 setState(() {

@@ -238,383 +238,391 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
       resizeToAvoidBottomInset: false,
       drawer: sideBar(context),
       key: _scaffoldKey,
-      body: SlidingUpPanel(
-        maxHeight: 590,
-        minHeight: 150,
-        padding: const EdgeInsets.only(left: 30, right: 30),
-        borderRadius: const BorderRadius.only(
-            topRight: Radius.circular(20), topLeft: Radius.circular(20)),
-        body: Container(
-          decoration: const BoxDecoration(
-            color: Color(0xFFFDFDFD),
-          ),
-          padding: const EdgeInsets.only(top: 60, left: 20, right: 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              topBar(context),
-              Center(
-                child: Container(
-                  width: 345,
-                  height: 485,
-                  decoration: const BoxDecoration(
-                      color: Color(0xFFFFFFFF),
-                      borderRadius: BorderRadius.all(Radius.circular(24)),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Color.fromRGBO(0, 0, 0, 0.25),
-                          blurRadius: 6.0,
-                          spreadRadius: 2.0,
-                          offset: Offset(0.0, 0.0),
-                        ),
-                      ]),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                        width: 322,
-                        height: 62,
-                        margin: const EdgeInsets.only(top: 26.88),
-                        child: SearchField<dynamic>(
-                          searchStyle: const TextStyle(
-                              fontFamily: 'Euclid Circular B',
-                              fontWeight: FontWeight.w600),
-                          searchInputDecoration: InputDecoration(
-                            enabledBorder: const UnderlineInputBorder(
-                              borderSide: BorderSide(color: Color(0xFFF1F1F1)),
-                            ),
-                            focusedBorder: const UnderlineInputBorder(
-                              borderSide: BorderSide(color: Color(0xFFF1F1F1)),
-                            ),
-                            border: const UnderlineInputBorder(
-                              borderSide: BorderSide(color: Color(0xFFF1F1F1)),
-                            ),
-                            hintText: 'Cari Pengguna',
-                            hintStyle: const TextStyle(
-                              color: Color(0xFFBDBDBD),
-                              fontFamily: 'Euclid Circular B',
-                              fontWeight: FontWeight.w400,
-                              fontSize: 18.8304,
-                            ),
-                            prefixIcon: Container(
-                              padding: const EdgeInsets.all(0.01),
-                              margin: const EdgeInsets.only(bottom: 15.0),
-                              child: Image.asset('assets/image/search-all.png'),
-                            ),
+      body: RefreshIndicator(
+        onRefresh: setValue,
+        child: SlidingUpPanel(
+          maxHeight: 590,
+          minHeight: 150,
+          padding: const EdgeInsets.only(left: 30, right: 30),
+          borderRadius: const BorderRadius.only(
+              topRight: Radius.circular(20), topLeft: Radius.circular(20)),
+          body: SingleChildScrollView(
+            child: Column(
+              children: [
+                topBar(context),
+                Center(
+                  child: Container(
+                    width: 345,
+                    height: MediaQuery.of(context).size.height,
+                    decoration: const BoxDecoration(
+                        color: Color(0xFFFFFFFF),
+                        borderRadius: BorderRadius.all(Radius.circular(24)),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Color.fromRGBO(0, 0, 0, 0.25),
+                            blurRadius: 6.0,
+                            spreadRadius: 2.0,
+                            offset: Offset(0.0, 0.0),
                           ),
-                          suggestions: user
-                              .map(
-                                (e) => SearchFieldListItem(
-                                  e.nama,
-                                  item: e,
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: 10, bottom: 10, left: 20),
-                                    child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                e.nama,
-                                                style: const TextStyle(
-                                                    fontWeight: FontWeight.w600,
-                                                    color: Color(0xff222222),
-                                                    fontSize: 20,
-                                                    fontFamily:
-                                                        'Euclid Circular B'),
-                                              ),
-                                              Text(
-                                                e.noHp,
-                                                style: const TextStyle(
-                                                    fontWeight: FontWeight.w400,
-                                                    color: Color(0xffbebebe),
-                                                    fontSize: 15,
-                                                    fontFamily:
-                                                        'Euclid Circular B'),
-                                              ),
-                                            ])
-                                      ],
+                        ]),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Container(
+                          width: 322,
+                          height: 62,
+                          margin: const EdgeInsets.only(top: 26.88),
+                          child: SearchField<dynamic>(
+                            searchStyle: const TextStyle(
+                                fontFamily: 'Euclid Circular B',
+                                fontWeight: FontWeight.w600),
+                            searchInputDecoration: InputDecoration(
+                              enabledBorder: const UnderlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: Color(0xFFF1F1F1)),
+                              ),
+                              focusedBorder: const UnderlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: Color(0xFFF1F1F1)),
+                              ),
+                              border: const UnderlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: Color(0xFFF1F1F1)),
+                              ),
+                              hintText: 'Cari Pengguna',
+                              hintStyle: const TextStyle(
+                                color: Color(0xFFBDBDBD),
+                                fontFamily: 'Euclid Circular B',
+                                fontWeight: FontWeight.w400,
+                                fontSize: 18.8304,
+                              ),
+                              prefixIcon: Container(
+                                padding: const EdgeInsets.all(0.01),
+                                margin: const EdgeInsets.only(bottom: 15.0),
+                                child:
+                                    Image.asset('assets/image/search-all.png'),
+                              ),
+                            ),
+                            suggestions: user
+                                .map(
+                                  (e) => SearchFieldListItem(
+                                    e.nama,
+                                    item: e,
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 10, bottom: 10, left: 20),
+                                      child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  e.nama,
+                                                  style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      color: Color(0xff222222),
+                                                      fontSize: 20,
+                                                      fontFamily:
+                                                          'Euclid Circular B'),
+                                                ),
+                                                Text(
+                                                  e.noHp,
+                                                  style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                      color: Color(0xffbebebe),
+                                                      fontSize: 15,
+                                                      fontFamily:
+                                                          'Euclid Circular B'),
+                                                ),
+                                              ])
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                              )
-                              .toList(),
-                          controller: searchController,
-                          inputType: TextInputType.text,
-                          itemHeight: 80,
-                          validator: (x) {
-                            if (x!.isEmpty || !containsUser(x)) {
-                              return 'Please enter valid name';
-                            } else {
-                              return null;
-                            }
-                          },
-                          onSuggestionTap: (SearchFieldListItem v) {
-                            setState(() {
-                              _selectedUsers = v.item!;
-                            });
-                          },
+                                )
+                                .toList(),
+                            controller: searchController,
+                            inputType: TextInputType.text,
+                            itemHeight: 80,
+                            validator: (x) {
+                              if (x!.isEmpty || !containsUser(x)) {
+                                return 'Please enter valid name';
+                              } else {
+                                return null;
+                              }
+                            },
+                            onSuggestionTap: (SearchFieldListItem v) {
+                              setState(() {
+                                _selectedUsers = v.item!;
+                              });
+                            },
+                          ),
                         ),
-                      ),
-                      Container(
-                        width: 325,
-                        height: 81.51,
-                        margin: const EdgeInsets.only(top: 24),
-                        padding: const EdgeInsets.only(top: 18.58, left: 15.2),
-                        decoration: const BoxDecoration(
-                            color: Color(0xFF7C81DF),
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(18.6053))),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              _selectedUsers.nama ?? 'Nama',
-                              style: const TextStyle(
-                                color: Color(0xFFFFFFFF),
-                                fontSize: 17.7193,
+                        Container(
+                          width: 325,
+                          height: 81.51,
+                          margin: const EdgeInsets.only(top: 24),
+                          padding:
+                              const EdgeInsets.only(top: 18.58, left: 15.2),
+                          decoration: const BoxDecoration(
+                              color: Color(0xFF7C81DF),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(18.6053))),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                _selectedUsers.nama ?? 'Nama',
+                                style: const TextStyle(
+                                  color: Color(0xFFFFFFFF),
+                                  fontSize: 17.7193,
+                                  fontFamily: 'Euclid Circular B',
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              const SizedBox(height: 3.82),
+                              Text(
+                                'DPID: ${_selectedUsers.noHp ?? '000000000000'}',
+                                style: const TextStyle(
+                                  color: Color(0xFFC5C7F1),
+                                  fontSize: 13.0526,
+                                  fontFamily: 'SF Pro Display',
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          width: 312,
+                          height: 67.51,
+                          margin: const EdgeInsets.only(top: 38.61),
+                          child: TextField(
+                            controller: _topupcontrol,
+                            style: const TextStyle(
+                                fontSize: 23,
+                                fontWeight: FontWeight.w700,
+                                fontFamily: 'SF Pro Display',
+                                color: Color(0xff222222)),
+                            decoration: const InputDecoration(
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  width: 0.912281,
+                                  color: Color(0xFFC8BDBD),
+                                ),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(6.38596)),
+                              ),
+                              disabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  width: 0.912281,
+                                  color: Color(0xFFC8BDBD),
+                                ),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(6.38596)),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  width: 0.912281,
+                                  color: Color(0xFFC8BDBD),
+                                ),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(6.38596)),
+                              ),
+                              labelText: 'Nominal Top Up',
+                              hintText: 'Rp0',
+                              hintStyle: TextStyle(
+                                color: Color(0xFFCAC5C5),
+                                fontWeight: FontWeight.w600,
+                                fontFamily: 'SF Pro Display',
+                                fontSize: 21.8947,
+                              ),
+                              labelStyle: TextStyle(
+                                color: Color(0xFF8D8989),
+                                fontWeight: FontWeight.w400,
                                 fontFamily: 'Euclid Circular B',
+                                fontSize: 17,
+                              ),
+                              floatingLabelBehavior:
+                                  FloatingLabelBehavior.always,
+                            ),
+                            keyboardType: TextInputType.number,
+                          ),
+                        ),
+                        Container(
+                          width: 310,
+                          height: 60,
+                          margin: const EdgeInsets.only(top: 48),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              setState(() {
+                                createTopup();
+                                _topupcontrol.clear();
+                              });
+                            },
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                  const Color(0xFF5258D4)),
+                              shape: MaterialStateProperty.all<
+                                  RoundedRectangleBorder>(
+                                const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(6.59649))),
+                              ),
+                            ),
+                            child: const Text(
+                              'Top-Up',
+                              style: TextStyle(
+                                color: Color(0xFFFFFFFF),
+                                fontFamily: 'Euclid Circular B',
+                                fontSize: 19.7895,
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
-                            const SizedBox(height: 3.82),
-                            Text(
-                              'DPID: ${_selectedUsers.noHp ?? '000000000000'}',
-                              style: const TextStyle(
-                                color: Color(0xFFC5C7F1),
-                                fontSize: 13.0526,
-                                fontFamily: 'SF Pro Display',
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        width: 312,
-                        height: 67.51,
-                        margin: const EdgeInsets.only(top: 38.61),
-                        child: TextField(
-                          controller: _topupcontrol,
-                          style: const TextStyle(
-                              fontSize: 23,
-                              fontWeight: FontWeight.w700,
-                              fontFamily: 'SF Pro Display',
-                              color: Color(0xff222222)),
-                          decoration: const InputDecoration(
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                width: 0.912281,
-                                color: Color(0xFFC8BDBD),
-                              ),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(6.38596)),
-                            ),
-                            disabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                width: 0.912281,
-                                color: Color(0xFFC8BDBD),
-                              ),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(6.38596)),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                width: 0.912281,
-                                color: Color(0xFFC8BDBD),
-                              ),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(6.38596)),
-                            ),
-                            labelText: 'Nominal Top Up',
-                            hintText: 'Rp0',
-                            hintStyle: TextStyle(
-                              color: Color(0xFFCAC5C5),
-                              fontWeight: FontWeight.w600,
-                              fontFamily: 'SF Pro Display',
-                              fontSize: 21.8947,
-                            ),
-                            labelStyle: TextStyle(
-                              color: Color(0xFF8D8989),
-                              fontWeight: FontWeight.w400,
-                              fontFamily: 'Euclid Circular B',
-                              fontSize: 17,
-                            ),
-                            floatingLabelBehavior: FloatingLabelBehavior.always,
-                          ),
-                          keyboardType: TextInputType.number,
-                        ),
-                      ),
-                      Container(
-                        width: 310,
-                        height: 60,
-                        margin: const EdgeInsets.only(top: 48),
-                        child: ElevatedButton(
-                          onPressed: () {
-                            setState(() {
-                              createTopup();
-                              _topupcontrol.clear();
-                            });
-                          },
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all<Color>(
-                                const Color(0xFF5258D4)),
-                            shape: MaterialStateProperty.all<
-                                RoundedRectangleBorder>(
-                              const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.all(
-                                      Radius.circular(6.59649))),
-                            ),
-                          ),
-                          child: const Text(
-                            'Top-Up',
-                            style: TextStyle(
-                              color: Color(0xFFFFFFFF),
-                              fontFamily: 'Euclid Circular B',
-                              fontSize: 19.7895,
-                              fontWeight: FontWeight.w600,
-                            ),
                           ),
                         ),
-                      ),
-                      Visibility(
-                          visible: successTopup,
-                          child: Container(
-                              padding: const EdgeInsets.only(left: 20, top: 20),
-                              child: Row(
-                                children: [
-                                  Image.asset(
-                                    'assets/image/greensmile.png',
-                                    width: 20,
-                                    height: 20,
-                                  ),
-                                  const SizedBox(
-                                    width: 5,
-                                  ),
-                                  const Text(
-                                    'Top-up Berhasil!',
-                                    style: TextStyle(
-                                        fontFamily: 'Euclid Circular B',
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w500,
-                                        color: Color(0xff52D47E)),
-                                  )
-                                ],
-                              ))),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Visibility(
-                          visible: failedTopup,
-                          child: Container(
-                              padding: const EdgeInsets.only(left: 20, top: 20),
-                              child: Row(
-                                children: [
-                                  Image.asset(
-                                    'assets/image/failed.png',
-                                    width: 20,
-                                    height: 20,
-                                  ),
-                                  const SizedBox(
-                                    width: 5,
-                                  ),
-                                  const Text(
-                                    'Top-Up Gagal!',
-                                    style: TextStyle(
-                                        fontFamily: 'Euclid Circular B',
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w500,
-                                        color: Color(0xffEF3434)),
-                                  )
-                                ],
-                              )))
-                    ],
+                        Visibility(
+                            visible: successTopup,
+                            child: Container(
+                                padding:
+                                    const EdgeInsets.only(left: 20, top: 20),
+                                child: Row(
+                                  children: [
+                                    Image.asset(
+                                      'assets/image/greensmile.png',
+                                      width: 20,
+                                      height: 20,
+                                    ),
+                                    const SizedBox(
+                                      width: 5,
+                                    ),
+                                    const Text(
+                                      'Top-up Berhasil!',
+                                      style: TextStyle(
+                                          fontFamily: 'Euclid Circular B',
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500,
+                                          color: Color(0xff52D47E)),
+                                    )
+                                  ],
+                                ))),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Visibility(
+                            visible: failedTopup,
+                            child: Container(
+                                padding:
+                                    const EdgeInsets.only(left: 20, top: 20),
+                                child: Row(
+                                  children: [
+                                    Image.asset(
+                                      'assets/image/failed.png',
+                                      width: 20,
+                                      height: 20,
+                                    ),
+                                    const SizedBox(
+                                      width: 5,
+                                    ),
+                                    const Text(
+                                      'Top-Up Gagal!',
+                                      style: TextStyle(
+                                          fontFamily: 'Euclid Circular B',
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500,
+                                          color: Color(0xffEF3434)),
+                                    )
+                                  ],
+                                )))
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-        panelBuilder: (controller) {
-          return Column(
-            children: [
-              GestureDetector(
-                child: Center(
-                  child: Container(
-                    width: 85,
-                    height: 4,
-                    margin: const EdgeInsets.only(top: 7),
-                    decoration: const BoxDecoration(
-                      color: Color(0xFFEBEBEB),
-                      borderRadius: BorderRadius.all(Radius.circular(29)),
+          panelBuilder: (controller) {
+            return Column(
+              children: [
+                GestureDetector(
+                  child: Center(
+                    child: Container(
+                      width: 85,
+                      height: 4,
+                      margin: const EdgeInsets.only(top: 7),
+                      decoration: const BoxDecoration(
+                        color: Color(0xFFEBEBEB),
+                        borderRadius: BorderRadius.all(Radius.circular(29)),
+                      ),
                     ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 12),
-              const Center(
-                child: Text(
-                  'Riwayat Top-Up',
-                  style: TextStyle(
-                    color: Color(0xFF172437),
-                    fontSize: 24,
-                    fontWeight: FontWeight.w600,
-                    fontFamily: 'Euclid Circular B',
-                  ),
-                ),
-              ),
-              Container(
-                width: 342,
-                height: 30,
-                margin: const EdgeInsets.only(top: 29),
-                child: TextFormField(
-                  onChanged: (value) async {
-                    final data = await fetchTopUp();
-                    setState(() {
-                      _filteredAkun = data
-                          .where((item) => item.penerima
-                              .toString()
-                              .toLowerCase()
-                              .contains(value.toLowerCase()))
-                          .toList();
-                    });
-                  },
-                  decoration: InputDecoration(
-                    enabledBorder: const UnderlineInputBorder(
-                      borderSide: BorderSide(color: Color(0xFFF1F1F1)),
-                    ),
-                    focusedBorder: const UnderlineInputBorder(
-                      borderSide: BorderSide(color: Color(0xFFF1F1F1)),
-                    ),
-                    border: const UnderlineInputBorder(
-                      borderSide: BorderSide(color: Color(0xFFF1F1F1)),
-                    ),
-                    hintText: 'Cari Top-Up',
-                    hintStyle: const TextStyle(
-                      color: Color(0xFFBDBDBD),
+                const SizedBox(height: 12),
+                const Center(
+                  child: Text(
+                    'Riwayat Top-Up',
+                    style: TextStyle(
+                      color: Color(0xFF172437),
+                      fontSize: 24,
+                      fontWeight: FontWeight.w600,
                       fontFamily: 'Euclid Circular B',
-                      fontWeight: FontWeight.w400,
-                      fontSize: 18.8304,
-                    ),
-                    prefixIcon: Container(
-                      padding: const EdgeInsets.all(0.01),
-                      margin: const EdgeInsets.only(bottom: 15.0),
-                      child: Image.asset('assets/image/search-all.png'),
                     ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 24),
-              scrollingList(controller),
-            ],
-          );
-        },
+                Container(
+                  width: 342,
+                  height: 30,
+                  margin: const EdgeInsets.only(top: 29),
+                  child: TextFormField(
+                    onChanged: (value) async {
+                      final data = await fetchTopUp();
+                      setState(() {
+                        _filteredAkun = data
+                            .where((item) => item.penerima
+                                .toString()
+                                .toLowerCase()
+                                .contains(value.toLowerCase()))
+                            .toList();
+                      });
+                    },
+                    decoration: InputDecoration(
+                      enabledBorder: const UnderlineInputBorder(
+                        borderSide: BorderSide(color: Color(0xFFF1F1F1)),
+                      ),
+                      focusedBorder: const UnderlineInputBorder(
+                        borderSide: BorderSide(color: Color(0xFFF1F1F1)),
+                      ),
+                      border: const UnderlineInputBorder(
+                        borderSide: BorderSide(color: Color(0xFFF1F1F1)),
+                      ),
+                      hintText: 'Cari Top-Up',
+                      hintStyle: const TextStyle(
+                        color: Color(0xFFBDBDBD),
+                        fontFamily: 'Euclid Circular B',
+                        fontWeight: FontWeight.w400,
+                        fontSize: 18.8304,
+                      ),
+                      prefixIcon: Container(
+                        padding: const EdgeInsets.all(0.01),
+                        margin: const EdgeInsets.only(bottom: 15.0),
+                        child: Image.asset('assets/image/search-all.png'),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 24),
+                scrollingList(controller),
+              ],
+            );
+          },
+        ),
       ),
     );
   }
@@ -673,15 +681,18 @@ class _AdminTopupPageState extends State<AdminTopupPage> {
                           const SizedBox(height: 19.84),
                         ],
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 10),
-                        child: Text(
-                          '+Rp${snapshot.data![i].nominal.toString()}',
-                          style: const TextStyle(
-                              color: Color(0xFF222222),
-                              fontWeight: FontWeight.w400,
-                              fontSize: 20,
-                              fontFamily: 'SF Pro Display'),
+                      SizedBox(
+                        width: 120,
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Text(
+                            '+Rp${snapshot.data![i].nominal.toString()}',
+                            style: const TextStyle(
+                                color: Color(0xFF222222),
+                                fontWeight: FontWeight.w400,
+                                fontSize: 20,
+                                fontFamily: 'SF Pro Display'),
+                          ),
                         ),
                       ),
                     ],
