@@ -214,10 +214,10 @@ class _AdminTransactionPageState extends State<AdminTransactionPage> {
                                       top: 25, bottom: 10, left: 30, right: 20),
                                   child: Column(
                                     children: <Widget>[
-                                      const Row(
+                                       Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
-                                        children: [
+                                        children: const <Widget>[
                                           Text(
                                             'Buyer',
                                             style: TextStyle(

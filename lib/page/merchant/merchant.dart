@@ -190,6 +190,7 @@ class _MerchantPageState extends State<MerchantPage> {
                                   padding: const EdgeInsets.all(10),
                                   child: Image.asset('assets/image/shop.png'),
                                 ),
+                                SizedBox(width: 10,),
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
@@ -650,6 +651,7 @@ class _MerchantPageState extends State<MerchantPage> {
                                                           height: 5,
                                                         ),
                                                         Row(
+                                                          mainAxisAlignment: MainAxisAlignment.center,
                                                           children: <Widget>[
                                                             const Padding(
                                                               padding:
@@ -935,7 +937,7 @@ class _MerchantPageState extends State<MerchantPage> {
           const TextField(
             // onChanged: (value) => _runFilter(value),
             decoration: InputDecoration(
-                labelText: 'Cari Transaksi',
+                labelText: 'Cari',
                 labelStyle: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w400,
@@ -991,7 +993,7 @@ class _MerchantPageState extends State<MerchantPage> {
                                 ],
                               ),
                               Text(
-                                '-Rp${snapshot.data![i].nominal.toString()}',
+                                '+Rp${snapshot.data![i].nominal.toString()}',
                                 style: const TextStyle(
                                     fontWeight: FontWeight.w400,
                                     fontFamily: 'Euclid Circular B',

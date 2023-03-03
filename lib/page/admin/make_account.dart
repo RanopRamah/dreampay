@@ -145,7 +145,7 @@ class _MakeAccountPageState extends State<MakeAccountPage> {
               height: MediaQuery.of(context).size.height,
               child: SlidingUpPanel(
                 maxHeight: 590,
-                minHeight: 150,
+                minHeight: 120,
                 borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(25),
                     topRight: Radius.circular(25)),
@@ -198,7 +198,7 @@ class _MakeAccountPageState extends State<MakeAccountPage> {
                             });
                           },
                           decoration: const InputDecoration(
-                              labelText: 'Cari Transaksi',
+                              labelText: 'Cari Akun',
                               labelStyle: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.w400,
@@ -221,7 +221,7 @@ class _MakeAccountPageState extends State<MakeAccountPage> {
 
   Padding topBar(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(30),
+      padding: const EdgeInsets.only(left: 30,right: 30,bottom: 10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -372,8 +372,8 @@ class _MakeAccountPageState extends State<MakeAccountPage> {
           const SizedBox(
             height: 25,
           ),
-          const Row(
-            children: <Widget>[
+           Row(
+            children: const <Widget>[
               Text(
                 'Tipe',
                 style: TextStyle(

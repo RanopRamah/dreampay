@@ -605,7 +605,7 @@ class _AdminWithdrawPageState extends State<AdminWithdrawPage> {
                     border: const UnderlineInputBorder(
                       borderSide: BorderSide(color: Color(0xFFF1F1F1)),
                     ),
-                    hintText: 'Cari Top-Up',
+                    hintText: 'Cari Withdraw',
                     hintStyle: const TextStyle(
                       color: Color(0xFFBDBDBD),
                       fontFamily: 'Euclid Circular B',
