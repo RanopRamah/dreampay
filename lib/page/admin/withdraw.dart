@@ -12,9 +12,11 @@ import 'package:searchfield/searchfield.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-Future<Admin> fetchAdmin(String id) async{
+var url = dotenv.env['API_URL'];
+
+Future<Admin> fetchAdmin(String id) async {
   final response = await http.get(
-    Uri.parse('${url}admin'),
+    Uri.parse('$url/admin'),
   );
 
   if (response.statusCode == 200) {
@@ -23,6 +25,7 @@ Future<Admin> fetchAdmin(String id) async{
     throw Exception(response.body);
   }
 }
+
 class Admin {
   final dynamic totalSaldo;
   final dynamic totalSeller;
@@ -43,10 +46,31 @@ class Admin {
   }
 }
 
-var url = dotenv.env['API_URL'];
+class Uang {
+  final dynamic totalSaldo;
+  final dynamic totalBuyer;
+  final dynamic totalSeller;
+  final dynamic totalWithdraw;
+
+  const Uang(
+      {required this.totalSaldo,
+      required this.totalSeller,
+      required this.totalBuyer,
+      required this.totalWithdraw});
+
+  factory Uang.fromJson(Map<dynamic, dynamic> json) {
+    return Uang(
+      totalSaldo: json['total_saldo'],
+      totalBuyer: json['total_buyer'],
+      totalSeller: json['total_seller'],
+      totalWithdraw: json['total_withdraw'],
+    );
+  }
+}
+
 Future<List> fetchUsers() async {
   final response = await http.get(
-    Uri.parse('${url}admin/list-withdraw'),
+    Uri.parse('$url/admin/list-withdraw'),
   );
 
   if (response.statusCode == 200) {
@@ -58,7 +82,7 @@ Future<List> fetchUsers() async {
 
 Future<List<Withdraw>> fetchWithdraw() async {
   final response = await http.get(
-    Uri.parse('${url}admin/list-withdraw'),
+    Uri.parse('$url/admin/list-withdraw'),
   );
 
   if (response.statusCode == 200) {
@@ -137,8 +161,8 @@ class _AdminWithdrawPageState extends State<AdminWithdrawPage> {
   List<Users> user = [];
   Users _selectedUsers = Users.init();
 
-bool successWithdraw = false;
-bool failedWithdraw = false;
+  bool successWithdraw = false;
+  bool failedWithdraw = false;
 
   final PanelController _controller = PanelController();
   late Future<List<Withdraw>> withdraw;
@@ -146,6 +170,7 @@ bool failedWithdraw = false;
   String? phone;
   String? name;
   String? id;
+  Future<Uang>? _uang;
   late SharedPreferences prefs;
 
   Future<Admin>? _admin;
@@ -159,12 +184,24 @@ bool failedWithdraw = false;
     _admin = fetchAdmin(id.toString());
   }
 
+  Future<Uang> fetchUang() async {
+    final response = await http.get(
+      Uri.parse('$url/admin'),
+    );
+
+    if (response.statusCode == 200) {
+      return Uang.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception(response.body);
+    }
+  }
 
   @override
   void initState() {
     setValue();
+    listToUser();
     super.initState();
-    dvs();
+    _uang = fetchUang();
     withdraw = fetchWithdraw();
   }
 
@@ -179,14 +216,13 @@ bool failedWithdraw = false;
     _controller.isPanelOpen ? _controller.close() : _controller.open();
   }
 
-  void dvs() async {
+  void listToUser() async {
     List<dynamic> data = await fetchUsers();
 
     setState(() {
       user = data.map((e) => Users.fromMap(e)).toList();
     });
   }
-
 
   bool containsUser(String text) {
     final Users result = user.firstWhere(
@@ -203,356 +239,7 @@ bool failedWithdraw = false;
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      drawer: Drawer(
-        child: Container(
-          padding: EdgeInsets.all(20),
-          color: Color(0xff45499D),
-          child: ListView(
-            children: <Widget>[
-              Container(
-                width: 170,
-                height: 42,
-                child: Image.asset('assets/image/logo.png'),
-              ),
-              SizedBox(
-                height: 50,
-              ),
-              Center(
-                child: ListTile(
-                  onTap: () {
-                    Navigator.of(context).push(
-                        MaterialPageRoute(builder: (c) => MakeAccountPage()));
-                  },
-                  title: Container(
-                    padding: EdgeInsets.only(right: 30, left: 40),
-                    width: double.infinity,
-                    height: 51,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        Image.asset(
-                          'assets/image/account.png',
-                          width: 21,
-                          height: 21,
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          'Akun Baru',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: 'Euclid Circular B',
-                              fontWeight: FontWeight.w500,
-                              fontSize: 24),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Center(
-                child: ListTile(
-                  onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (c) => AdminTransactionPage()));
-                  },
-                  title: Container(
-                    padding: EdgeInsets.only(right: 25, left: 25),
-                    width: 275,
-                    height: 51,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        Image.asset(
-                          'assets/image/transaction.png',
-                          width: 21,
-                          height: 21,
-                        ),
-                        // SizedBox(
-                        //   width: 13,
-                        // ),
-                        Text(
-                          'Transaksi',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: 'Euclid Circular B',
-                              fontWeight: FontWeight.w500,
-                              fontSize: 24),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Center(
-                child: ListTile(
-                  onTap: () {
-                    Navigator.of(context).push(
-                        MaterialPageRoute(builder: (c) => AdminTopupPage()));
-                  },
-                  title: Container(
-                    padding: EdgeInsets.only(right: 45, left: 25),
-                    width: 275,
-                    height: 51,
-
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        Image.asset(
-                          'assets/image/topup.png',
-                          width: 21,
-                          height: 21,
-                        ),
-                        // SizedBox(
-                        //   width: 13,
-                        // ),
-                        Text(
-                          'Top-Up',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: 'Euclid Circular B',
-                              fontWeight: FontWeight.w500,
-                              fontSize: 24),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Center(
-                child: ListTile(
-                  onTap: () {
-                    Navigator.of(context).push(
-                        MaterialPageRoute(builder: (c) => AdminWithdrawPage()));
-                  },
-                  title: Container(
-                    decoration: BoxDecoration(
-                        color: Color(0xff8A8EF9),
-                        borderRadius: BorderRadius.circular(13)),
-                    padding: EdgeInsets.only(right: 25, left: 27),
-                    width: 275,
-                    height: 51,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        Image.asset(
-                          'assets/image/withdraw.png',
-                          width: 21,
-                          height: 21,
-                        ),
-                        // SizedBox(
-                        //   width: 13,
-                        // ),
-                        Text(
-                          'Withdraw',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: 'Euclid Circular B',
-                              fontWeight: FontWeight.w500,
-                              fontSize: 24),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 15,
-              ),
-              FutureBuilder(
-                future: _admin,
-                builder: (BuildContext context, snapshot) {
-                  if (snapshot.hasData){
-                    return Column(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
-                          width: double.infinity,
-                          height: 98,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: const Color(0xff292B5A)),
-                          child:  Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(
-                                'Saldo Buyer',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    fontFamily: 'Euclid Circular B',
-                                    fontSize: 14,
-                                    color: Color(0xffbebebe)),
-                              ),
-                              SizedBox(
-                                height: 5,
-                              ),
-                              Center(
-                                  child: SingleChildScrollView(
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: <Widget>[
-                                          Padding(
-                                            padding: EdgeInsets.only(bottom: 35),
-                                            child: Text(
-                                              'Rp',
-                                              style: TextStyle(
-                                                  fontFamily: 'SF Pro Display',
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w500,
-                                                  color: Colors.white),
-                                            ),
-                                          ),
-                                          Text(
-                                            snapshot.data!.totalSaldo.toString(),
-                                            style: TextStyle(
-                                                fontFamily: 'SF Pro Display',
-                                                fontSize: 36,
-                                                fontWeight: FontWeight.w700,
-                                                color: Colors.white),
-                                          ),
-                                        ],
-                                      )))
-                            ],
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        Container(
-                          padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
-                          width: double.infinity,
-                          height: 98,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: const Color(0xff3A2C62)),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(
-                                'Saldo Seller',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    fontFamily: 'Euclid Circular B',
-                                    fontSize: 14,
-                                    color: Color(0xffbebebe)),
-                              ),
-                              SizedBox(
-                                height: 5,
-                              ),
-                              Center(
-                                  child:SingleChildScrollView(
-                                      child:Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children:  <Widget>[
-                                          Padding(
-                                            padding: EdgeInsets.only(bottom: 35),
-                                            child: Text(
-                                              'Rp',
-                                              style: TextStyle(
-                                                  fontFamily: 'SF Pro Display',
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w500,
-                                                  color: Colors.white),
-                                            ),
-                                          ),
-                                          Text(
-                                            snapshot.data!.totalSeller.toString(),
-                                            style: TextStyle(
-                                                fontFamily: 'SF Pro Display',
-                                                fontSize: 36,
-                                                fontWeight: FontWeight.w700,
-                                                color: Colors.white),
-                                          ),
-                                        ],
-                                      )))
-                            ],
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        Container(
-                          padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
-                          width: double.infinity,
-                          height: 98,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: const Color(0xff2E3346)),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              const Text(
-                                'Total Penarikan',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    fontFamily: 'Euclid Circular B',
-                                    fontSize: 14,
-                                    color: Color(0xffbebebe)),
-                              ),
-                              const SizedBox(
-                                height: 5,
-                              ),
-                              Center(
-                                  child: SingleChildScrollView(
-                                      scrollDirection: Axis.horizontal,
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children:  <Widget>[
-                                          Padding(
-                                            padding: EdgeInsets.only(bottom: 35),
-                                            child: Text(
-                                              'Rp',
-                                              style: TextStyle(
-                                                  fontFamily: 'SF Pro Display',
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w500,
-                                                  color: Colors.white),
-                                            ),
-                                          ),
-                                          Text(
-                                            snapshot.data!.totalWithdraw,
-                                            style: TextStyle(
-                                                fontFamily: 'SF Pro Display',
-                                                fontSize: 36,
-                                                fontWeight: FontWeight.w700,
-                                                color: Colors.white),
-                                          ),
-                                        ],
-                                      )))
-                            ],
-                          ),
-                        ),
-                      ],
-                    );
-                  } else if (snapshot.hasError) {
-                    return Text('${snapshot.error}');
-                  }
-
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [ Center(
-                  child: LoadingAnimationWidget.staggeredDotsWave(
-                    color: Colors.white,
-                    size: 40,)
-                    )
-                 ]
-                  );
-
-                },),
-            ],
-          ),
-        ),
-      ),
+      drawer: sideBar(context),
       key: _scaffoldKey,
       body: SlidingUpPanel(
         controller: _controller,
@@ -605,11 +292,10 @@ bool failedWithdraw = false;
                         width: 322,
                         height: 62,
                         margin: const EdgeInsets.only(top: 26.88),
-                        child:   SearchField<dynamic>(
-                          searchStyle: TextStyle(
+                        child: SearchField<dynamic>(
+                          searchStyle: const TextStyle(
                               fontFamily: 'Euclid Circular B',
-                              fontWeight: FontWeight.w600
-                          ),
+                              fontWeight: FontWeight.w600),
                           searchInputDecoration: InputDecoration(
                             enabledBorder: const UnderlineInputBorder(
                               borderSide: BorderSide(color: Color(0xFFF1F1F1)),
@@ -636,41 +322,49 @@ bool failedWithdraw = false;
                           suggestions: user
                               .map(
                                 (e) => SearchFieldListItem(
-                              e.nama,
+                                  e.nama,
 
-                              item: e,
-                              // Use child to show Custom Widgets in the suggestions
-                              // defaults to Text widget
+                                  item: e,
+                                  // Use child to show Custom Widgets in the suggestions
+                                  // defaults to Text widget
                                   child: Padding(
-
-                                    padding: const EdgeInsets.only(top: 10,bottom: 10,left: 20),
+                                    padding: const EdgeInsets.only(
+                                        top: 10, bottom: 10, left: 20),
                                     child: Row(
-                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
                                       children: [
                                         Column(
-                                            mainAxisAlignment: MainAxisAlignment.center  ,
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children:[
-                                              Text(e.nama,style: TextStyle(
-                                                  fontWeight: FontWeight.w600,
-                                                  color: Color(0xff222222),
-                                                  fontSize: 20,
-                                                  fontFamily: 'Euclid Circular B'
-                                              ),),
-                                              Text(e.no_hp,style: TextStyle(
-                                                  fontWeight: FontWeight.w400,
-                                                  color: Color(0xffbebebe),
-                                                  fontSize: 15,
-                                                  fontFamily: 'Euclid Circular B'
-                                              ),),
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                e.nama,
+                                                style: const TextStyle(
+                                                    fontWeight: FontWeight.w600,
+                                                    color: Color(0xff222222),
+                                                    fontSize: 20,
+                                                    fontFamily:
+                                                        'Euclid Circular B'),
+                                              ),
+                                              Text(
+                                                e.no_hp,
+                                                style: const TextStyle(
+                                                    fontWeight: FontWeight.w400,
+                                                    color: Color(0xffbebebe),
+                                                    fontSize: 15,
+                                                    fontFamily:
+                                                        'Euclid Circular B'),
+                                              ),
                                             ])
                                       ],
                                     ),
                                   ),
-                            ),
-                          )
+                                ),
+                              )
                               .toList(),
-
                           controller: searchController,
                           inputType: TextInputType.text,
                           itemHeight: 80,
@@ -728,7 +422,7 @@ bool failedWithdraw = false;
                         margin: const EdgeInsets.only(top: 38.61),
                         child: TextField(
                           controller: _withdrawcontrol,
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontSize: 23,
                               fontWeight: FontWeight.w700,
                               fontFamily: 'SF Pro Display',
@@ -809,32 +503,57 @@ bool failedWithdraw = false;
                           ),
                         ),
                       ),
-                    Visibility(
-                        visible: successWithdraw,
-                        child: Container(
-                            padding: EdgeInsets.only(left: 20,top: 20),
-                            child: Row(children: [
-                              Image.asset('assets/image/greensmile.png',width: 20,height: 20,),
-                              SizedBox(width: 5,),
-                              Text('Withdraw Berhasil!',style: TextStyle(
-                                  fontFamily: 'Euclid Circular B',fontSize: 16,fontWeight: FontWeight.w500,color: Color(0xff52D47E)
-                              ),)
-                            ],))),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Visibility(
-                        visible: failedWithdraw,
-                        child: Container(
-                            padding: EdgeInsets.only(left: 20,top: 20),
-                            child: Row(children: [
-                              Image.asset('assets/image/failed.png',width: 20,height: 20,),
-                              SizedBox(width: 5,),
-                              Text('Withdraw Gagal!',style: TextStyle(
-                                  fontFamily: 'Euclid Circular B',fontSize: 16,fontWeight: FontWeight.w500,color: Color(0xffEF3434)
-                              ),)
-                            ],)))
-
+                      Visibility(
+                          visible: successWithdraw,
+                          child: Container(
+                              padding: const EdgeInsets.only(left: 20, top: 20),
+                              child: Row(
+                                children: [
+                                  Image.asset(
+                                    'assets/image/greensmile.png',
+                                    width: 20,
+                                    height: 20,
+                                  ),
+                                  const SizedBox(
+                                    width: 5,
+                                  ),
+                                  const Text(
+                                    'Withdraw Berhasil!',
+                                    style: TextStyle(
+                                        fontFamily: 'Euclid Circular B',
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                        color: Color(0xff52D47E)),
+                                  )
+                                ],
+                              ))),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Visibility(
+                          visible: failedWithdraw,
+                          child: Container(
+                              padding: const EdgeInsets.only(left: 20, top: 20),
+                              child: Row(
+                                children: [
+                                  Image.asset(
+                                    'assets/image/failed.png',
+                                    width: 20,
+                                    height: 20,
+                                  ),
+                                  const SizedBox(
+                                    width: 5,
+                                  ),
+                                  const Text(
+                                    'Withdraw Gagal!',
+                                    style: TextStyle(
+                                        fontFamily: 'Euclid Circular B',
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                        color: Color(0xffEF3434)),
+                                  )
+                                ],
+                              )))
                     ],
                   ),
                 ),
@@ -910,6 +629,407 @@ bool failedWithdraw = false;
     );
   }
 
+  Drawer sideBar(BuildContext context) {
+    return Drawer(
+      child: Container(
+        padding: const EdgeInsets.all(20),
+        color: const Color(0xff45499D),
+        child: ListView(
+          children: <Widget>[
+            SizedBox(
+              width: 170,
+              height: 42,
+              child: Image.asset('assets/image/logo.png'),
+            ),
+            const SizedBox(
+              height: 50,
+            ),
+            Center(
+              child: ListTile(
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (c) => const MakeAccountPage()));
+                },
+                title: Container(
+                  padding: const EdgeInsets.only(right: 30, left: 40),
+                  width: double.infinity,
+                  height: 51,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      Image.asset(
+                        'assets/image/account.png',
+                        width: 21,
+                        height: 21,
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      const Text(
+                        'Akun Baru',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontFamily: 'Euclid Circular B',
+                            fontWeight: FontWeight.w500,
+                            fontSize: 24),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Center(
+              child: ListTile(
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (c) => const AdminTransactionPage()));
+                },
+                title: Container(
+                  padding: const EdgeInsets.only(right: 25, left: 25),
+                  width: 275,
+                  height: 51,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      Image.asset(
+                        'assets/image/transaction.png',
+                        width: 21,
+                        height: 21,
+                      ),
+                      const Text(
+                        'Transaksi',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontFamily: 'Euclid Circular B',
+                            fontWeight: FontWeight.w500,
+                            fontSize: 24),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Center(
+              child: ListTile(
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (c) => const AdminTopupPage()));
+                },
+                title: Container(
+                  padding: const EdgeInsets.only(right: 45, left: 25),
+                  width: 275,
+                  height: 51,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      Image.asset(
+                        'assets/image/topup.png',
+                        width: 21,
+                        height: 21,
+                      ),
+                      // SizedBox(
+                      //   width: 13,
+                      // ),
+                      const Text(
+                        'Top-Up',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontFamily: 'Euclid Circular B',
+                            fontWeight: FontWeight.w500,
+                            fontSize: 24),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Center(
+              child: ListTile(
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (c) => const AdminWithdrawPage()));
+                },
+                title: Container(
+                  padding: const EdgeInsets.only(right: 25, left: 27),
+                  width: 275,
+                  height: 51,
+                  decoration: BoxDecoration(
+                      color: const Color(0xff8A8EF9),
+                      borderRadius: BorderRadius.circular(13)),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      Image.asset(
+                        'assets/image/withdraw.png',
+                        width: 21,
+                        height: 21,
+                      ),
+                      // SizedBox(
+                      //   width: 13,
+                      // ),
+                      const Text(
+                        'Withdraw',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontFamily: 'Euclid Circular B',
+                            fontWeight: FontWeight.w500,
+                            fontSize: 24),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+            FutureBuilder(
+              future: _uang,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return Column(children: [
+                    Container(
+                      padding:
+                          const EdgeInsets.only(top: 10, left: 10, right: 10),
+                      width: double.infinity,
+                      height: 98,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: const Color(0xff292B5A)),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          const Text(
+                            'Total Saldo',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontFamily: 'Euclid Circular B',
+                                fontSize: 14,
+                                color: Color(0xffbebebe)),
+                          ),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          Center(
+                              child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              const Padding(
+                                padding: EdgeInsets.only(bottom: 35),
+                                child: Text(
+                                  'Rp',
+                                  style: TextStyle(
+                                      fontFamily: 'SF Pro Display',
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.white),
+                                ),
+                              ),
+                              Text(
+                                snapshot.data!.totalSaldo,
+                                style: const TextStyle(
+                                    fontFamily: 'SF Pro Display',
+                                    fontSize: 36,
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.white),
+                              ),
+                            ],
+                          ))
+                        ],
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    Container(
+                      padding:
+                          const EdgeInsets.only(top: 10, left: 10, right: 10),
+                      width: double.infinity,
+                      height: 98,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: const Color.fromARGB(255, 59, 46, 70)),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          const Text(
+                            'Total Withdraw',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontFamily: 'Euclid Circular B',
+                                fontSize: 14,
+                                color: Color(0xffbebebe)),
+                          ),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          Center(
+                              child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              const Padding(
+                                padding: EdgeInsets.only(bottom: 35),
+                                child: Text(
+                                  'Rp',
+                                  style: TextStyle(
+                                      fontFamily: 'SF Pro Display',
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.white),
+                                ),
+                              ),
+                              Text(
+                                snapshot.data!.totalWithdraw,
+                                style: const TextStyle(
+                                    fontFamily: 'SF Pro Display',
+                                    fontSize: 36,
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.white),
+                              ),
+                            ],
+                          ))
+                        ],
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    Container(
+                      padding:
+                          const EdgeInsets.only(top: 10, left: 10, right: 10),
+                      width: double.infinity,
+                      height: 98,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: const Color(0xff3A2C62)),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          const Text(
+                            'Saldo Buyer',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontFamily: 'Euclid Circular B',
+                                fontSize: 14,
+                                color: Color(0xffbebebe)),
+                          ),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          Center(
+                              child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              const Padding(
+                                padding: EdgeInsets.only(bottom: 35),
+                                child: Text(
+                                  'Rp',
+                                  style: TextStyle(
+                                      fontFamily: 'SF Pro Display',
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.white),
+                                ),
+                              ),
+                              Text(
+                                snapshot.data!.totalBuyer,
+                                style: const TextStyle(
+                                    fontFamily: 'SF Pro Display',
+                                    fontSize: 36,
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.white),
+                              ),
+                            ],
+                          ))
+                        ],
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    Container(
+                      padding:
+                          const EdgeInsets.only(top: 10, left: 10, right: 10),
+                      width: double.infinity,
+                      height: 98,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: const Color(0xff2E3346)),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          const Text(
+                            'Saldo Seller',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontFamily: 'Euclid Circular B',
+                                fontSize: 14,
+                                color: Color(0xffbebebe)),
+                          ),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          Center(
+                              child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              const Padding(
+                                padding: EdgeInsets.only(bottom: 35),
+                                child: Text(
+                                  'Rp',
+                                  style: TextStyle(
+                                      fontFamily: 'SF Pro Display',
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.white),
+                                ),
+                              ),
+                              Text(
+                                snapshot.data!.totalSeller,
+                                style: const TextStyle(
+                                    fontFamily: 'SF Pro Display',
+                                    fontSize: 36,
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.white),
+                              ),
+                            ],
+                          ))
+                        ],
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                  ]);
+                } else if (snapshot.hasError) {
+                  return Text('${snapshot.error}');
+                }
+                return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Center(
+                          child: LoadingAnimationWidget.staggeredDotsWave(
+                        color: Colors.white,
+                        size: 40,
+                      ))
+                    ]);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget scrollingList(ScrollController sc) {
     return Container(
       height: 450,
@@ -973,12 +1093,12 @@ bool failedWithdraw = false;
             return Center(child: Text('${snapshot.error}'));
           }
 
-          print(snapshot.data);
-          return  Center(child:
-          LoadingAnimationWidget.staggeredDotsWave(
-            color: Colors.black,
-            size: 40,
-          ),);
+          return Center(
+            child: LoadingAnimationWidget.staggeredDotsWave(
+              color: Colors.black,
+              size: 40,
+            ),
+          );
         },
       ),
     );
@@ -986,7 +1106,7 @@ bool failedWithdraw = false;
 
   Future<void> createWithdraw() async {
     final response = await http.post(
-      Uri.parse('${url}admin/add-withdraw'),
+      Uri.parse('$url/admin/add-withdraw'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -997,16 +1117,14 @@ bool failedWithdraw = false;
       }),
     );
     if (response.statusCode == 200) {
-setState(() {
-  successWithdraw=true;
-  failedWithdraw=false;
-});
+      setState(() {
+        successWithdraw = true;
+        failedWithdraw = false;
+      });
       var output = jsonDecode(response.body);
-
-      print(response.body);
     } else {
-      successWithdraw=false;
-      failedWithdraw=true;
+      successWithdraw = false;
+      failedWithdraw = true;
     }
   }
 }

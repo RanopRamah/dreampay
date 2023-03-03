@@ -139,20 +139,22 @@ class _MakeAccountPageState extends State<MakeAccountPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      drawer: sidebar(context),
+      drawer: sideBar(context),
       key: _scaffoldKey,
       body: RefreshIndicator(
-        onRefresh: fetchUang,
+        onRefresh: _refreshPage,
         child: ListView(
           children: [
             SizedBox(
               height: MediaQuery.of(context).size.height,
               child: SlidingUpPanel(
+                maxHeight: 590,
+                minHeight: 150,
                 borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(25),
                     topRight: Radius.circular(25)),
                 body: Column(
-                  children: [topbar(context), form()],
+                  children: [topBar(context), form()],
                 ),
                 panelBuilder: (ScrollController sc) {
                   return Column(
@@ -221,7 +223,7 @@ class _MakeAccountPageState extends State<MakeAccountPage> {
     );
   }
 
-  Padding topbar(BuildContext context) {
+  Padding topBar(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(30),
       child: Row(
@@ -234,7 +236,47 @@ class _MakeAccountPageState extends State<MakeAccountPage> {
               width: 35,
             ),
           ),
-          logoutButton(context),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                  width: 52,
+                  height: 54,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFFFFFFF),
+                    borderRadius: const BorderRadius.all(Radius.circular(13)),
+                    border:
+                        Border.all(color: const Color(0xFFD2D2D2), width: 1),
+                  ),
+                  child: TextButton(
+                    child: Image.asset('assets/image/logout.png',
+                        width: 27.03, height: 27.05),
+                    onPressed: () {
+                      setState(() {
+                        prefs.remove('id_customer');
+                        prefs.remove('phone_customer');
+                        prefs.remove('name_customer');
+                        prefs.remove('pin_customer');
+                        prefs.remove('type_customer');
+                        prefs.remove('is_login');
+                        Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(
+                                builder: (ctx) => const LoginPage()),
+                            (route) => false);
+                      });
+                    },
+                  )),
+              const Text(
+                'Keluar',
+                style: TextStyle(
+                  color: Color(0xFFADADAD),
+                  fontFamily: 'Euclid Circular B',
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );
@@ -459,7 +501,7 @@ class _MakeAccountPageState extends State<MakeAccountPage> {
     );
   }
 
-  Drawer sidebar(BuildContext context) {
+  Drawer sideBar(BuildContext context) {
     return Drawer(
       child: Container(
         padding: const EdgeInsets.all(20),
@@ -476,6 +518,10 @@ class _MakeAccountPageState extends State<MakeAccountPage> {
             ),
             Center(
               child: ListTile(
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (c) => const MakeAccountPage()));
+                },
                 title: Container(
                   padding: const EdgeInsets.only(right: 30, left: 40),
                   width: double.infinity,
@@ -839,10 +885,15 @@ class _MakeAccountPageState extends State<MakeAccountPage> {
                 } else if (snapshot.hasError) {
                   return Text('${snapshot.error}');
                 }
-                return LoadingAnimationWidget.staggeredDotsWave(
-                  color: Colors.black,
-                  size: 40,
-                );
+                return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Center(
+                          child: LoadingAnimationWidget.staggeredDotsWave(
+                        color: Colors.white,
+                        size: 40,
+                      ))
+                    ]);
               },
             ),
           ],
@@ -851,117 +902,86 @@ class _MakeAccountPageState extends State<MakeAccountPage> {
     );
   }
 
-  Column logoutButton(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Container(
-            width: 52,
-            height: 54,
-            decoration: BoxDecoration(
-              color: const Color(0xFFFFFFFF),
-              borderRadius: const BorderRadius.all(Radius.circular(13)),
-              border: Border.all(color: const Color(0xFFD2D2D2), width: 1),
-            ),
-            child: TextButton(
-              child: Image.asset('assets/image/logout.png',
-                  width: 27.03, height: 27.05),
-              onPressed: () {
-                setState(() {
-                  prefs.remove('id_customer');
-                  prefs.remove('phone_customer');
-                  prefs.remove('name_customer');
-                  prefs.remove('pin_customer');
-                  prefs.remove('type_customer');
-                  prefs.remove('is_login');
-                  Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(builder: (ctx) => const LoginPage()),
-                      (route) => false);
-                });
-              },
-            )),
-        const Text(
-          'Keluar',
-          style: TextStyle(
-            color: Color(0xFFADADAD),
-            fontFamily: 'Euclid Circular B',
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      ],
-    );
-  }
-
   Widget _scrollingList(ScrollController sc) {
-    return FutureBuilder(
-      future: _listuser,
-      builder: (context, snapshot) {
-        return SizedBox(
-          height: 300,
-          child: ListView.builder(
-            controller: sc,
-            itemCount: _filteredAkun.isNotEmpty
-                ? _filteredAkun.length
-                : snapshot.data!.length,
-            itemBuilder: (BuildContext context, i) => Container(
-              padding: const EdgeInsets.only(top: 25, left: 30, right: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          width: 200,
-                          child: Text(
-                              _filteredAkun.isNotEmpty
-                                  ? _filteredAkun[i].nama
-                                  : snapshot.data![i].nama,
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.w600,
+    return SizedBox(
+      height: 450,
+      child: FutureBuilder(
+        future: _listuser,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return SizedBox(
+              height: 300,
+              child: ListView.builder(
+                controller: sc,
+                itemCount: _filteredAkun.isNotEmpty
+                    ? _filteredAkun.length
+                    : snapshot.data!.length,
+                itemBuilder: (BuildContext context, i) => Container(
+                  padding: const EdgeInsets.only(top: 25, left: 30, right: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              width: 200,
+                              child: Text(
+                                  _filteredAkun.isNotEmpty
+                                      ? _filteredAkun[i].nama
+                                      : snapshot.data![i].nama,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontFamily: 'Euclid Circular B',
+                                      fontSize: 20,
+                                      color: Color(0xff172437))),
+                            ),
+                            Text(
+                                _filteredAkun.isNotEmpty
+                                    ? _filteredAkun[i].noHp
+                                    : snapshot.data![i].noHp,
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.w400,
+                                    fontFamily: 'Euclid Circular B',
+                                    fontSize: 16,
+                                    color: Color(0xffbebebe))),
+                          ]),
+                      TextButton(
+                        onPressed: () {},
+                        child: Container(
+                          width: 101,
+                          height: 36,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(49),
+                              border: Border.all(
+                                  width: 0.5, color: const Color(0xffe6e6e6))),
+                          child: const Center(
+                            child: Text(
+                              'Detail',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w400,
                                   fontFamily: 'Euclid Circular B',
-                                  fontSize: 20,
-                                  color: Color(0xff172437))),
+                                  fontSize: 16,
+                                  color: Color(0xff222222)),
+                            ),
+                          ),
                         ),
-                        Text(
-                            _filteredAkun.isNotEmpty
-                                ? _filteredAkun[i].noHp
-                                : snapshot.data![i].noHp,
-                            style: const TextStyle(
-                                fontWeight: FontWeight.w400,
-                                fontFamily: 'Euclid Circular B',
-                                fontSize: 16,
-                                color: Color(0xffbebebe))),
-                      ]),
-                  TextButton(
-                    onPressed: () {},
-                    child: Container(
-                      width: 101,
-                      height: 36,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(49),
-                          border: Border.all(
-                              width: 0.5, color: const Color(0xffe6e6e6))),
-                      child: const Center(
-                        child: Text(
-                          'Detail',
-                          style: TextStyle(
-                              fontWeight: FontWeight.w400,
-                              fontFamily: 'Euclid Circular B',
-                              fontSize: 16,
-                              color: Color(0xff222222)),
-                        ),
-                      ),
-                    ),
-                  )
-                ],
+                      )
+                    ],
+                  ),
+                ),
               ),
-            ),
-          ),
-        );
-      },
+            );
+          } else if (snapshot.hasError) {
+            return Text('${snapshot.error}');
+          }
+          return LoadingAnimationWidget.staggeredDotsWave(
+            color: Colors.black,
+            size: 40,
+          );
+        },
+      ),
     );
   }
 
