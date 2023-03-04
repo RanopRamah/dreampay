@@ -350,7 +350,7 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                                                       style: TextStyle(
                                                           fontFamily:
                                                               'SF Pro Display',
-                                                          fontSize: 20,
+                                                          fontSize: 15,
                                                           fontWeight:
                                                               FontWeight.w400,
                                                           color: Colors.white),
@@ -371,7 +371,7 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                                                         style: const TextStyle(
                                                             fontFamily:
                                                                 'SF Pro Display',
-                                                            fontSize: 40,
+                                                            fontSize: 32,
                                                             fontWeight:
                                                                 FontWeight.w700,
                                                             color:
@@ -387,7 +387,7 @@ class _BuyerHomePageState extends State<BuyerHomePage> {
                                 const SizedBox(
                                   height: 20,
                                 ),
-                                const Row(children: <Widget>[
+                                Row(children: const <Widget>[
                                   Text(
                                     'Riwayat',
                                     style: TextStyle(

@@ -164,14 +164,15 @@ class _MerchantPageState extends State<MerchantPage> {
               height: MediaQuery.of(context).size.height,
               child: SlidingUpPanel(
                 controller: _panelController,
-                minHeight: 80,
+                minHeight: 100,
                 padding: const EdgeInsets.only(left: 30, right: 30),
                 borderRadius: const BorderRadius.only(
                     topRight: Radius.circular(30),
                     topLeft: Radius.circular(30)),
                 body: Container(
+                    height: 1000,
                   decoration: const BoxDecoration(color: Color(0xFFFDFDFD)),
-                  padding: const EdgeInsets.only(top: 60, left: 25, right: 25),
+                  padding: const EdgeInsets.only(top: 10, left: 25, right: 25),
                   child: Center(
                       child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -267,7 +268,10 @@ class _MerchantPageState extends State<MerchantPage> {
                         const SizedBox(
                           height: 20,
                         ),
-                        FutureBuilder(
+                        SingleChildScrollView(
+                         child: Container(
+                           height: 700,
+                        child: FutureBuilder(
                           future: _seller,
                           builder: (context, snapshot) {
                             if (snapshot.hasData) {
@@ -403,7 +407,9 @@ class _MerchantPageState extends State<MerchantPage> {
                                                       image: const DecorationImage(
                                                           image: AssetImage(
                                                               'assets/image/back_money2.png'))),
-                                                  child: Row(
+                                                  child: SingleChildScrollView(
+                                                    scrollDirection: Axis.horizontal,
+                                                    child: Row(
                                                     children: <Widget>[
                                                       const Padding(
                                                         padding:
@@ -437,7 +443,7 @@ class _MerchantPageState extends State<MerchantPage> {
                                                     ],
                                                   ),
                                                 ),
-                                              ),
+                                              ),)
                                             ],
                                           ),
                                           const SizedBox(
@@ -650,7 +656,9 @@ class _MerchantPageState extends State<MerchantPage> {
                                                         const SizedBox(
                                                           height: 5,
                                                         ),
-                                                        Row(
+                                                        SingleChildScrollView(
+                                                          scrollDirection : Axis.horizontal,
+                                                       child:  Row(
                                                           mainAxisAlignment: MainAxisAlignment.center,
                                                           children: <Widget>[
                                                             const Padding(
@@ -688,7 +696,7 @@ class _MerchantPageState extends State<MerchantPage> {
                                                                       0xff222222)),
                                                             ),
                                                           ],
-                                                        ),
+                                                        ),),
                                                         const SizedBox(
                                                           height: 5,
                                                         ),
@@ -750,7 +758,7 @@ class _MerchantPageState extends State<MerchantPage> {
                                   ))
                                 ]);
                           },
-                        )
+                        )))
                       ])),
                 ),
                 panelBuilder: (ScrollController pemasukan) {
