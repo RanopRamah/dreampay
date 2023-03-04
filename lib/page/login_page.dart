@@ -42,9 +42,11 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
       body: SingleChildScrollView(
+        physics: const NeverScrollableScrollPhysics(),
         child: Container(
-          padding: const EdgeInsets.only(top: 46),
+          padding: const EdgeInsets.only(top: 10),
           decoration: const BoxDecoration(
             color: Color(0xFFFDFDFD),
           ),
@@ -128,6 +130,9 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                 ),
+               const SizedBox(
+                  height: 10,
+                ),
                 Visibility(
                   visible: isSubmit,
                   child: Padding(
@@ -200,7 +205,7 @@ class _LoginPageState extends State<LoginPage> {
     preferences.setBool('is_login', true);
 
     if (type == 'B') {
-      Navigator.of(context).pushAndRemoveUntil(
+     Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (ctx) => const BuyerHomePage()),
           (route) => false);
     } else if (type == 'C') {
