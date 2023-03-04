@@ -32,7 +32,8 @@ class _FailedResponsePageState extends State<FailedResponsePage> {
             ),
             const SizedBox(height: 12),
             Text(
-              'Yahh... Pembayaranmu gagal 😭, ${widget.pesan}',
+              'Yahh... Pembayaranmu gagal 😭,\n ${widget.pesan}',
+              textAlign: TextAlign.center,
               style: const TextStyle(
                   color: Color(0xFFA6A6A6),
                   fontSize: 16,
