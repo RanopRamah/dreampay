@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:bcrypt/bcrypt.dart';
-import 'package:dreampay/page/buyer/buyer_home.dart';
+import 'package:dreampay/page/buyer/home/buyer_view.dart';
 import 'package:dreampay/page/buyer/closing/failed_response.dart';
 import 'package:dreampay/page/buyer/closing/success_pay.dart';
 import 'package:flutter/material.dart';

@@ -1,4 +1,4 @@
-import 'package:dreampay/page/buyer/buyer_home.dart';
+import 'package:dreampay/page/buyer/home/buyer_view.dart';
 import 'package:flutter/material.dart';
 
 class FailedResponsePage extends StatefulWidget {

@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:dreampay/page/admin/make_account.dart';
-import 'package:dreampay/page/buyer/buyer_home.dart';
+import 'package:dreampay/page/buyer/home/buyer_view.dart';
 import 'package:dreampay/page/cashier/cashier_page.dart';
 import 'package:dreampay/page/merchant/merchant.dart';
 import 'package:flutter/material.dart';
