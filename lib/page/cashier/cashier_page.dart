@@ -7,105 +7,14 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:searchfield/searchfield.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
-
+import 'api/topup.dart';
+import 'api/totalsaldo.dart';
+import 'api/user.dart';
 import '../login_page.dart';
 
+
+
 var url = dotenv.env['API_URL'];
-
-Future<List> fetchUsers(idSeller) async {
-  final response = await http.get(
-    Uri.parse('$url/cashier/$idSeller'),
-  );
-  if (response.statusCode == 200) {
-    return jsonDecode(response.body)['list_buyer'];
-  } else {
-    throw Exception(response.body);
-  }
-}
-
-class TotalSaldo {
-  final String totalSaldo;
-
-  TotalSaldo({required this.totalSaldo});
-
-  factory TotalSaldo.fromJson(Map<String, dynamic> json) {
-    return TotalSaldo(
-      totalSaldo: json['total_masuk'],
-    );
-  }
-}
-
-Future<TotalSaldo> fetchTotalSaldo(idSeller) async {
-  final response = await http.get(Uri.parse('$url/cashier/total/$idSeller'));
-  if (response.statusCode == 200) {
-    final jsonResponse = json.decode(response.body);
-    return TotalSaldo.fromJson(jsonResponse);
-  } else {
-    throw Exception(response.body);
-  }
-}
-
-Future<List<TopUp>> fetchTopUp(idSeller) async {
-  final response = await http.get(
-    Uri.parse('$url/cashier/$idSeller'),
-  );
-
-  if (response.statusCode == 200) {
-    List jsonResponse = jsonDecode(response.body)['list_topup'];
-    return jsonResponse.map((e) => TopUp.fromJson(e)).toList();
-  } else {
-    throw Exception(response.body);
-  }
-}
-
-class Users {
-  final dynamic id;
-  final dynamic nama;
-  final dynamic no_hp;
-
-  const Users({required this.id, required this.nama, required this.no_hp});
-
-  Users.init()
-      : id = 0,
-        nama = '-',
-        no_hp = '-';
-
-  Users.fromMap(Map<dynamic, dynamic> map)
-      : id = map['id'],
-        nama = map['nama'],
-        no_hp = map['no_hp'];
-
-  factory Users.fromJson(Map<dynamic, dynamic> json) {
-    return Users(
-      id: json['id'],
-      nama: json['nama'],
-      no_hp: json['no_hp'],
-    );
-  }
-}
-
-class TopUp {
-  final dynamic id;
-  final dynamic penerima;
-  final dynamic nominal;
-  final dynamic createdAt;
-
-  const TopUp({
-    required this.id,
-    required this.penerima,
-    required this.nominal,
-    required this.createdAt,
-  });
-
-  factory TopUp.fromJson(Map<dynamic, dynamic> json) {
-    return TopUp(
-      id: json['id'],
-      penerima: json['penerima'],
-      nominal: json['nominal'],
-      createdAt: json['created_at'],
-    );
-  }
-}
 
 class CashierPage extends StatefulWidget {
   const CashierPage({Key? key}) : super(key: key);

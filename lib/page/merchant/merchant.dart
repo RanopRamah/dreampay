@@ -9,54 +9,16 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:signed_spacing_flex/signed_spacing_flex.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'api/detail.dart';
+import 'api/seller.dart';
 
 var url = dotenv.env['API_URL'];
 
-class Seller {
-  final dynamic qrcode;
-  final dynamic saldo;
-  final dynamic pemasukan;
-  final dynamic penarikan;
 
-  const Seller({
-    required this.qrcode,
-    required this.saldo,
-    required this.pemasukan,
-    required this.penarikan,
-  });
 
-  factory Seller.fromJson(Map<dynamic, dynamic> json) {
-    return Seller(
-      qrcode: json['qrcode'],
-      saldo: json['saldo'],
-      pemasukan: json['pemasukan'],
-      penarikan: json['penarikan'],
-    );
-  }
-}
 
-class Detail {
-  final dynamic pengirim;
-  final dynamic created_at;
-  final dynamic nominal;
-
-  const Detail({
-    required this.pengirim,
-    required this.created_at,
-    required this.nominal,
-  });
-
-  factory Detail.fromJson(Map<dynamic, dynamic> json) {
-    return Detail(
-      pengirim: json['pengirim'],
-      created_at: json['created_at'],
-      nominal: json['nominal'],
-    );
-  }
-}
 
 class MerchantPage extends StatefulWidget {
   const MerchantPage({Key? key}) : super(key: key);
@@ -81,43 +43,9 @@ class _MerchantPageState extends State<MerchantPage> {
   Future<List<Detail>>? _penarikan;
   late SharedPreferences prefs;
 
-  Future<Seller> fetchUser(String idSeller) async {
-    final response = await http.get(
-      Uri.parse('$url/seller/$idSeller'),
-    );
 
-    if (response.statusCode == 200) {
-      return Seller.fromJson(jsonDecode(response.body));
-    } else {
-      throw Exception(response.body);
-    }
-  }
 
-  Future<List<Detail>> fetchPemasukan(String id) async {
-    final response = await http.get(
-      Uri.parse('$url/seller/$id'),
-    );
 
-    if (response.statusCode == 200) {
-      List jsonResponse = jsonDecode(response.body)['list_pemasukan'];
-      return jsonResponse.map((e) => Detail.fromJson(e)).toList();
-    } else {
-      throw Exception(response.body);
-    }
-  }
-
-  Future<List<Detail>> fetchPenarikan(String id) async {
-    final response = await http.get(
-      Uri.parse('$url/seller/$id'),
-    );
-
-    if (response.statusCode == 200) {
-      List jsonResponse = jsonDecode(response.body)['list_penarikan'];
-      return jsonResponse.map((e) => Detail.fromJson(e)).toList();
-    } else {
-      throw Exception('Failed to load');
-    }
-  }
 
   Future<void> setValue() async {
     prefs = await SharedPreferences.getInstance();

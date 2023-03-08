@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'package:dreampay/page/buyer/home/buyer_view.dart';
-import 'package:dreampay/page/buyer/nominal_page.dart';
+import 'package:dreampay/page/buyer/home/api/nominal_page.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 

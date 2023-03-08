@@ -1,4 +1,4 @@
-import 'package:dreampay/page/buyer/input_pin.dart';
+import 'package:dreampay/page/buyer/home/input_pin.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 

@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:core';
-import 'package:dreampay/page/buyer/qr_page.dart';
+import 'package:dreampay/page/buyer/home/qr_page.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
