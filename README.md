@@ -1,6 +1,6 @@
 # dreampay
 
-A new Flutter project.
+Payment Application project using Flutter.
 
 ## Getting Started
 
